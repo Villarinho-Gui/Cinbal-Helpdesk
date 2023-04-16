@@ -1,12 +1,11 @@
-import { Button } from "@mui/material";
-import React from "react";
+import { Button } from '@mui/material'
+import React from 'react'
 
-import { Route, Routes, Navigate } from "react-router-dom";
-import { useAppThemeContext } from "../shared/contexts";
+import { Route, Routes, Navigate } from 'react-router-dom'
+import { useAppThemeContext } from '../shared/contexts'
 
 export const AppRoutes: React.FC = () => {
-
-const { toggleTheme } = useAppThemeContext();
+  const { toggleTheme } = useAppThemeContext()
 
   return (
     <Routes>
@@ -20,5 +19,5 @@ const { toggleTheme } = useAppThemeContext();
       />
       <Route path="*" element={<Navigate to="/home" />} />
     </Routes>
-  );
-};
+  )
+}
