@@ -1,19 +1,40 @@
 import {
   Badge,
-  Button,
   Card,
-  CardActionArea,
-  CardActions,
   CardContent,
-  CardHeader,
   Chip,
   Icon,
   Typography,
 } from "@mui/material";
 import React from "react";
 import { FaPaperclip } from "react-icons/fa";
+import { useMatch, useNavigate, useResolvedPath } from "react-router-dom";
 
-const Chamado: React.FC = () => {
+interface IChamadoProps {
+  category: string;
+  title: string;
+  description: string;
+  onCLick?: () => void | undefined;
+  to: string;
+}
+
+const Chamado: React.FC<IChamadoProps> = ({
+  category,
+  description,
+  title,
+  onCLick,
+  to,
+}) => {
+  const navigate = useNavigate();
+
+  const triggerNavigate = () => {
+    navigate(to);
+    onCLick?.();
+  };
+
+  const resolvedPath = useResolvedPath(to);
+  const match = useMatch({ path: resolvedPath.pathname, end: false });
+
   return (
     <Card
       variant="outlined"
@@ -28,10 +49,10 @@ const Chamado: React.FC = () => {
     >
       <CardContent sx={{ paddingBottom: 0 }}>
         <Typography variant="h5" sx={{ fontSize: 14, padding: "10px" }}>
-          Problema com Protheus
+          {title}
         </Typography>
         <Chip
-          label="Protheus"
+          label={category}
           variant="filled"
           color="primary"
           size="small"
@@ -40,13 +61,14 @@ const Chamado: React.FC = () => {
         <Typography
           variant="body2"
           color="text.secondary"
-          sx={{ fontSize: 12, padding: "10px" }}
+          sx={{
+            fontSize: 12,
+            padding: "10px",
+            textOverflow: "ellipsis",
+          }}
         >
           {" "}
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Rerum
-          repudiandae explicabo sit quibusdam cupiditate ea amet, est debitis
-          quae quo id laborum, recusandae placeat. Eligendi ut aliquam quasi!
-          Unde, consequatur.
+          {description}
         </Typography>
         <Badge badgeContent={2} color="primary">
           {" "}
@@ -55,13 +77,6 @@ const Chamado: React.FC = () => {
           </Icon>
         </Badge>
       </CardContent>
-      <CardActions
-        sx={{ display: "flex", float: "left", width: "100%", marginLeft: 6 }}
-      >
-        <Button size="small" variant="outlined">
-          Visualizar
-        </Button>
-      </CardActions>
     </Card>
   );
 };
