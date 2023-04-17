@@ -12,9 +12,9 @@ import {
   useTheme,
 } from "@mui/material";
 
-import { FaHome } from "react-icons/fa";
 import Chamado from "../Chamado";
 import { useDrawerContext } from "../../contexts/DrawerContext";
+import { useMatch, useResolvedPath } from "react-router-dom";
 // import { useAppThemeContext } from "../../contexts/ThemeContext";
 
 // import logo from "../../../media/images/logo.png";
@@ -35,7 +35,11 @@ export const MenuLateral: React.FC<IMenuLateralChildrenConfig> = ({
 
   return (
     <>
-      <Drawer open={isDrawerOpen} variant={smDown ? "temporary" : "permanent"} onClose={toggleDrawerOpen}>
+      <Drawer
+        open={isDrawerOpen}
+        variant={smDown ? "temporary" : "permanent"}
+        onClose={toggleDrawerOpen}
+      >
         <Box
           width={theme.spacing(45)}
           height="100%"
@@ -60,7 +64,17 @@ export const MenuLateral: React.FC<IMenuLateralChildrenConfig> = ({
 
           <Box flex={1}>
             <List component="nav">
-              <Chamado />
+              <ListItemButton>
+                <Chamado
+                  category={"Protheus"}
+                  title={"Problema no Protheus"}
+                  description={
+                    "Lorem ipsum dolor sit amet consectetur adipisicing elit. Maiores veritatis excepturi ad doloribus. Incidunt officiis voluptas maiores et quisquamconsequatur suscipit, aliquam necessitatibus iusto deserunt fugit corporisplaceat doloremque enim."
+                  }
+                  onCLick={smDown ? toggleDrawerOpen : undefined}
+                  to={"/chamado"}
+                />
+              </ListItemButton>
             </List>
           </Box>
         </Box>
