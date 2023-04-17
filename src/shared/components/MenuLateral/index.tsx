@@ -31,7 +31,7 @@ export const MenuLateral: React.FC<IMenuLateralChildrenConfig> = ({
   const theme = useTheme();
   const smDown = useMediaQuery(theme.breakpoints.down("sm"));
 
-  const { isDrawerOpen, toggleDrawerOpen } = useDrawerContext();
+  const { isDrawerOpen, toggleDrawerOpen, chamadoAberto } = useDrawerContext();
 
   return (
     <>
@@ -61,22 +61,23 @@ export const MenuLateral: React.FC<IMenuLateralChildrenConfig> = ({
               width={130}
             />
           </Box>
-
           <Box flex={1}>
             <List component="nav">
-              <ListItemButton>
-                <Chamado
-                  category={"Protheus"}
-                  title={"Problema no Protheus"}
-                  description={
-                    "Lorem ipsum dolor sit amet consectetur adipisicing elit. Maiores veritatis excepturi ad doloribus. Incidunt officiis voluptas maiores et quisquamconsequatur suscipit, aliquam necessitatibus iusto deserunt fugit corporisplaceat doloremque enim."
-                  }
-                  onCLick={smDown ? toggleDrawerOpen : undefined}
-                  to={"/chamado"}
-                />
-              </ListItemButton>
+              {chamadoAberto.map((chamado) => {
+                return (
+                  <Chamado
+                    key={chamado.description}
+                    category={chamado.category}
+                    title={chamado.title}
+                    description={chamado.description}
+                    onCLick={smDown ? toggleDrawerOpen : undefined}
+                    to={"/chamado-aberto"}
+                  />
+                );
+              })}
             </List>
           </Box>
+          q
         </Box>
       </Drawer>
 
