@@ -8,11 +8,13 @@ import {
   List,
   ListItemButton,
   ListItemText,
+  useMediaQuery,
   useTheme,
 } from "@mui/material";
 
 import { FaHome } from "react-icons/fa";
 import Chamado from "../Chamado";
+import { useDrawerContext } from "../../contexts/DrawerContext";
 // import { useAppThemeContext } from "../../contexts/ThemeContext";
 
 // import logo from "../../../media/images/logo.png";
@@ -27,10 +29,13 @@ export const MenuLateral: React.FC<IMenuLateralChildrenConfig> = ({
   children,
 }) => {
   const theme = useTheme();
+  const smDown = useMediaQuery(theme.breakpoints.down("sm"));
+
+  const { isDrawerOpen, toggleDrawerOpen } = useDrawerContext();
 
   return (
     <>
-      <Drawer variant="permanent">
+      <Drawer open={isDrawerOpen} variant={smDown ? "temporary" : "permanent"} onClose={toggleDrawerOpen}>
         <Box
           width={theme.spacing(45)}
           height="100%"
@@ -46,7 +51,7 @@ export const MenuLateral: React.FC<IMenuLateralChildrenConfig> = ({
             justifyContent={"top"}
           >
             <img
-              // src={themeName === "light" ? logo : logo2}
+              src="https://cinbal-apps.vercel.app/assets/logo2-full-cbb1a1b4.png"
               alt="Cinbal Help Desk Logo"
               height={60}
               width={130}
@@ -61,7 +66,7 @@ export const MenuLateral: React.FC<IMenuLateralChildrenConfig> = ({
         </Box>
       </Drawer>
 
-      <Box height="100vh" marginLeft={theme.spacing(46)}>
+      <Box height="100vh" marginLeft={smDown ? 0 : theme.spacing(46)}>
         {children}
       </Box>
     </>
