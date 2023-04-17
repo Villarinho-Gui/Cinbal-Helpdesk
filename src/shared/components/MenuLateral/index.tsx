@@ -1,26 +1,16 @@
 /* eslint-disable import/no-duplicates */
-import React from "react";
+import React from 'react'
 
-import {
-  Box,
-  Drawer,
-  Icon,
-  List,
-  ListItemButton,
-  ListItemText,
-  useMediaQuery,
-  useTheme,
-} from "@mui/material";
+import { Box, Drawer, List, useMediaQuery, useTheme } from '@mui/material'
 
-import Chamado from "../Chamado";
-import { useDrawerContext } from "../../contexts/DrawerContext";
-import { useMatch, useResolvedPath } from "react-router-dom";
+import Chamado from '../Chamado'
+import { useDrawerContext } from '../../contexts/DrawerContext'
 // import { useAppThemeContext } from "../../contexts/ThemeContext";
 
 // import logo from "../../../media/images/logo.png";
 // import logo2 from "../../../media/images/logo2.png";
 interface IMenuLateralChildrenConfig {
-  children: React.ReactNode;
+  children: React.ReactNode
 }
 
 // const { themeName } = useAppThemeContext();
@@ -28,16 +18,16 @@ interface IMenuLateralChildrenConfig {
 export const MenuLateral: React.FC<IMenuLateralChildrenConfig> = ({
   children,
 }) => {
-  const theme = useTheme();
-  const smDown = useMediaQuery(theme.breakpoints.down("sm"));
+  const theme = useTheme()
+  const smDown = useMediaQuery(theme.breakpoints.down('sm'))
 
-  const { isDrawerOpen, toggleDrawerOpen, chamadoAberto } = useDrawerContext();
+  const { isDrawerOpen, toggleDrawerOpen, chamadoAberto } = useDrawerContext()
 
   return (
     <>
       <Drawer
         open={isDrawerOpen}
-        variant={smDown ? "temporary" : "permanent"}
+        variant={smDown ? 'temporary' : 'permanent'}
         onClose={toggleDrawerOpen}
       >
         <Box
@@ -50,9 +40,9 @@ export const MenuLateral: React.FC<IMenuLateralChildrenConfig> = ({
             margin={3}
             padding={2}
             height={theme.spacing(20)}
-            display={"flex"}
-            alignItems={"start"}
-            justifyContent={"top"}
+            display={'flex'}
+            alignItems={'start'}
+            justifyContent={'top'}
           >
             <img
               src="https://cinbal-apps.vercel.app/assets/logo2-full-cbb1a1b4.png"
@@ -71,9 +61,9 @@ export const MenuLateral: React.FC<IMenuLateralChildrenConfig> = ({
                     title={chamado.title}
                     description={chamado.description}
                     onCLick={smDown ? toggleDrawerOpen : undefined}
-                    to={"/chamado-aberto"}
+                    to={'/chamado-aberto'}
                   />
-                );
+                )
               })}
             </List>
           </Box>
@@ -85,5 +75,5 @@ export const MenuLateral: React.FC<IMenuLateralChildrenConfig> = ({
         {children}
       </Box>
     </>
-  );
-};
+  )
+}
