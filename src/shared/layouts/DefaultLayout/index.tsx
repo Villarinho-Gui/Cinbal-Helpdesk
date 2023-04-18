@@ -10,6 +10,9 @@ import React, { ReactNode } from 'react'
 
 import { GiHamburgerMenu } from 'react-icons/gi'
 import { useDrawerContext } from '../../contexts/DrawerContext'
+
+import { BsMoonFill } from "react-icons/bs"
+import { useAppThemeContext } from '../../contexts/ThemeContext'
 interface IDefaultLayoutProps {
   children: React.ReactNode
   tituloPagina: string
@@ -26,6 +29,7 @@ const DefaultLayout: React.FC<IDefaultLayoutProps> = ({
   const mdDown = useMediaQuery(theme.breakpoints.down('md'))
 
   const { toggleDrawerOpen } = useDrawerContext()
+  const { toggleTheme } = useAppThemeContext();
 
   return (
     <Box height="100%" display="flex" flexDirection="column" gap={1}>
@@ -44,15 +48,21 @@ const DefaultLayout: React.FC<IDefaultLayoutProps> = ({
           </IconButton>
         )}
 
-        <Typography
-          variant={smDown ? 'h5' : mdDown ? 'h4' : 'h3'}
-          component="h4"
-          whiteSpace="nowrap"
-          overflow="hidden"
-          textOverflow="elipses"
-        >
-          {tituloPagina}
-        </Typography>
+        <Box display="flex" alignItems="center" justifyContent="space-between" width="100%">
+          <Typography
+            variant={smDown ? 'h5' : mdDown ? 'h4' : 'h3'}
+            component="h4"
+            whiteSpace="nowrap"
+            overflow="hidden"
+            textOverflow="elipses"
+          >
+            {tituloPagina}
+          </Typography>
+
+          <IconButton size='small' sx={{height: "35px", position: "relative", right: "20px"}} onClick={toggleTheme}><Icon><BsMoonFill /></Icon></IconButton>
+        </Box>
+
+        
       </Box>
       {barraDeFerramentas && <Box>{barraDeFerramentas}</Box>}
       <Box flex={1} overflow="auto">
