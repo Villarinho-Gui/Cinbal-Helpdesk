@@ -47,7 +47,7 @@ export const MenuLateral: React.FC<IMenuLateralChildrenConfig> = ({
             <img
               src="https://cinbal-apps.vercel.app/assets/logo2-full-cbb1a1b4.png"
               alt="Cinbal Help Desk Logo"
-              height={60}
+              height={57}
               width={130}
             />
           </Box>
