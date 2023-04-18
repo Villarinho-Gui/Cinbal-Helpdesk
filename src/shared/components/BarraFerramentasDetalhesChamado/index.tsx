@@ -1,4 +1,11 @@
-import { Box, Divider, Icon, IconButton, useTheme } from '@mui/material'
+import {
+  Box,
+  CircularProgress,
+  Divider,
+  Icon,
+  IconButton,
+  useTheme,
+} from '@mui/material'
 import React from 'react'
 import { BiPlus } from 'react-icons/bi'
 import { AiOutlineArrowLeft } from 'react-icons/ai'
@@ -9,6 +16,8 @@ interface IBarraFerramentasDetalhesChamadoProps {
   mostrarBotaoNovo?: boolean
   mostrarBotaoSalvar?: boolean
   mostrarBotaoDeletar?: boolean
+
+  mostrarBotaoSalvarCarregando?: boolean
 
   aoClicarEmVoltar?: () => void
   aoClicarEmNovo?: () => void
@@ -23,6 +32,8 @@ const BarraFerramentasDetalhesChamado: React.FC<
   mostrarBotaoNovo = true,
   mostrarBotaoSalvar = true,
   mostrarBotaoDeletar = true,
+
+  mostrarBotaoSalvarCarregando = false,
 
   aoClicarEmVoltar,
   aoClicarEmNovo,
@@ -63,7 +74,7 @@ const BarraFerramentasDetalhesChamado: React.FC<
         {mostrarBotaoSalvar && (
           <IconButton onClick={aoClicarEmSalvar}>
             <Icon>
-              <MdSave />
+              {mostrarBotaoSalvarCarregando ? <CircularProgress /> : <MdSave />}
             </Icon>
           </IconButton>
         )}
