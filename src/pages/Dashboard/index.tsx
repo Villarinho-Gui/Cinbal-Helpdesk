@@ -1,10 +1,11 @@
 /* eslint-disable prettier/prettier */
 import React from 'react'
 import DefaultLayout from '../../shared/layouts/DefaultLayout'
-import BarraFerramentasAbrirChamado from '../../shared/components/BarraFerramentasAbrirChamado'
+// import BarraFerramentas from '../../shared/components/BarraFerramentas'
+import BarraFerramentasDetalhesChamado from '../../shared/components/BarraFerramentasDetalhesChamado'
 
 const Dashboard: React.FC = () => {
-  return <DefaultLayout tituloPagina="Abrir Chamado" barraDeFerramentas={(<BarraFerramentasAbrirChamado mostrarInputBusca />)}>Testando</DefaultLayout>
+  return <DefaultLayout tituloPagina="Abrir Chamado" barraDeFerramentas={(<BarraFerramentasDetalhesChamado />)}>Testando</DefaultLayout>
 }
 
 export default Dashboard
