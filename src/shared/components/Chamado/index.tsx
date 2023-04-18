@@ -5,6 +5,7 @@ import {
   CardContent,
   Chip,
   Icon,
+  Paper,
   Typography,
 } from '@mui/material'
 import React from 'react'
@@ -36,6 +37,7 @@ const Chamado: React.FC<IChamadoProps> = ({
   return (
     <CardActionArea onClick={triggerNavigate}>
       <Card
+        component={Paper}
         variant="outlined"
         sx={{
           width: '95%',
