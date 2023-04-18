@@ -2,6 +2,7 @@ import { Box, Button, TextField, useTheme } from '@mui/material'
 import React from 'react'
 
 import { BiPlus } from 'react-icons/bi'
+import { Environment } from '../../environment/export'
 
 interface IBarraFerramentasAbrirChamado {
   textoBusca?: string
@@ -39,7 +40,7 @@ const BarraFerramentasAbrirChamado: React.FC<IBarraFerramentasAbrirChamado> = ({
       {mostrarInputBusca && (
         <TextField
           size="small"
-          placeholder="Pesquisar..."
+          placeholder={Environment.INPUT_DE_BUSCA}
           value={textoBusca}
           onChange={(e) => aoMudarTextoDeBusca?.(e.target.value)}
         />
