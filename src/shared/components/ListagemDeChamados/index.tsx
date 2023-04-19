@@ -9,7 +9,7 @@ import {
 } from '../../services/api/Chamados/ChamadosServices'
 
 import { useDebounce } from '../../hooks/UseDebounce'
-import { List, ListItem } from '@mui/material'
+import { LinearProgress, List, ListItem } from '@mui/material'
 
 // import { Container } from './styles';
 
@@ -69,6 +69,9 @@ export const ListagemDeChamados: React.FC = () => {
           </ListItem>
         ))}
       </List>
+      {isLoading && (
+        <LinearProgress variant="indeterminate" sx={{ marginX: '10px' }} />
+      )}
     </DefaultLayout>
   )
 }
