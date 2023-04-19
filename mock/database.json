@@ -1,9 +1,10 @@
 {
-    "pessoas": [
+    "chamado": [
         {
             "id": 1,
-            "nome": "Juca",
-            "sobrenome": "Silva"
+            "titulo": "Problema no Protheus",
+            "categoria": "Protheus",
+            "descricao": "lorem"
         }
     ]
 }
