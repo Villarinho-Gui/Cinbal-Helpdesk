@@ -9,9 +9,10 @@ import {
 } from '../../services/api/Chamados/ChamadosServices'
 
 import { useDebounce } from '../../hooks/UseDebounce'
-import { LinearProgress, List, ListItem } from '@mui/material'
+import { Alert, LinearProgress, List, ListItem } from '@mui/material'
+import { Environment } from '../../environment/export'
 
-// import { Container } from './styles';
+import { VscError } from 'react-icons/vsc'
 
 export const ListagemDeChamados: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -40,7 +41,7 @@ export const ListagemDeChamados: React.FC = () => {
         }
       })
     })
-  }, [busca])
+  }, [busca, debounce])
 
   return (
     <DefaultLayout
@@ -69,6 +70,18 @@ export const ListagemDeChamados: React.FC = () => {
           </ListItem>
         ))}
       </List>
+
+      {!isLoading && totalCount === 0 && (
+        <Alert
+          variant="outlined"
+          color="error"
+          icon={<VscError />}
+          sx={{ width: 'auto', marginX: '16px' }}
+        >
+          {Environment.LISTAGEM_VAZIA}
+        </Alert>
+      )}
+
       {isLoading && (
         <LinearProgress variant="indeterminate" sx={{ marginX: '10px' }} />
       )}
