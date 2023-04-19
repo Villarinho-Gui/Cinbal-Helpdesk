@@ -1,10 +1,9 @@
 /* eslint-disable import/no-duplicates */
 import React from 'react'
 
-import { Box, Drawer, List, useMediaQuery, useTheme } from '@mui/material'
-
-import Chamado from '../Chamado'
+import { Box, Drawer, useMediaQuery, useTheme } from '@mui/material'
 import { useDrawerContext } from '../../contexts/DrawerContext'
+import { ListagemDeChamados } from '../ListagemDeChamados'
 // import { useAppThemeContext } from "../../contexts/ThemeContext";
 
 // import logo from "../../../media/images/logo.png";
@@ -21,7 +20,7 @@ export const MenuLateral: React.FC<IMenuLateralChildrenConfig> = ({
   const theme = useTheme()
   const smDown = useMediaQuery(theme.breakpoints.down('sm'))
 
-  const { isDrawerOpen, toggleDrawerOpen, chamadoAberto } = useDrawerContext()
+  const { isDrawerOpen, toggleDrawerOpen } = useDrawerContext()
 
   return (
     <>
@@ -39,7 +38,7 @@ export const MenuLateral: React.FC<IMenuLateralChildrenConfig> = ({
           <Box
             margin={3}
             padding={2}
-            height={theme.spacing(20)}
+            height={theme.spacing(1)}
             display={'flex'}
             alignItems={'start'}
             justifyContent={'top'}
@@ -51,23 +50,7 @@ export const MenuLateral: React.FC<IMenuLateralChildrenConfig> = ({
               width={130}
             />
           </Box>
-          <Box flex={1}>
-            <List component="nav">
-              {chamadoAberto.map((chamado) => {
-                return (
-                  <Chamado
-                    key={chamado.description}
-                    category={chamado.category}
-                    title={chamado.title}
-                    description={chamado.description}
-                    onCLick={smDown ? toggleDrawerOpen : undefined}
-                    to={'/chamado-aberto'}
-                  />
-                )
-              })}
-            </List>
-          </Box>
-          q
+          <ListagemDeChamados />
         </Box>
       </Drawer>
 
