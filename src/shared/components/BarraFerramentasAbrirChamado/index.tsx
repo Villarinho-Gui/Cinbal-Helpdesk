@@ -3,25 +3,24 @@ import React from 'react'
 
 import { BiPlus } from 'react-icons/bi'
 import { Environment } from '../../environment/export'
+import { useNavigate } from 'react-router-dom'
 
 interface IBarraFerramentasAbrirChamado {
   textoBusca?: string
   mostrarInputBusca?: boolean
   aoMudarTextoDeBusca?: (novoTexto: string) => void
-  textoBotaoNovo?: string
   mostrarBotaoNovo?: boolean
-  aoClicarEmNovo?: (novoTexto: string) => void
+  // aoClicarEmNovo?: (novoTexto: string) => void
 }
 
 const BarraFerramentasAbrirChamado: React.FC<IBarraFerramentasAbrirChamado> = ({
   mostrarInputBusca = false,
   aoMudarTextoDeBusca,
   textoBusca = '',
-  aoClicarEmNovo,
   mostrarBotaoNovo = true,
-  textoBotaoNovo = 'Abrir novo Chamado',
 }) => {
   const theme = useTheme()
+  const navigate = useNavigate()
 
   return (
     <Box
@@ -47,7 +46,7 @@ const BarraFerramentasAbrirChamado: React.FC<IBarraFerramentasAbrirChamado> = ({
       )}
       <Box display="flex" flex={1} justifyContent="end">
         {mostrarBotaoNovo && (
-          <IconButton>
+          <IconButton onClick={() => navigate('/abrir-chamado')}>
             <Icon>
               <BiPlus />
             </Icon>
