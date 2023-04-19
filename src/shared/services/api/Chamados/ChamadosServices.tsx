@@ -99,7 +99,7 @@ const deleteById = async (id: number): Promise<void | Error> => {
   }
 }
 
-export const PessoasService = {
+export const ChamadosService = {
   getAll,
   getById,
   create,
