@@ -49,7 +49,6 @@ export const ListagemDeChamados: React.FC = () => {
       mostrarBotaoTema={false}
       barraDeFerramentas={
         <BarraFerramentasAbrirChamado
-          textoBotaoNovo=""
           mostrarInputBusca
           textoBusca={busca}
           aoMudarTextoDeBusca={(texto) =>
