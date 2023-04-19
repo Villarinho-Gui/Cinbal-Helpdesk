@@ -1,4 +1,4 @@
-import { Box, Button, TextField, useTheme } from '@mui/material'
+import { Box, Icon, IconButton, TextField, useTheme } from '@mui/material'
 import React from 'react'
 
 import { BiPlus } from 'react-icons/bi'
@@ -47,16 +47,11 @@ const BarraFerramentasAbrirChamado: React.FC<IBarraFerramentasAbrirChamado> = ({
       )}
       <Box display="flex" flex={1} justifyContent="end">
         {mostrarBotaoNovo && (
-          <Button
-            variant="contained"
-            size="medium"
-            endIcon={<BiPlus />}
-            disableElevation
-            onClick={() => aoClicarEmNovo}
-            sx={{ position: 'relative', right: '22px' }}
-          >
-            {textoBotaoNovo}
-          </Button>
+          <IconButton>
+            <Icon>
+              <BiPlus />
+            </Icon>
+          </IconButton>
         )}
       </Box>
     </Box>
