@@ -1,18 +1,19 @@
 import { Environment } from '../../../environment/export'
 import { Api } from '../Config'
 
-interface IListagemChamados {
+export interface IListagemChamados {
   id: number
   titulo: string
   categoria: string
   descricao: string
+  maxLines?: number
 }
 
-interface IDetalheChamados {
+export interface IDetalheChamados {
   id: number
   chamadoId: number
-  author: string
   titulo: string
+  author: string
   categoria: string
   attachedFile: [0]
   descricao: string
@@ -21,7 +22,7 @@ interface IDetalheChamados {
 
 type IChamadoComTotalCount = {
   data: IListagemChamados[]
-  totalCount: string
+  totalCount: string | number
 }
 
 const getAll = async (
