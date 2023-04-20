@@ -58,14 +58,16 @@ export const ListagemDeChamados: React.FC = () => {
         />
       }
     >
-      <List sx={{ overflow: 'auto' }}>
+      <List sx={{ overflow: 'auto', padding: '0px' }}>
         {chamados.map((chamado) => (
-          <ListItem key={chamado.id}>
+          <ListItem key={chamado.id} disablePadding>
             <Chamado
               titulo={chamado.titulo}
               categoria={chamado.categoria}
               descricao={chamado.descricao}
               id={chamado.id}
+              author={chamado.author}
+              publishedAt={chamado.publishedAt}
             />
           </ListItem>
         ))}
