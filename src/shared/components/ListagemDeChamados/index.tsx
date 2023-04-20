@@ -27,10 +27,14 @@ export const ListagemDeChamados: React.FC = () => {
     return searchParams.get('busca') || ''
   }, [searchParams])
 
+  const pagina = useMemo(() => {
+    return Number(searchParams.get('pagina') || '1')
+  }, [searchParams])
+
   useEffect(() => {
     setIsLoading(true)
     debounce(() => {
-      ChamadosService.getAll(1, busca).then((result) => {
+      ChamadosService.getAll(pagina, busca).then((result) => {
         setIsLoading(false)
         if (result instanceof Error) {
           alert(result.message)
@@ -41,7 +45,7 @@ export const ListagemDeChamados: React.FC = () => {
         }
       })
     })
-  }, [busca, debounce])
+  }, [busca, debounce, pagina])
 
   return (
     <DefaultLayout
