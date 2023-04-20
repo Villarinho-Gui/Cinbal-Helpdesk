@@ -24,21 +24,17 @@ const BarraFerramentasAbrirChamado: React.FC<IBarraFerramentasAbrirChamado> = ({
 
   return (
     <Box
-      border="1px solid"
-      borderColor={theme.palette.divider}
-      borderRadius={1}
       display="flex"
       alignItems="center"
       justifyContent="space-between"
       padding={1}
-      paddingX={1}
-      marginX={1}
       gap={1}
       height={theme.spacing(5)}
     >
       {mostrarInputBusca && (
         <TextField
           size="small"
+          fullWidth
           placeholder={Environment.INPUT_DE_BUSCA}
           value={textoBusca}
           onChange={(e) => aoMudarTextoDeBusca?.(e.target.value)}
