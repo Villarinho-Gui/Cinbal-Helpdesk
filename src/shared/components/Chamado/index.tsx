@@ -11,8 +11,10 @@ import React from 'react'
 import { IListagemChamados } from '../../services/api/Chamados/ChamadosServices'
 
 import { MdImage } from 'react-icons/md'
+import { useNavigate } from 'react-router-dom'
 
 export const Chamado: React.FC<IListagemChamados> = ({
+  id,
   author,
   titulo,
   categoria,
@@ -28,8 +30,10 @@ export const Chamado: React.FC<IListagemChamados> = ({
     overflow: 'hidden',
   }
 
+  const navigate = useNavigate()
+
   return (
-    <CardActionArea>
+    <CardActionArea onClick={() => navigate(`/chamado/detalhe/${id}`)}>
       <Card
         variant="outlined"
         sx={{
