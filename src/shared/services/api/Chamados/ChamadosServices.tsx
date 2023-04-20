@@ -3,9 +3,11 @@ import { Api } from '../Config'
 
 export interface IListagemChamados {
   id: number
+  author: string
   titulo: string
   categoria: string
   descricao: string
+  publishedAt: number
   maxLines?: number
 }
 
