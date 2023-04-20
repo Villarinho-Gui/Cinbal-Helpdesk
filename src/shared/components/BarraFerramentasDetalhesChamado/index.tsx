@@ -2,7 +2,7 @@ import { Box, Divider, Icon, IconButton, useTheme } from '@mui/material'
 import React from 'react'
 import { BiPlus } from 'react-icons/bi'
 import { AiOutlineArrowLeft } from 'react-icons/ai'
-import { MdDelete } from 'react-icons/md'
+import { MdDelete, MdOutlineEmojiPeople } from 'react-icons/md'
 // import { ChamadosService } from '../../services/api/Chamados/ChamadosServices'
 
 interface IBarraFerramentasDetalhesChamadoProps {
@@ -10,10 +10,12 @@ interface IBarraFerramentasDetalhesChamadoProps {
   mostrarBotaoNovo?: boolean
   mostrarBotaoSalvar?: boolean
   mostrarBotaoDeletar?: boolean
+  mostrarBotaoAssumirChamado?: boolean
 
   aoClicarEmVoltar?: () => void
   aoClicarEmNovo?: () => void
   aoClicarEmSalvar?: () => void
+  aoClicarEmAssumirChamado?: void
 }
 
 const BarraFerramentasDetalhesChamado: React.FC<
@@ -22,6 +24,7 @@ const BarraFerramentasDetalhesChamado: React.FC<
   mostrarBotaoVoltar = true,
   mostrarBotaoNovo = true,
   mostrarBotaoDeletar = true,
+  mostrarBotaoAssumirChamado,
 
   aoClicarEmVoltar,
   aoClicarEmNovo,
@@ -63,6 +66,13 @@ const BarraFerramentasDetalhesChamado: React.FC<
           <IconButton onClick={aoClicarEmNovo}>
             <Icon>
               <BiPlus />
+            </Icon>
+          </IconButton>
+        )}
+        {mostrarBotaoAssumirChamado && (
+          <IconButton>
+            <Icon>
+              <MdOutlineEmojiPeople />
             </Icon>
           </IconButton>
         )}
