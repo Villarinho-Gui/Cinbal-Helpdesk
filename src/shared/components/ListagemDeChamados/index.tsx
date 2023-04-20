@@ -20,7 +20,7 @@ export const ListagemDeChamados: React.FC = () => {
   const { debounce } = useDebounce()
 
   const [chamados, setChamados] = useState<IListagemChamados[]>([])
-  const [totalCount, setTotalCount] = useState<number | string>(0)
+  const [totalCount, setTotalCount] = useState<number>(0)
   const [isLoading, setIsLoading] = useState<boolean>(true)
 
   const busca = useMemo(() => {
@@ -37,7 +37,7 @@ export const ListagemDeChamados: React.FC = () => {
         } else {
           console.log(result)
           setChamados(result.data)
-          setTotalCount(result.totalCount)
+          setTotalCount(Number(result.totalCount))
         }
       })
     })
@@ -71,9 +71,9 @@ export const ListagemDeChamados: React.FC = () => {
         ))}
       </List>
 
-      {!isLoading && totalCount === 0 && (
+      {totalCount === 0 && !isLoading && (
         <Alert
-          variant="outlined"
+          variant="standard"
           color="error"
           icon={<VscError />}
           sx={{ width: 'auto', marginX: '16px' }}
