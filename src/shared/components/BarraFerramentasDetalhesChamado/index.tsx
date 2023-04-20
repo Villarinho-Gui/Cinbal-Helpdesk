@@ -3,6 +3,7 @@ import React from 'react'
 import { BiPlus } from 'react-icons/bi'
 import { AiOutlineArrowLeft } from 'react-icons/ai'
 import { MdDelete } from 'react-icons/md'
+// import { ChamadosService } from '../../services/api/Chamados/ChamadosServices'
 
 interface IBarraFerramentasDetalhesChamadoProps {
   mostrarBotaoVoltar?: boolean
@@ -10,12 +11,9 @@ interface IBarraFerramentasDetalhesChamadoProps {
   mostrarBotaoSalvar?: boolean
   mostrarBotaoDeletar?: boolean
 
-  mostrarBotaoSalvarCarregando?: boolean
-
   aoClicarEmVoltar?: () => void
   aoClicarEmNovo?: () => void
   aoClicarEmSalvar?: () => void
-  aoClicarEmDeletar?: () => void
 }
 
 const BarraFerramentasDetalhesChamado: React.FC<
@@ -27,9 +25,17 @@ const BarraFerramentasDetalhesChamado: React.FC<
 
   aoClicarEmVoltar,
   aoClicarEmNovo,
-  aoClicarEmDeletar,
 }) => {
   const theme = useTheme()
+
+  // const triggerDeleteChamado = (id: number) => {
+  //   ChamadosService.deleteById(id).then((result) => {
+  //     if (result instanceof Error) {
+  //       alert(result.message)
+  //     }
+  //   })
+  //   console.log('Deletar')
+  // }
 
   return (
     <Box
@@ -61,7 +67,7 @@ const BarraFerramentasDetalhesChamado: React.FC<
           </IconButton>
         )}
         {mostrarBotaoDeletar && (
-          <IconButton onClick={aoClicarEmDeletar}>
+          <IconButton>
             <Icon>
               <MdDelete />
             </Icon>
