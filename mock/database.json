@@ -2,9 +2,11 @@
     "chamado": [
         {
             "id": 1,
+            "author": "Guilherme Villarinho",
             "titulo": "Problema no Protheus",
             "categoria": "Protheus",
-            "descricao": "lorem"
+            "descricao": "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Id dignissimos blanditiis omnis amet atque ullam consequuntur odio, eligendi magnam veritatis laborum tenetur illum dolorum velit vitae aut voluptas facilis consectetur!",
+            "publishedAt": "há 20 horas"
         }
     ]
 }
