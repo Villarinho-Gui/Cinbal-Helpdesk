@@ -27,10 +27,11 @@ export const MenuLateral: React.FC<IMenuLateralChildrenConfig> = ({
         open={isDrawerOpen}
         variant={smDown ? 'temporary' : 'permanent'}
         onClose={toggleDrawerOpen}
+        sx={{ overflow: 'hidden' }}
       >
         <Box
           width={theme.spacing(52)}
-          height="100%"
+          height="94vh"
           display="flex"
           flexDirection="column"
         >
