@@ -1,18 +1,16 @@
+/* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable import/no-duplicates */
 import React from 'react'
 
 import { Box, Drawer, useMediaQuery, useTheme } from '@mui/material'
 import { useDrawerContext } from '../../contexts/DrawerContext'
 import { ListagemDeChamados } from '../ListagemDeChamados'
-// import { useAppThemeContext } from "../../contexts/ThemeContext";
-
-// import logo from "../../../media/images/logo.png";
-// import logo2 from "../../../media/images/logo2.png";
+import { useAppThemeContext } from '../../contexts/ThemeContext'
+import logoDarkMode from '../../../media/images/logo-full.png'
+import logoLightMode from '../../../media/images/logo2-full.png'
 interface IMenuLateralChildrenConfig {
   children: React.ReactNode
 }
-
-// const { themeName } = useAppThemeContext();
 
 export const MenuLateral: React.FC<IMenuLateralChildrenConfig> = ({
   children,
@@ -21,6 +19,7 @@ export const MenuLateral: React.FC<IMenuLateralChildrenConfig> = ({
   const smDown = useMediaQuery(theme.breakpoints.down('sm'))
 
   const { isDrawerOpen, toggleDrawerOpen } = useDrawerContext()
+  const { themeName } = useAppThemeContext()
 
   return (
     <>
@@ -30,31 +29,26 @@ export const MenuLateral: React.FC<IMenuLateralChildrenConfig> = ({
         onClose={toggleDrawerOpen}
       >
         <Box
-          width={theme.spacing(45)}
+          width={theme.spacing(52)}
           height="100%"
           display="flex"
           flexDirection="column"
         >
-          <Box
-            margin={3}
-            padding={2}
-            height={theme.spacing(1)}
-            display={'flex'}
-            alignItems={'start'}
-            justifyContent={'top'}
-          >
+          {themeName === 'light' ? (
             <img
-              src="https://cinbal-apps.vercel.app/assets/logo2-full-cbb1a1b4.png"
+              src={logoLightMode}
               alt="Cinbal Help Desk Logo"
               height={57}
               width={130}
             />
-          </Box>
+          ) : (
+            <img src={logoDarkMode} height={57} width={130} />
+          )}
           <ListagemDeChamados />
         </Box>
       </Drawer>
 
-      <Box height="100vh" marginLeft={smDown ? 0 : theme.spacing(46)}>
+      <Box height="100vh" marginLeft={smDown ? 0 : theme.spacing(53)}>
         {children}
       </Box>
     </>
