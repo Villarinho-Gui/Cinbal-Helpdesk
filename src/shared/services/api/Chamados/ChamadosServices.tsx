@@ -16,6 +16,7 @@ export interface IDetalheChamados {
   chamadoId: number
   titulo: string
   author: string
+  setor: string
   categoria: string
   attachedFile: [0]
   descricao: string
