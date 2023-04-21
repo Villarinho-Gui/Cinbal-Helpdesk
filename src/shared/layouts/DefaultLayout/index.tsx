@@ -38,7 +38,7 @@ const DefaultLayout: React.FC<IDefaultLayoutProps> = ({
   const { toggleTheme } = useAppThemeContext()
 
   return (
-    <Box height="100%" display="flex" flexDirection="column" gap={1}>
+    <Box height="98%" display="flex" flexDirection="column" gap={1}>
       <Box
         padding={1}
         height={theme.spacing(smDown ? 6 : mdDown ? 8 : 12)}
