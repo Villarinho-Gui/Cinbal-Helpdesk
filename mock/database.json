@@ -3,6 +3,7 @@
     {
       "id": 1,
       "author": "Guilherme Villarinho",
+      "setor": "TI",
       "titulo": "Problema no Protheus",
       "categoria": "Protheus",
       "descricao": "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Id dignissimos blanditiis omnis amet atque ullam consequuntur odio, eligendi magnam veritatis laborum tenetur illum dolorum velit vitae aut voluptas facilis consectetur!",
@@ -11,6 +12,7 @@
     {
       "id": 2,
       "author": "Daniel",
+      "setor": "Almoxarifado",
       "titulo": "Problema na Rede",
       "categoria": "Rede",
       "descricao": "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Id dignissimos blanditiis omnis amet atque ullam consequuntur odio, eligendi magnam veritatis laborum tenetur illum dolorum velit vitae aut voluptas facilis consectetur!",
@@ -19,6 +21,7 @@
     {
       "id": 3,
       "author": "Allax",
+      "setor": "Obra",
       "titulo": "Conta de Email com problema",
       "categoria": "Email",
       "descricao": "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Id dignissimos blanditiis omnis amet atque ullam consequuntur odio, eligendi magnam veritatis laborum tenetur illum dolorum velit vitae aut voluptas facilis consectetur!",
@@ -27,6 +30,7 @@
     {
       "id": 4,
       "author": "Rafael",
+      "setor": "DP",
       "titulo": "Problema no Vexon",
       "categoria": "Vexon",
       "descricao": "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Id dignissimos blanditiis omnis amet atque ullam consequuntur odio, eligendi magnam veritatis laborum tenetur illum dolorum velit vitae aut voluptas facilis consectetur!",
@@ -35,6 +39,7 @@
     {
       "id": 5,
       "author": "Sarah",
+      "setor": "PCP",
       "titulo": "Rede com velocidade baixa",
       "categoria": "Rede",
       "descricao": "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Id dignissimos blanditiis omnis amet atque ullam consequuntur odio, eligendi magnam veritatis laborum tenetur illum dolorum velit vitae aut voluptas facilis consectetur!",
