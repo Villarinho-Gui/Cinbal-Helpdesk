@@ -7,7 +7,7 @@ export interface IListagemChamados {
   titulo: string
   categoria: string
   descricao: string
-  publishedAt: number
+  publishedAt: Date
   maxLines?: number
 }
 
@@ -20,7 +20,7 @@ export interface IDetalheChamados {
   categoria: string
   attachedFile: [0]
   descricao: string
-  publishedAt: number
+  publishedAt: Date
 }
 
 type IChamadoComTotalCount = {
