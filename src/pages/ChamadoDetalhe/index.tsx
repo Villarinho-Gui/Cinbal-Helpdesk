@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react'
 import DefaultLayout from '../../shared/layouts/DefaultLayout'
 
@@ -5,8 +6,6 @@ import { ChamadoAbertoParaDetalhe } from '../../shared/components/ChamadoAbertoP
 import BarraFerramentasDetalhesChamado from '../../shared/components/BarraFerramentasDetalhesChamado'
 import { useNavigate, useParams } from 'react-router-dom'
 import { ChamadosService } from '../../shared/services/api/Chamados/ChamadosServices'
-
-// import { Container } from './styles';
 
 const ChamadoDetalhe: React.FC = () => {
   const navigate = useNavigate()
