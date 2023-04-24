@@ -44,7 +44,6 @@ export const ChamadoAbertoParaDetalhe: React.FC = () => {
           setPublishedAt(Number(result.publishedAt))
           setAutor(result.author)
           setSetor(result.setor)
-          console.log(result)
         }
       })
     }
