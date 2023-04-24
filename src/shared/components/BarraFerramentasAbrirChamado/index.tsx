@@ -9,6 +9,8 @@ import {
 import React from 'react'
 
 import { BiPlus } from 'react-icons/bi'
+import { FaFilter } from 'react-icons/fa'
+
 import { Environment } from '../../environment/export'
 import { useNavigate } from 'react-router-dom'
 
@@ -17,6 +19,7 @@ interface IBarraFerramentasAbrirChamado {
   mostrarInputBusca?: boolean
   aoMudarTextoDeBusca?: (novoTexto: string) => void
   mostrarBotaoNovo?: boolean
+  mostrarBotaoFiltro?: boolean
   // aoClicarEmNovo?: (novoTexto: string) => void
 }
 
@@ -25,6 +28,7 @@ const BarraFerramentasAbrirChamado: React.FC<IBarraFerramentasAbrirChamado> = ({
   aoMudarTextoDeBusca,
   textoBusca = '',
   mostrarBotaoNovo = true,
+  mostrarBotaoFiltro = true,
 }) => {
   const theme = useTheme()
   const navigate = useNavigate()
@@ -49,10 +53,19 @@ const BarraFerramentasAbrirChamado: React.FC<IBarraFerramentasAbrirChamado> = ({
       )}
       <Box display="flex" flex={1} justifyContent="end">
         {mostrarBotaoNovo && (
-          <Tooltip title="Abrir chamado" placement="top" arrow>
+          <Tooltip title="Abrir novo chamado" placement="top" arrow>
             <IconButton onClick={() => navigate('/abrir-chamado')}>
               <Icon>
                 <BiPlus />
+              </Icon>
+            </IconButton>
+          </Tooltip>
+        )}
+        {mostrarBotaoFiltro && (
+          <Tooltip title="Filtrar" placement="top" arrow>
+            <IconButton>
+              <Icon>
+                <FaFilter size={18} />
               </Icon>
             </IconButton>
           </Tooltip>
