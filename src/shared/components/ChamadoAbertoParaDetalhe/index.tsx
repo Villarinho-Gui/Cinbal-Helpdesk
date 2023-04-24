@@ -41,7 +41,7 @@ export const ChamadoAbertoParaDetalhe: React.FC = () => {
         } else {
           setCategoria(result.categoria)
           setDescricao(result.descricao)
-          setPublishedAt(result.publishedAt)
+          setPublishedAt(Number(result.publishedAt))
           setAutor(result.author)
           setSetor(result.setor)
           console.log(result)
@@ -74,13 +74,15 @@ export const ChamadoAbertoParaDetalhe: React.FC = () => {
               {setor}
             </Typography>
           </Box>
-          <Typography
-            variant="body2"
-            sx={{ fontSize: '0.8rem' }}
-            color="text.secondary"
-          >
-            {publishedAt}
-          </Typography>
+          <time>
+            <Typography
+              variant="body2"
+              sx={{ fontSize: '0.8rem' }}
+              color="text.secondary"
+            >
+              há 20 horas
+            </Typography>
+          </time>
         </Box>
         <Divider />
 
