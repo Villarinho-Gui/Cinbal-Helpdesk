@@ -5,7 +5,6 @@ export interface IListagemChamados {
   id: number
   author: string
   titulo: string
-  categoria: string
   descricao: string
   publishedAt: Date
   maxLines?: number
