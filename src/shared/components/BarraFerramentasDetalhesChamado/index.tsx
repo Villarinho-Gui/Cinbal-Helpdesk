@@ -1,7 +1,14 @@
-import { Box, Divider, Icon, IconButton, useTheme } from '@mui/material'
+import {
+  Box,
+  Divider,
+  Icon,
+  IconButton,
+  Tooltip,
+  useTheme,
+} from '@mui/material'
 import React from 'react'
-import { BiPlus } from 'react-icons/bi'
 import { AiOutlineArrowLeft } from 'react-icons/ai'
+import { BsFillSendFill } from 'react-icons/bs'
 import { MdDelete, MdOutlineEmojiPeople } from 'react-icons/md'
 // import { ChamadosService } from '../../services/api/Chamados/ChamadosServices'
 
@@ -22,12 +29,14 @@ const BarraFerramentasDetalhesChamado: React.FC<
   IBarraFerramentasDetalhesChamadoProps
 > = ({
   mostrarBotaoVoltar = true,
+  mostrarBotaoSalvar = true,
   mostrarBotaoNovo = true,
   mostrarBotaoDeletar = true,
   mostrarBotaoAssumirChamado,
 
   aoClicarEmVoltar,
   aoClicarEmNovo,
+  aoClicarEmSalvar,
 }) => {
   const theme = useTheme()
 
@@ -62,19 +71,23 @@ const BarraFerramentasDetalhesChamado: React.FC<
       )}
       <Divider variant="middle" orientation="vertical" />
       <Box display="flex" flex={1} justifyContent="end">
-        {mostrarBotaoNovo && (
-          <IconButton onClick={aoClicarEmNovo}>
-            <Icon>
-              <BiPlus />
-            </Icon>
-          </IconButton>
+        {mostrarBotaoSalvar && (
+          <Tooltip title="Abrir chamado" placement="top" arrow>
+            <IconButton onClick={aoClicarEmSalvar}>
+              <Icon>
+                <BsFillSendFill size={18} />
+              </Icon>
+            </IconButton>
+          </Tooltip>
         )}
         {mostrarBotaoAssumirChamado && (
-          <IconButton>
-            <Icon>
-              <MdOutlineEmojiPeople />
-            </Icon>
-          </IconButton>
+          <Tooltip title="Assumir Chamado" placement="top" arrow>
+            <IconButton>
+              <Icon>
+                <MdOutlineEmojiPeople />
+              </Icon>
+            </IconButton>
+          </Tooltip>
         )}
         {mostrarBotaoDeletar && (
           <IconButton>
