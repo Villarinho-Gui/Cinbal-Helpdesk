@@ -1,4 +1,11 @@
-import { Box, Icon, IconButton, TextField, useTheme } from '@mui/material'
+import {
+  Box,
+  Icon,
+  IconButton,
+  TextField,
+  Tooltip,
+  useTheme,
+} from '@mui/material'
 import React from 'react'
 
 import { BiPlus } from 'react-icons/bi'
@@ -42,11 +49,13 @@ const BarraFerramentasAbrirChamado: React.FC<IBarraFerramentasAbrirChamado> = ({
       )}
       <Box display="flex" flex={1} justifyContent="end">
         {mostrarBotaoNovo && (
-          <IconButton onClick={() => navigate('/abrir-chamado')}>
-            <Icon>
-              <BiPlus />
-            </Icon>
-          </IconButton>
+          <Tooltip title="Abrir chamado" placement="top" arrow>
+            <IconButton onClick={() => navigate('/abrir-chamado')}>
+              <Icon>
+                <BiPlus />
+              </Icon>
+            </IconButton>
+          </Tooltip>
         )}
       </Box>
     </Box>
