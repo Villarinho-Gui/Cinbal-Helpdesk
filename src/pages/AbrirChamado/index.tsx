@@ -9,7 +9,7 @@ import { ChamadosService } from '../../shared/services/api/Chamados/ChamadosServ
 import { AiOutlinePaperClip } from 'react-icons/ai'
 
 import * as yup from 'yup'
-import { AutoCompleteCategoria } from '../../shared/Form/AutoCompleteCategoria'
+import { SelectCategoria } from '../../shared/Form/SelectCategoria'
 
 interface IFormData {
   author: string
@@ -129,7 +129,7 @@ const AbrirChamado: React.FC = () => {
             </Grid>
             <Grid container item direction="row" spacing={2}>
               <Grid item lg={4} sm={12} xs={12}>
-                <AutoCompleteCategoria name="categoria" />
+                <SelectCategoria name="categoria" />
               </Grid>
               <Grid item lg={4} sm={12} xs={12} sx={{ marginY: 'auto' }}>
                 <Tooltip title="Anexar arquivo" placement="top" arrow>
