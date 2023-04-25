@@ -8,12 +8,30 @@ import { VTextField, VForm, useVForm } from '../../shared/Form/export'
 import { ChamadosService } from '../../shared/services/api/Chamados/ChamadosServices'
 import { AiOutlinePaperClip } from 'react-icons/ai'
 
+import * as yup from 'yup'
+
 interface IFormData {
   author: string
   titulo: string
   descricao: string
   publishedAt: Date
 }
+
+const formValidationSchema = yup
+  .object({
+    titulo: yup
+      .string()
+      .required('Esse campo precisa ser preenchido')
+      .min(3, 'Deve ter no mínimo 3 caracteres')
+      .max(50, 'Deve conter no máximo 50 caracteres'),
+    categoria: yup.string().required('Esse campo precisa ser preenchido'),
+    descricao: yup
+      .string()
+      .required('Esse campo precisa ser preenchido')
+      .min(3, 'Deve ter no mínimo 3 caracteres')
+      .max(300, 'Deve conter no máximo 300 caracteres'),
+  })
+  .required()
 
 const AbrirChamado: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false)
@@ -26,37 +44,56 @@ const AbrirChamado: React.FC = () => {
   const { formRef, save, isSaveAndClose } = useVForm()
 
   const triggerSave = (dados: IFormData) => {
-    if (id === 'novo') {
-      setIsLoading(true)
-      ChamadosService.create(dados).then((result) => {
-        setIsLoading(true)
-        if (result instanceof Error) {
-          alert(result.message)
+    formValidationSchema
+      .validate(dados, { abortEarly: false })
+      .then((dadosValidados) => {
+        if (id === 'novo') {
+          setIsLoading(true)
+          ChamadosService.create(dadosValidados).then((result) => {
+            setIsLoading(true)
+            if (result instanceof Error) {
+              alert(result.message)
+            } else {
+              if (isSaveAndClose()) {
+                navigate(`/chamados`)
+              } else {
+                navigate(`/chamados/detalhe/${result}`)
+              }
+            }
+          })
         } else {
-          if (isSaveAndClose()) {
-            navigate(`/chamados`)
-          } else {
-            navigate(`/chamados/detalhe/${result}`)
-          }
+          ChamadosService.updateById(Number(id), {
+            id: Number(id),
+            ...dadosValidados,
+            chamadoId: 0,
+            setor: '',
+            categoria: '',
+            attachedFile: [0],
+            author: '',
+            publishedAt: Date,
+          }).then((result) => {
+            setIsLoading(true)
+            if (result instanceof Error) {
+              alert(result.message)
+            } else {
+              navigate(`/chamados/detalhe/${result}/${id}`)
+            }
+          })
         }
       })
-    } else {
-      ChamadosService.updateById(Number(id), {
-        id: Number(id),
-        ...dados,
-        chamadoId: 0,
-        setor: '',
-        categoria: '',
-        attachedFile: [0],
-      }).then((result) => {
-        setIsLoading(true)
-        if (result instanceof Error) {
-          alert(result.message)
-        } else {
-          navigate(`/chamados/detalhe/${result}/${id}`)
-        }
+      .catch((errors: yup.ValidationError) => {
+        const validationErrors: { [key: string]: string } = {}
+
+        errors.inner.forEach((error) => {
+          // eslint-disable-next-line no-useless-return
+          if (!error.path) return
+
+          validationErrors[error.path] = error.message
+        })
+        console.log(validationErrors)
+
+        formRef.current?.setErrors(validationErrors)
       })
-    }
   }
 
   return (
@@ -81,12 +118,18 @@ const AbrirChamado: React.FC = () => {
           <Grid container direction="column" padding={2} spacing={2}>
             <Grid container item direction="row">
               <Grid item lg={6} sm={12} xs={12}>
-                <VTextField name="titulo" placeholder="Título" fullWidth />
+                <VTextField
+                  type="text"
+                  placeholder="Título"
+                  fullWidth
+                  name="titulo"
+                />
               </Grid>
             </Grid>
             <Grid container item direction="row" spacing={2}>
               <Grid item lg={4} sm={12} xs={12}>
                 <VTextField
+                  type="text"
                   name="categoria"
                   placeholder="Categoria"
                   fullWidth
@@ -104,6 +147,7 @@ const AbrirChamado: React.FC = () => {
             <Grid container item direction="row">
               <Grid item lg={6} sm={8} xs={12}>
                 <VTextField
+                  type="text"
                   name="descricao"
                   placeholder="Descrição"
                   fullWidth
