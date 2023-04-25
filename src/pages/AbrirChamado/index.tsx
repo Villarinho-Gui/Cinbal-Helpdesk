@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useRef, useState } from 'react'
 import DefaultLayout from '../../shared/layouts/DefaultLayout'
 import { Box, Grid, IconButton, Tooltip, useTheme } from '@mui/material'
@@ -23,23 +24,6 @@ const AbrirChamado: React.FC = () => {
 
   const theme = useTheme()
   const navigate = useNavigate()
-
-  // useEffect(() => {
-  //   if (id !== 'novo') {
-  //     setIsLoading(true)
-
-  //     ChamadosService.getById(Number(id)).then((result) => {
-  //       setIsLoading(false)
-  //       if (result instanceof Error) {
-  //         alert(result.message)
-  //         navigate('/abrir-chamado')
-  //       } else {
-  //         setTitulo(result.titulo)
-  //         console.log(result)
-  //       }
-  //     })
-  //   }
-  // }, [id, navigate])
 
   const formRef = useRef<FormHandles>(null)
 
