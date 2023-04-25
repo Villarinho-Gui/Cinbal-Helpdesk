@@ -67,7 +67,6 @@ export const ListagemDeChamados: React.FC = () => {
           <ListItem key={chamado.id} disablePadding>
             <Chamado
               titulo={chamado.titulo}
-              categoria={chamado.categoria}
               descricao={chamado.descricao}
               id={chamado.id}
               author={chamado.author}
