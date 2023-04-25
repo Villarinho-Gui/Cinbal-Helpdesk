@@ -1,12 +1,10 @@
 /* eslint-disable no-unused-vars */
-import React, { useRef, useState } from 'react'
+import React, { useState } from 'react'
 import DefaultLayout from '../../shared/layouts/DefaultLayout'
 import { Box, Grid, IconButton, Tooltip, useTheme } from '@mui/material'
 import BarraFerramentasDetalhesChamado from '../../shared/components/BarraFerramentasDetalhesChamado'
 import { useNavigate, useParams } from 'react-router-dom'
-import { Form } from '@unform/web'
-import { VTextField } from '../../shared/Form/export'
-import { FormHandles } from '@unform/core'
+import { VTextField, VForm, useVForm } from '../../shared/Form/export'
 import { ChamadosService } from '../../shared/services/api/Chamados/ChamadosServices'
 import { AiOutlinePaperClip } from 'react-icons/ai'
 
@@ -25,7 +23,7 @@ const AbrirChamado: React.FC = () => {
   const theme = useTheme()
   const navigate = useNavigate()
 
-  const formRef = useRef<FormHandles>(null)
+  const { formRef, save, isSaveAndClose } = useVForm()
 
   const triggerSave = (dados: IFormData) => {
     if (id === 'novo') {
@@ -35,7 +33,11 @@ const AbrirChamado: React.FC = () => {
         if (result instanceof Error) {
           alert(result.message)
         } else {
-          navigate(`/chamados/detalhe/${result}`)
+          if (isSaveAndClose()) {
+            navigate(`/chamados`)
+          } else {
+            navigate(`/chamados/detalhe/${result}`)
+          }
         }
       })
     } else {
@@ -64,7 +66,7 @@ const AbrirChamado: React.FC = () => {
       barraDeFerramentas={
         <BarraFerramentasDetalhesChamado
           aoClicarEmNovo={() => navigate('/abrir-chamado')}
-          aoClicarEmSalvar={() => formRef.current?.submitForm()}
+          aoClicarEmSalvar={save}
         />
       }
     >
@@ -75,7 +77,7 @@ const AbrirChamado: React.FC = () => {
         border="1px solid"
         borderColor={theme.palette.divider}
       >
-        <Form ref={formRef} onSubmit={triggerSave}>
+        <VForm ref={formRef} onSubmit={triggerSave}>
           <Grid container direction="column" padding={2} spacing={2}>
             <Grid container item direction="row">
               <Grid item lg={6} sm={12} xs={12}>
@@ -115,7 +117,7 @@ const AbrirChamado: React.FC = () => {
           <VTextField name="author" placeholder="Autor" fullWidth />
 
           <VTextField name="publishedAt" placeholder="publishedAt" fullWidth />
-        </Form>
+        </VForm>
       </Box>
     </DefaultLayout>
   )
