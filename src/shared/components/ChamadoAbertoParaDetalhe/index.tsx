@@ -9,6 +9,7 @@ import {
   CardMedia,
   Chip,
   Divider,
+  Skeleton,
   Typography,
 } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
@@ -62,41 +63,79 @@ export const ChamadoAbertoParaDetalhe: React.FC = () => {
       >
         <Box display="flex" justifyContent="space-between" paddingBottom={2}>
           <Box>
-            <Typography variant="h5" sx={{ fontSize: '1rem' }}>
-              {autor}
-            </Typography>
-            <Typography
-              variant="body2"
-              color="text.secondary"
-              sx={{ fontSize: '0.8rem' }}
-            >
-              {setor}
-            </Typography>
+            {isLoading ? (
+              <Skeleton
+                variant="text"
+                sx={{ fontSize: '1.5rem' }}
+                width="200px"
+              />
+            ) : (
+              <Typography variant="h5" sx={{ fontSize: '1rem' }}>
+                {autor}
+              </Typography>
+            )}
+
+            {isLoading ? (
+              <Skeleton
+                variant="text"
+                sx={{ fontSize: '1.5rem' }}
+                width="50px"
+              />
+            ) : (
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                sx={{ fontSize: '0.8rem' }}
+              >
+                {setor}
+              </Typography>
+            )}
           </Box>
           <time>
-            <Typography
-              variant="body2"
-              sx={{ fontSize: '0.8rem' }}
-              color="text.secondary"
-            >
-              há 20 horas
-            </Typography>
+            {isLoading ? (
+              <Skeleton
+                variant="text"
+                sx={{ fontSize: '1.5rem' }}
+                width="90px"
+              />
+            ) : (
+              <Typography
+                variant="body2"
+                sx={{ fontSize: '0.8rem' }}
+                color="text.secondary"
+              >
+                há 20 horas
+              </Typography>
+            )}
           </time>
         </Box>
         <Divider />
 
         <Box paddingY={2} marginLeft={0}>
-          <Chip label={categoria} size="small" color="default" />
+          {isLoading ? (
+            <Skeleton variant="text" sx={{ fontSize: '1.5rem' }} width="90px" />
+          ) : (
+            <Chip label={categoria} size="small" color="default" />
+          )}
         </Box>
 
         <Box>
-          <Typography
-            variant="body2"
-            color="text.secondary"
-            sx={{ paddingBottom: '40px' }}
-          >
-            {descricao}
-          </Typography>
+          {isLoading ? (
+            <Skeleton
+              variant="rounded"
+              sx={{ fontSize: '1.5rem' }}
+              width="100%"
+              height="100px"
+            />
+          ) : (
+            <Typography
+              variant="body2"
+              color="text.secondary"
+              sx={{ paddingBottom: '40px' }}
+            >
+              {descricao}
+            </Typography>
+          )}
           <Divider />
           <Box display="flex" gap="10px">
             <Card
