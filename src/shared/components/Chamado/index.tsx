@@ -56,13 +56,13 @@ export const Chamado: React.FC<IListagemChamados> = ({
             >
               {author}
             </Typography>
-            <time>
+            <time dateTime={String(publishedAt)}>
               <Typography
                 variant="body2"
                 color="text.secondary"
                 sx={{ fontSize: '14px' }}
               >
-                {publishedAt}
+                há 20 horas
               </Typography>
             </time>
           </Box>

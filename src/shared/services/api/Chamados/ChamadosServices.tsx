@@ -5,9 +5,8 @@ export interface IListagemChamados {
   id: number
   author: string
   titulo: string
-  categoria: string
   descricao: string
-  publishedAt: number
+  publishedAt: Date
   maxLines?: number
 }
 
@@ -20,7 +19,7 @@ export interface IDetalheChamados {
   categoria: string
   attachedFile: [0]
   descricao: string
-  publishedAt: number
+  publishedAt: Date
 }
 
 type IChamadoComTotalCount = {
@@ -64,10 +63,10 @@ const getById = async (id: number): Promise<IDetalheChamados | Error> => {
   }
 }
 const create = async (
-  dados: Omit<IDetalheChamados, 'id'>,
+  dados: Omit<IListagemChamados, 'id'>,
 ): Promise<number | Error> => {
   try {
-    const { data } = await Api.post<IDetalheChamados>('/chamado', dados)
+    const { data } = await Api.post<IListagemChamados>('/chamado', dados)
     if (data) {
       return data.id
     }
