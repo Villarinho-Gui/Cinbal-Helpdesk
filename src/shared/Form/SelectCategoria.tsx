@@ -1,4 +1,10 @@
-import { MenuItem, Select, SelectProps } from '@mui/material'
+import {
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  SelectProps,
+} from '@mui/material'
 import { useField } from '@unform/core'
 import React, { useEffect, useState } from 'react'
 
@@ -36,29 +42,32 @@ export const SelectCategoria: React.FC<TVSelectValue> = ({ name, ...rest }) => {
   }, [registerField, fieldName, categoria])
 
   return (
-    <Select
-      {...rest}
-      value={categoria}
-      label="Categoria"
-      error={!!error}
-      // helperText={error}
-      size="medium"
-      sx={{ width: '350px' }}
-      onChange={(e) => {
-        setCategoria(e.target.value)
-      }}
-    >
-      <MenuItem value="Email">Email</MenuItem>
-      <MenuItem value="Telefone">Telefone</MenuItem>
-      <MenuItem value="Fluig">Fluig</MenuItem>
-      <MenuItem value="Hardware">Hardware</MenuItem>
-      <MenuItem value="Software">Software</MenuItem>
-      <MenuItem value="PCFactory">PC Factory</MenuItem>
-      <MenuItem value="Preactor">Preactor</MenuItem>
-      <MenuItem value="Protheus">Protheus</MenuItem>
-      <MenuItem value="Vexon">Vexon</MenuItem>
-      <MenuItem value="PortalDoCliente">Portal do Cliente</MenuItem>
-      <MenuItem value="Outros">Outros</MenuItem>
-    </Select>
+    <FormControl>
+      <InputLabel> Categoria</InputLabel>
+      <Select
+        {...rest}
+        value={categoria}
+        label="Categoria"
+        error={!!error}
+        size="medium"
+        sx={{ width: '350px' }}
+        onChange={(e) => {
+          setCategoria(e.target.value)
+        }}
+        defaultValue={defaultValue}
+      >
+        <MenuItem value="Email">Email</MenuItem>
+        <MenuItem value="Telefone">Telefone</MenuItem>
+        <MenuItem value="Fluig">Fluig</MenuItem>
+        <MenuItem value="Hardware">Hardware</MenuItem>
+        <MenuItem value="Software">Software</MenuItem>
+        <MenuItem value="PCFactory">PC Factory</MenuItem>
+        <MenuItem value="Preactor">Preactor</MenuItem>
+        <MenuItem value="Protheus">Protheus</MenuItem>
+        <MenuItem value="Vexon">Vexon</MenuItem>
+        <MenuItem value="PortalDoCliente">Portal do Cliente</MenuItem>
+        <MenuItem value="Outros">Outros</MenuItem>
+      </Select>
+    </FormControl>
   )
 }
