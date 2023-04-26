@@ -17,7 +17,6 @@ export const Chamado: React.FC<IListagemChamados> = ({
   id,
   author,
   titulo,
-  categoria,
   descricao,
   publishedAt,
   maxLines = 2,
@@ -33,13 +32,14 @@ export const Chamado: React.FC<IListagemChamados> = ({
   const navigate = useNavigate()
 
   return (
-    <CardActionArea onClick={() => navigate(`/chamado/detalhe/${id}`)}>
+    <CardActionArea onClick={() => navigate(`chamado/detalhe/${id}`)}>
       <Card
         variant="outlined"
         sx={{
           width: '99%',
           height: '150px',
           display: 'flex',
+          flex: '1',
           marginX: 'auto',
         }}
       >
@@ -71,23 +71,11 @@ export const Chamado: React.FC<IListagemChamados> = ({
             color="text.primary"
             sx={{
               fontSize: 14,
-              // padding: '10px',
-              // borderRadius: '8px',
-              // width: 'max-content',
-              // height: '10px',
-              // display: 'flex',
-              // alignItems: 'center',
             }}
           >
             {titulo}
           </Typography>
-          {/* <Chip
-          label={categoria}
-          variant="filled"
-          color="primary"
-          size="small"
-          sx={{ marginTop: '10px' }}
-        /> */}
+
           <Typography
             variant="body2"
             color="text.secondary"
