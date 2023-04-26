@@ -38,7 +38,6 @@ const ChamadoDetalhe: React.FC = () => {
       barraDeFerramentas={
         <BarraFerramentasDetalhesChamado
           aoClicarEmVoltar={() => navigate('/abrir-chamado')}
-          mostrarBotaoDeletar={false}
           mostrarBotaoAssumirChamado={true}
         />
       }
