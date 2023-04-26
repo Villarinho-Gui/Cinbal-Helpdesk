@@ -29,6 +29,11 @@ export const useVForm = () => {
 
     formRef.current?.submitForm()
   }, [])
+
+  const triggerResetForm = useCallback(() => {
+    formRef.current?.clearField('titulo')
+  }, [])
+
   const triggerIsSaveAndNew = useCallback(() => {
     return isSavingAndNew.current
   }, [])
@@ -43,5 +48,6 @@ export const useVForm = () => {
     saveAndClose: triggerSaveAndClose,
     isSaveAndNew: triggerIsSaveAndNew,
     isSaveAndClose: triggerIsSaveAndClose,
+    reset: triggerResetForm,
   }
 }
