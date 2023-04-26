@@ -10,6 +10,7 @@ import { AiOutlinePaperClip } from 'react-icons/ai'
 
 import * as yup from 'yup'
 import { SelectCategoria } from '../../shared/Form/SelectCategoria'
+import { BarraFerramentasAbrirNovoChamado } from '../../shared/components/BarraFerramentasAbrirNovoChamado'
 
 interface IFormData {
   author: string
@@ -102,10 +103,7 @@ const AbrirChamado: React.FC = () => {
       tituloPagina="Abrir Chamado"
       mostrarBotaoTema
       barraDeFerramentas={
-        <BarraFerramentasDetalhesChamado
-          aoClicarEmNovo={() => navigate('/abrir-chamado')}
-          aoClicarEmSalvar={save}
-        />
+        <BarraFerramentasAbrirNovoChamado aoCLicarEmEnviar={save} />
       }
     >
       <Box
