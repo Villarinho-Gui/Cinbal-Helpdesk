@@ -1,2 +1,2 @@
-export * from './BarraFerramentasAbrirChamado'
+export * from './BarraFerramentasAbrirNovoChamado'
 export * from './BarraFerramentasDetalhesChamado'
