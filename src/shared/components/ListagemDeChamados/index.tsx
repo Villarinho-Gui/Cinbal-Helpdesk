@@ -1,8 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import DefaultLayout from '../../layouts/DefaultLayout'
-import BarraFerramentasAbrirChamado from '../BarraFerramentasAbrirChamado'
 import { Chamado } from '../Chamado'
-import { useSearchParams } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import {
   ChamadosService,
   IListagemChamados,
@@ -13,11 +12,14 @@ import { Alert, LinearProgress, List, ListItem } from '@mui/material'
 import { Environment } from '../../environment/export'
 
 import { VscError } from 'react-icons/vsc'
+import { BarraFerramentasListagemDeChamados } from '../BarraFerramentasListagemDeChamados'
 
 export const ListagemDeChamados: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams()
 
   const { debounce } = useDebounce()
+
+  const navigate = useNavigate()
 
   const [chamados, setChamados] = useState<IListagemChamados[]>([])
   const [totalCount, setTotalCount] = useState<number>(0)
@@ -53,12 +55,16 @@ export const ListagemDeChamados: React.FC = () => {
       mostrarTituloPagina={false}
       mostrarBotaoTema={false}
       barraDeFerramentas={
-        <BarraFerramentasAbrirChamado
+        <BarraFerramentasListagemDeChamados
           mostrarInputBusca
           textoBusca={busca}
           aoMudarTextoDeBusca={(texto) =>
             setSearchParams({ busca: texto }, { replace: true })
           }
+          mostrarBotaoNovo
+          mostrarBotaoFiltro
+          aoClicarEmNovo={() => navigate('/abrir-chamado')}
+          aoClicarEmFiltrar={() => {}}
         />
       }
     >
