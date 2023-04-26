@@ -38,7 +38,12 @@ export const MenuLateral: React.FC<IMenuLateralChildrenConfig> = ({
           display="flex"
           flexDirection="column"
         >
-          <Box position={'relative'} top="40px" left="110px">
+          <Box
+            position={'relative'}
+            top="40px"
+            left="110px"
+            width="max-content"
+          >
             {themeName === 'light' ? (
               <Link component="button" onClick={() => navigate('/home')}>
                 <img
