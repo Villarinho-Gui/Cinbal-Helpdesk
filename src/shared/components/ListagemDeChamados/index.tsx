@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-key */
 import React, { useEffect, useMemo, useState } from 'react'
 import DefaultLayout from '../../layouts/DefaultLayout'
 import { Chamado } from '../Chamado'
