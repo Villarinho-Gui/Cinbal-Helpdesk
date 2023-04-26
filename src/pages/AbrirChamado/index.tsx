@@ -1,12 +1,11 @@
 /* eslint-disable no-unused-vars */
 import React, { useState } from 'react'
 import DefaultLayout from '../../shared/layouts/DefaultLayout'
-import { Box, Button, Grid, IconButton, Tooltip, useTheme } from '@mui/material'
-import BarraFerramentasDetalhesChamado from '../../shared/components/BarraFerramentasDetalhesChamado'
+import { Box, Grid, useTheme } from '@mui/material'
+
 import { useNavigate, useParams } from 'react-router-dom'
 import { VTextField, VForm, useVForm } from '../../shared/Form/export'
 import { ChamadosService } from '../../shared/services/api/Chamados/ChamadosServices'
-import { AiOutlinePaperClip } from 'react-icons/ai'
 
 import * as yup from 'yup'
 import { SelectCategoria } from '../../shared/Form/SelectCategoria'
