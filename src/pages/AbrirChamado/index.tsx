@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React, { useState } from 'react'
 import DefaultLayout from '../../shared/layouts/DefaultLayout'
-import { Box, Grid, IconButton, Tooltip, useTheme } from '@mui/material'
+import { Box, Button, Grid, IconButton, Tooltip, useTheme } from '@mui/material'
 import BarraFerramentasDetalhesChamado from '../../shared/components/BarraFerramentasDetalhesChamado'
 import { useNavigate, useParams } from 'react-router-dom'
 import { VTextField, VForm, useVForm } from '../../shared/Form/export'
@@ -43,7 +43,7 @@ const AbrirChamado: React.FC = () => {
   const theme = useTheme()
   const navigate = useNavigate()
 
-  const { formRef, save, isSaveAndClose } = useVForm()
+  const { formRef, save, isSaveAndClose, reset } = useVForm()
 
   const triggerSave = (dados: IFormData) => {
     formValidationSchema
@@ -103,7 +103,12 @@ const AbrirChamado: React.FC = () => {
       tituloPagina="Abrir Chamado"
       mostrarBotaoTema
       barraDeFerramentas={
-        <BarraFerramentasAbrirNovoChamado aoCLicarEmEnviar={save} />
+        <BarraFerramentasAbrirNovoChamado
+          aoCLicarEmEnviar={save}
+          aoClicarEmLimpar={reset}
+          mostrarBotaoAnexarArquivo
+          aoClicarEmAnexar={() => {}}
+        />
       }
     >
       <Box
@@ -113,13 +118,14 @@ const AbrirChamado: React.FC = () => {
         border="1px solid"
         borderColor={theme.palette.divider}
       >
-        <VForm ref={formRef} onSubmit={triggerSave}>
+        <VForm ref={formRef} onSubmit={triggerSave} action="POST">
           <Grid container direction="column" padding={2} spacing={2}>
             <Grid container item direction="row">
               <Grid item lg={6} sm={12} xs={12}>
                 <VTextField
                   type="text"
                   placeholder="Título"
+                  label="Título"
                   fullWidth
                   name="titulo"
                 />
@@ -129,14 +135,6 @@ const AbrirChamado: React.FC = () => {
               <Grid item lg={4} sm={12} xs={12}>
                 <SelectCategoria name="categoria" />
               </Grid>
-              <Grid item lg={4} sm={12} xs={12} sx={{ marginY: 'auto' }}>
-                <Tooltip title="Anexar arquivo" placement="top" arrow>
-                  <IconButton aria-label="upload picture" component="label">
-                    <input hidden accept="image/*" type="file" />
-                    <AiOutlinePaperClip />
-                  </IconButton>
-                </Tooltip>
-              </Grid>
             </Grid>
             <Grid container item direction="row">
               <Grid item lg={6} sm={8} xs={12}>
@@ -144,6 +142,7 @@ const AbrirChamado: React.FC = () => {
                   type="text"
                   name="descricao"
                   placeholder="Descrição"
+                  label="Descrição"
                   fullWidth
                   multiline
                   rows={4}
