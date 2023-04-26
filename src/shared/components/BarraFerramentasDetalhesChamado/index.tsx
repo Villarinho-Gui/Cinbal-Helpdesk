@@ -8,20 +8,13 @@ import {
 } from '@mui/material'
 import React from 'react'
 import { AiOutlineArrowLeft } from 'react-icons/ai'
-import { BsFillSendFill } from 'react-icons/bs'
-import { MdDelete, MdOutlineEmojiPeople } from 'react-icons/md'
-// import { ChamadosService } from '../../services/api/Chamados/ChamadosServices'
+import { MdOutlineEmojiPeople } from 'react-icons/md'
 
 interface IBarraFerramentasDetalhesChamadoProps {
   mostrarBotaoVoltar?: boolean
-  mostrarBotaoNovo?: boolean
-  mostrarBotaoSalvar?: boolean
-  mostrarBotaoDeletar?: boolean
   mostrarBotaoAssumirChamado?: boolean
 
   aoClicarEmVoltar?: () => void
-  aoClicarEmNovo?: () => void
-  aoClicarEmSalvar?: () => void
   aoClicarEmAssumirChamado?: void
 }
 
@@ -29,25 +22,10 @@ const BarraFerramentasDetalhesChamado: React.FC<
   IBarraFerramentasDetalhesChamadoProps
 > = ({
   mostrarBotaoVoltar = true,
-  mostrarBotaoSalvar = true,
-  mostrarBotaoNovo = true,
-  mostrarBotaoDeletar = true,
   mostrarBotaoAssumirChamado,
-
   aoClicarEmVoltar,
-  aoClicarEmNovo,
-  aoClicarEmSalvar,
 }) => {
   const theme = useTheme()
-
-  // const triggerDeleteChamado = (id: number) => {
-  //   ChamadosService.deleteById(id).then((result) => {
-  //     if (result instanceof Error) {
-  //       alert(result.message)
-  //     }
-  //   })
-  //   console.log('Deletar')
-  // }
 
   return (
     <Box
@@ -71,15 +49,6 @@ const BarraFerramentasDetalhesChamado: React.FC<
       )}
       <Divider variant="middle" orientation="vertical" />
       <Box display="flex" flex={1} justifyContent="end">
-        {mostrarBotaoSalvar && (
-          <Tooltip title="Abrir chamado" placement="top" arrow>
-            <IconButton onClick={aoClicarEmSalvar}>
-              <Icon>
-                <BsFillSendFill size={18} />
-              </Icon>
-            </IconButton>
-          </Tooltip>
-        )}
         {mostrarBotaoAssumirChamado && (
           <Tooltip title="Assumir Chamado" placement="top" arrow>
             <IconButton>
@@ -88,13 +57,6 @@ const BarraFerramentasDetalhesChamado: React.FC<
               </Icon>
             </IconButton>
           </Tooltip>
-        )}
-        {mostrarBotaoDeletar && (
-          <IconButton>
-            <Icon>
-              <MdDelete />
-            </Icon>
-          </IconButton>
         )}
       </Box>
     </Box>
