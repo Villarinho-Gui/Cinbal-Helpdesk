@@ -2,12 +2,13 @@
 /* eslint-disable import/no-duplicates */
 import React from 'react'
 
-import { Box, Drawer, useMediaQuery, useTheme } from '@mui/material'
+import { Box, Drawer, Link, useMediaQuery, useTheme } from '@mui/material'
 import { useDrawerContext } from '../../contexts/DrawerContext'
 import { ListagemDeChamados } from '../ListagemDeChamados'
 import { useAppThemeContext } from '../../contexts/ThemeContext'
 import logoDarkMode from '../../../media/images/logo-full.png'
 import logoLightMode from '../../../media/images/logo2-full.png'
+import { useNavigate } from 'react-router-dom'
 interface IMenuLateralChildrenConfig {
   children: React.ReactNode
 }
@@ -20,6 +21,8 @@ export const MenuLateral: React.FC<IMenuLateralChildrenConfig> = ({
 
   const { isDrawerOpen, toggleDrawerOpen } = useDrawerContext()
   const { themeName } = useAppThemeContext()
+
+  const navigate = useNavigate()
 
   return (
     <>
@@ -35,16 +38,22 @@ export const MenuLateral: React.FC<IMenuLateralChildrenConfig> = ({
           display="flex"
           flexDirection="column"
         >
-          {themeName === 'light' ? (
-            <img
-              src={logoLightMode}
-              alt="Cinbal Help Desk Logo"
-              height={57}
-              width={130}
-            />
-          ) : (
-            <img src={logoDarkMode} height={57} width={130} />
-          )}
+          <Box position={'relative'} top="40px" left="110px">
+            {themeName === 'light' ? (
+              <Link component="button" onClick={() => navigate('/home')}>
+                <img
+                  src={logoLightMode}
+                  alt="Cinbal Help Desk Logo"
+                  height={57}
+                  width={130}
+                />
+              </Link>
+            ) : (
+              <Link component="button" onClick={() => navigate('/home')}>
+                <img src={logoDarkMode} height={57} width={130} />
+              </Link>
+            )}
+          </Box>
           <ListagemDeChamados />
         </Box>
       </Drawer>
