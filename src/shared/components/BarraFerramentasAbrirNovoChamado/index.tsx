@@ -10,7 +10,7 @@ import {
 
 import { FaBroom } from 'react-icons/fa'
 import { BsSendFill } from 'react-icons/bs'
-import { AiOutlineArrowLeft } from 'react-icons/ai'
+import { AiOutlineArrowLeft, AiOutlinePaperClip } from 'react-icons/ai'
 
 interface IBarraFerramentasAbrirNovoChamadoProps {
   textoBusca?: string
@@ -19,10 +19,12 @@ interface IBarraFerramentasAbrirNovoChamadoProps {
   mostrarBotaoEnviarChamado?: boolean
   mostrarBotaoFiltro?: boolean
   mostrarBotaoLimpar?: boolean
+  mostrarBotaoAnexarArquivo?: boolean
 
   aoClicarEmVoltar?: () => void
   aoClicarEmLimpar?: () => void
   aoCLicarEmEnviar?: () => void
+  aoClicarEmAnexar?: () => void
 }
 
 export const BarraFerramentasAbrirNovoChamado: React.FC<
@@ -31,9 +33,11 @@ export const BarraFerramentasAbrirNovoChamado: React.FC<
   mostrarBotaoEnviarChamado = true,
   mostrarBotaoLimpar = true,
   mostrarBotaoVoltar = true,
+  mostrarBotaoAnexarArquivo = true,
 
   aoCLicarEmEnviar,
   aoClicarEmVoltar,
+  aoClicarEmAnexar,
   aoClicarEmLimpar,
 }) => {
   const theme = useTheme()
@@ -60,6 +64,14 @@ export const BarraFerramentasAbrirNovoChamado: React.FC<
       )}
       <Divider variant="middle" orientation="vertical" />
       <Box display="flex" flex={1} justifyContent="end">
+        {mostrarBotaoAnexarArquivo && (
+          <Tooltip title="Anexar imagens" placement="top" arrow>
+            <IconButton aria-label="upload picture" component="label">
+              <input hidden accept="image/*" type="file" />
+              <AiOutlinePaperClip size={25} />
+            </IconButton>
+          </Tooltip>
+        )}
         {mostrarBotaoEnviarChamado && (
           <Tooltip title="Abrir Chamado" placement="top" arrow>
             <IconButton onClick={aoCLicarEmEnviar}>
@@ -71,7 +83,7 @@ export const BarraFerramentasAbrirNovoChamado: React.FC<
         )}
         {mostrarBotaoLimpar && (
           <Tooltip title="Limpar Campos" placement="top" arrow>
-            <IconButton>
+            <IconButton onClick={aoClicarEmLimpar}>
               <Icon>
                 <FaBroom size={18} />
               </Icon>
