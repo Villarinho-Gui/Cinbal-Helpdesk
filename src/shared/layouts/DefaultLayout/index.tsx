@@ -2,6 +2,7 @@ import {
   Box,
   Icon,
   IconButton,
+  Tooltip,
   Typography,
   useMediaQuery,
   useTheme,
@@ -9,15 +10,21 @@ import {
 import React, { ReactNode } from 'react'
 
 import { GiHamburgerMenu } from 'react-icons/gi'
+import { IoMdPerson } from 'react-icons/io'
+import { CgLogOut } from 'react-icons/cg'
+
 import { useDrawerContext } from '../../contexts/DrawerContext'
 
 import { BsMoonFill } from 'react-icons/bs'
 import { useAppThemeContext } from '../../contexts/ThemeContext'
+import { useAuthContext } from '../../contexts/AuthContext'
 interface IDefaultLayoutProps {
   children: React.ReactNode
   tituloPagina: string
   barraDeFerramentas?: ReactNode
 
+  mostrarBotaoLogout?: boolean
+  mostrarBotaoPerfil?: boolean
   mostrarBotaoTema?: boolean
   mostrarTituloPagina?: boolean
 }
@@ -26,6 +33,8 @@ const DefaultLayout: React.FC<IDefaultLayoutProps> = ({
   children,
   tituloPagina,
   barraDeFerramentas,
+  mostrarBotaoLogout,
+  mostrarBotaoPerfil,
   mostrarBotaoTema,
 
   mostrarTituloPagina = true,
@@ -36,6 +45,7 @@ const DefaultLayout: React.FC<IDefaultLayoutProps> = ({
 
   const { toggleDrawerOpen } = useDrawerContext()
   const { toggleTheme } = useAppThemeContext()
+  const { logout } = useAuthContext()
 
   return (
     <Box height="98%" display="flex" flexDirection="column" gap={1}>
@@ -72,17 +82,31 @@ const DefaultLayout: React.FC<IDefaultLayoutProps> = ({
             </Typography>
           )}
 
-          {mostrarBotaoTema && (
-            <IconButton
-              size="small"
-              sx={{ height: '35px', position: 'relative', right: '20px' }}
-              onClick={toggleTheme}
-            >
-              <Icon>
-                <BsMoonFill />
-              </Icon>
-            </IconButton>
-          )}
+          <Box display="flex" gap={1} alignItems="center">
+            {mostrarBotaoLogout && (
+              <Tooltip title="Sair" placement="bottom" arrow>
+                <IconButton onClick={logout}>
+                  <CgLogOut size={20} />
+                </IconButton>
+              </Tooltip>
+            )}
+
+            {mostrarBotaoPerfil && (
+              <Tooltip title="Perfil" placement="bottom" arrow>
+                <IconButton>
+                  <Icon>
+                    <IoMdPerson size={20} />
+                  </Icon>
+                </IconButton>
+              </Tooltip>
+            )}
+
+            {mostrarBotaoTema && (
+              <IconButton onClick={toggleTheme}>
+                <BsMoonFill size={20} />
+              </IconButton>
+            )}
+          </Box>
         </Box>
       </Box>
       {barraDeFerramentas && <Box>{barraDeFerramentas}</Box>}
