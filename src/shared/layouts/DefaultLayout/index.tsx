@@ -17,7 +17,8 @@ import { useDrawerContext } from '../../contexts/DrawerContext'
 
 import { BsMoonFill } from 'react-icons/bs'
 import { useAppThemeContext } from '../../contexts/ThemeContext'
-import { useAuthContext } from '../../contexts/AuthContext'
+
+import { useNavigate } from 'react-router-dom'
 interface IDefaultLayoutProps {
   children: React.ReactNode
   tituloPagina: string
@@ -45,7 +46,8 @@ const DefaultLayout: React.FC<IDefaultLayoutProps> = ({
 
   const { toggleDrawerOpen } = useDrawerContext()
   const { toggleTheme } = useAppThemeContext()
-  const { logout } = useAuthContext()
+
+  const navigate = useNavigate()
 
   return (
     <Box height="98%" display="flex" flexDirection="column" gap={1}>
@@ -85,7 +87,7 @@ const DefaultLayout: React.FC<IDefaultLayoutProps> = ({
           <Box display="flex" gap={1} alignItems="center">
             {mostrarBotaoLogout && (
               <Tooltip title="Sair" placement="bottom" arrow>
-                <IconButton onClick={logout}>
+                <IconButton onClick={() => navigate('/login')}>
                   <CgLogOut size={20} />
                 </IconButton>
               </Tooltip>
