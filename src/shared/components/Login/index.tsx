@@ -10,9 +10,11 @@ import {
   CardActions,
   CardContent,
   CircularProgress,
+  Paper,
   TextField,
   Tooltip,
   Typography,
+  useTheme,
 } from '@mui/material'
 import { useAuthContext } from '../../contexts/AuthContext'
 import { useState } from 'react'
@@ -41,6 +43,8 @@ export const Login: React.FC<ILoginProps> = ({ children }) => {
   const [passwordError, setPasswordError] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+
+  const theme = useTheme()
 
   if (isAuthenticated) return <>{children}</>
 
@@ -103,7 +107,11 @@ export const Login: React.FC<ILoginProps> = ({ children }) => {
           <Typography variant="h6" align="center" sx={{ marginBottom: '10px' }}>
             Bem vindo(a) ao seu HelpDesk!
           </Typography>
-          <Card elevation={0} sx={{ background: '#FBFBFB' }}>
+          <Card
+            elevation={0}
+            component={Paper}
+            background-color={theme.palette.background.default}
+          >
             <CardContent>
               <Box display="flex" flexDirection="column" gap={2} width="300px">
                 <TextField
