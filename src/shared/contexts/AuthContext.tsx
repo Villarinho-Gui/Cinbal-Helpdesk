@@ -2,6 +2,7 @@
 import React, {
   createContext,
   useCallback,
+  useContext,
   useEffect,
   useMemo,
   useState,
@@ -22,7 +23,7 @@ const AuthContext = createContext({} as IAuthContextData)
 
 const LOCAL_STORAGE_KEY__ACCESS_TOKEN = 'APP_ACCESS_TOKEN'
 
-const contexts: React.FC<IChildrenConfig> = ({ children }) => {
+export const AuthProvider: React.FC<IChildrenConfig> = ({ children }) => {
   const [accessToken, setAccessToken] = useState<string>()
 
   useEffect(() => {
@@ -65,4 +66,4 @@ const contexts: React.FC<IChildrenConfig> = ({ children }) => {
   )
 }
 
-export default contexts
+export const useAuthContext = () => useContext(AuthContext)
