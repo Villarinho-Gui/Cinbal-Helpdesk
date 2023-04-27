@@ -4,21 +4,24 @@ import { Route, Routes, Navigate } from 'react-router-dom'
 import Dashboard from '../pages/Dashboard'
 import AbrirChamado from '../pages/AbrirChamado'
 import ChamadoDetalhe from '../pages/ChamadoDetalhe'
-import { CadastroUsuario } from '../pages/CadastroUsuario'
-import { Login } from '../pages/Login'
+import { CadastroUsuario } from '../pages/LoginLayout/CadastroUsuario'
+import { LoginLayout } from '../pages/LoginLayout'
 import { MenuLateral } from '../shared/components/MenuLateral'
+import { Login } from '../pages/LoginLayout/Login'
 
 export const AppRoutes: React.FC = () => {
   return (
     <Routes>
-      <Route path="/login" element={<Login />} />
-      <Route path="/cadastro" element={<CadastroUsuario />} />
+      <Route path="/login" element={<LoginLayout />}>
+        <Route path="/login" element={<Login />} />
+        <Route path="/login/cadastro" element={<CadastroUsuario />} />
+      </Route>
       <Route path="/" element={<MenuLateral />}>
         <Route path="/home" element={<Dashboard />} />
         <Route path="/abrir-chamado" element={<AbrirChamado />} />
         <Route path="/chamado/detalhe/:id" element={<ChamadoDetalhe />} />
       </Route>
-      <Route path="*" element={<Navigate to="/home" />} />
+      <Route path="*" element={<Navigate to="/login" />} />
     </Routes>
   )
 }
