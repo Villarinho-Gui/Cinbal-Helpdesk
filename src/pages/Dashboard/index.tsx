@@ -27,7 +27,13 @@ const Dashboard: React.FC = () => {
     },[])
 
   return (
-    <DefaultLayout tituloPagina="Dashboard" mostrarBotaoTema barraDeFerramentas={<BarraFerramentasDetalhesChamado />}>
+    <DefaultLayout 
+      tituloPagina="Dashboard" 
+      mostrarBotaoTema       
+      mostrarBotaoLogout
+      mostrarBotaoPerfil 
+      barraDeFerramentas={<BarraFerramentasDetalhesChamado />}
+    >
       <Box         
           padding={2}
           borderRadius={1}
