@@ -9,5 +9,8 @@
       "id": 1
     }
     
-  ]
+  ],
+  "auth": {
+    "accessToken": "aaaaaa.bbbbbbbbb.cccccccccc"
+  }
 }

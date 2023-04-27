@@ -101,6 +101,8 @@ const AbrirChamado: React.FC = () => {
     <DefaultLayout
       tituloPagina="Abrir Chamado"
       mostrarBotaoTema
+      mostrarBotaoLogout
+      mostrarBotaoPerfil
       barraDeFerramentas={
         <BarraFerramentasAbrirNovoChamado
           aoCLicarEmEnviar={save}

@@ -34,6 +34,8 @@ const ChamadoDetalhe: React.FC = () => {
   return (
     <DefaultLayout
       mostrarBotaoTema={true}
+      mostrarBotaoLogout
+      mostrarBotaoPerfil
       tituloPagina={id === 'novo' ? '' : titulo}
       barraDeFerramentas={
         <BarraFerramentasDetalhesChamado
