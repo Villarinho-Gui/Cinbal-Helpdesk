@@ -66,7 +66,11 @@ export const BarraFerramentasAbrirNovoChamado: React.FC<
       <Box display="flex" flex={1} justifyContent="end">
         {mostrarBotaoAnexarArquivo && (
           <Tooltip title="Anexar imagens" placement="top" arrow>
-            <IconButton aria-label="upload picture" component="label">
+            <IconButton
+              aria-label="upload picture"
+              component="label"
+              onClick={aoClicarEmAnexar}
+            >
               <input hidden accept="image/*" type="file" />
               <AiOutlinePaperClip size={25} />
             </IconButton>
