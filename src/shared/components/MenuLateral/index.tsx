@@ -9,13 +9,9 @@ import { useAppThemeContext } from '../../contexts/ThemeContext'
 import logoDarkMode from '../../../media/images/logo-full.png'
 import logoLightMode from '../../../media/images/logo2-full.png'
 import { useNavigate } from 'react-router-dom'
-interface IMenuLateralChildrenConfig {
-  children: React.ReactNode
-}
+import { Outlet } from 'react-router-dom'
 
-export const MenuLateral: React.FC<IMenuLateralChildrenConfig> = ({
-  children,
-}) => {
+export const MenuLateral: React.FC = () => {
   const theme = useTheme()
   const smDown = useMediaQuery(theme.breakpoints.down('sm'))
 
@@ -64,7 +60,7 @@ export const MenuLateral: React.FC<IMenuLateralChildrenConfig> = ({
       </Drawer>
 
       <Box height="100vh" marginLeft={smDown ? 0 : theme.spacing(55)}>
-        {children}
+        <Outlet />
       </Box>
     </>
   )
