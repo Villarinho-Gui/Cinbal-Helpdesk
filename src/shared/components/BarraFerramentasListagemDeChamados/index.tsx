@@ -11,11 +11,15 @@ import React from 'react'
 import { Environment } from '../../environment/export'
 import { BsPlus } from 'react-icons/bs'
 import { FaFilter } from 'react-icons/fa'
+import { AiFillHome } from 'react-icons/ai'
+
+import { useNavigate } from 'react-router-dom'
 
 interface IBarraFerramentasAbrirChamado {
   textoBusca?: string
   mostrarInputBusca?: boolean
 
+  mostrarBotaoHome?: boolean
   mostrarBotaoNovo?: boolean
   mostrarBotaoFiltro?: boolean
 
@@ -29,6 +33,7 @@ export const BarraFerramentasListagemDeChamados: React.FC<
 > = ({
   textoBusca = '',
 
+  mostrarBotaoHome = true,
   mostrarInputBusca = false,
   mostrarBotaoNovo = true,
   mostrarBotaoFiltro = true,
@@ -38,6 +43,7 @@ export const BarraFerramentasListagemDeChamados: React.FC<
   aoClicarEmFiltrar,
 }) => {
   const theme = useTheme()
+  const navigate = useNavigate()
 
   return (
     <Box
@@ -58,6 +64,15 @@ export const BarraFerramentasListagemDeChamados: React.FC<
         />
       )}
       <Box display="flex" flex={1} justifyContent="end">
+        {mostrarBotaoHome && (
+          <Tooltip title="Página Inicial" placement="top" arrow>
+            <IconButton onClick={() => navigate('/home')}>
+              <Icon>
+                <AiFillHome size={20} />
+              </Icon>
+            </IconButton>
+          </Tooltip>
+        )}
         {mostrarBotaoNovo && (
           <Tooltip title="Abrir Chamado" placement="top" arrow>
             <IconButton onClick={aoClicarEmNovo}>
