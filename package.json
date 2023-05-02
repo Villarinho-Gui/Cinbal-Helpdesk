@@ -23,12 +23,13 @@
     "@unform/core": "^2.1.6",
     "@unform/web": "^2.1.6",
     "axios": "^1.4.0",
-    "date-fns": "^2.29.3",
+    "date-fns": "^2.30.0",
+    "express": "^4.18.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.43.9",
     "react-icons": "^4.8.0",
-    "react-router-dom": "^6.10.0",
+    "react-router-dom": "^6.11.0",
     "styled-components": "^5.3.10",
     "yarn": "^1.22.19",
     "yup": "^1.1.1",
@@ -48,7 +49,7 @@
     "husky": "^8.0.3",
     "json-server": "^0.17.3",
     "typescript": "^5.0.4",
-    "vite": "^4.3.3"
+    "vite": "^4.3.4"
   },
   "config": {
     "commitizen": {
