@@ -1,64 +1,105 @@
 import React, { useState } from 'react'
 
-import { useForm } from 'react-hook-form'
+import { useForm, SubmitHandler } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
-import { z } from 'zod'
-import { zodResolver } from '@hookform/resolvers/zod'
+
 import DefaultLayout from '../../../shared/layouts/DefaultLayout'
-import { Box, useTheme, Grid, Button, Typography } from '@mui/material'
-import { VForm } from '../../../shared/Form/Vform'
-import { VTextField } from '../../../shared/Form/VTextField'
+import {
+  Box,
+  useTheme,
+  Grid,
+  Button,
+  Typography,
+  TextField,
+  CircularProgress,
+} from '@mui/material'
 
-const createUserFormSchema = z.object({
-  name: z
-    .string()
-    .nonempty('Esse campo é obrigatório')
-    .transform((name) => {
-      return name
-        .trim()
-        .split(' ')
-        .map((word) => {
-          return word[0].toLocaleUpperCase().concat(word.substring(1))
-        })
-        .join(' ')
-    }),
-  email: z
-    .string()
-    .email('Formato de e-mail inválido')
-    .nonempty('Esse campo é obrigatório')
-    .endsWith('@cinbal.com.br', 'O e-mail precisa ser da Cinbal'),
-  password: z
-    .string()
-    .nonempty('Esse campo é obrigatório')
-    .min(6, 'A senha precisar ter pelo menos 6 caracteres.'),
-  ramal: z.string().nonempty('Esse campo é obrigatório'),
-  role: z.string().nonempty('Esse campo é obrigatório'),
-  sector: z.string().nonempty('Esse campo é obrigatório'),
-  branch: z.string().nonempty('Esse campo é obrigatório'),
-})
+import * as yup from 'yup'
+import { yupResolver } from '@hookform/resolvers/yup'
+import { Api } from '../../../shared/services/api/Config/index'
 
-type CreateUserFormData = z.infer<typeof createUserFormSchema>
+interface ICadastroUsuario {
+  name: string
+  email: string
+  ramal: string
+  funcao: string
+  setor: string
+  filial: string
+  password: string
+}
+
+const createUserFormSchema = yup
+  .object()
+  .shape({
+    name: yup
+      .string()
+      .required('Esse campo precisa ser preenchido!')
+      .min(3, 'Deve ter no mínimo 3 caracteres')
+      .max(50, 'Deve conter no máximo 50 caracteres'),
+    email: yup
+      .string()
+      .email('Formato de e-mail incorreto')
+      .required('Esse campo precisa ser preenchido!'),
+    ramal: yup
+      .string()
+      .required('Esse campo precisa ser preenchido!')
+      .min(2, 'Deve ter no mínimo 2 caracteres')
+      .max(5, 'Deve conter no máximo 5 caracteres'),
+    funcao: yup.string().required('Esse campo precisa ser preenchido!'),
+    setor: yup.string().required('Esse campo precisa ser preenchido!'),
+    filial: yup.string().required('Esse campo precisa ser preenchido!'),
+    password: yup
+      .string()
+      .required('Esse campo precisa ser preenchido!')
+      .min(6, 'Deve ter no mínimo 6 caracteres')
+      .max(8, 'Deve ter no mínimo 8 caracteres'),
+  })
+  .required()
 
 export const CadastroUsuario: React.FC = () => {
-  const [output, setOutput] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
+
+  const theme = useTheme()
+  const navigate = useNavigate()
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<CreateUserFormData>({
-    resolver: zodResolver(createUserFormSchema),
+  } = useForm<ICadastroUsuario>({
+    resolver: yupResolver(createUserFormSchema),
+    defaultValues: {
+      name: '',
+      email: '',
+      password: '',
+      ramal: '',
+      funcao: '',
+      setor: '',
+      filial: '',
+    },
   })
-
-  const theme = useTheme()
-  const navigate = useNavigate()
 
   console.log(errors)
 
-  function createUser(data: any) {
-    setOutput(JSON.stringify(data, null, 2))
-    console.log(data)
+  const createUser: SubmitHandler<ICadastroUsuario> = async (data) => {
+    event?.preventDefault()
+    setIsLoading(false)
+    const formData = new FormData()
+
+    formData.append('name', data.name)
+    formData.append('email', data.email)
+    formData.append('password', data.password)
+    formData.append('ramal', data.ramal)
+    formData.append('funcao', data.funcao)
+    formData.append('setor', data.setor)
+    formData.append('filial', data.filial)
+
+    await Api.post<ICadastroUsuario>('/cadastro', formData).then(() => {
+      setIsLoading(true)
+      navigate('/login')
+    })
   }
+
   return (
     <DefaultLayout tituloPagina={''}>
       <Box
@@ -69,15 +110,25 @@ export const CadastroUsuario: React.FC = () => {
         border="1px solid"
         borderColor={theme.palette.divider}
       >
-        <VForm onSubmit={handleSubmit(createUser)} style={{ width: '100%' }}>
+        <form
+          onSubmit={handleSubmit(createUser)}
+          style={{ width: '100%' }}
+          action="POST"
+        >
           <Grid container direction="column" padding={5} spacing={2}>
             <Grid container item lg={6} spacing={2}>
               <Grid item lg={12} sm={12} xs={12}>
                 <Typography variant="h5" sx={{ marginBottom: '20px' }}>
                   Cadastro de usuário
                 </Typography>
-                <VTextField
+                <TextField
                   {...register('name')}
+                  error={!!errors.name}
+                  helperText={
+                    <Typography variant="body2" color="error">
+                      {errors.name && <span>{errors.name?.message}</span>}
+                    </Typography>
+                  }
                   name="name"
                   type="text"
                   placeholder="Nome completo"
@@ -85,56 +136,92 @@ export const CadastroUsuario: React.FC = () => {
                 />
               </Grid>
               <Grid item lg={12} sm={12} xs={12}>
-                <VTextField
+                <TextField
                   {...register('email')}
                   name="email"
+                  error={!!errors.email}
+                  helperText={
+                    <Typography variant="body2" color="error">
+                      {errors.email && <span>{errors.email?.message}</span>}
+                    </Typography>
+                  }
                   type="email"
                   placeholder="E-mail"
                   fullWidth
                 />
               </Grid>
-              {errors.email && <span>{errors.email.message}</span>}
-              {errors.password && <span>{errors.password.message}</span>}
               <Grid item lg={12} sm={12} xs={12}>
-                <VTextField
+                <TextField
                   {...register('ramal')}
                   name="ramal"
+                  error={!!errors.ramal}
+                  helperText={
+                    <Typography variant="body2" color="error">
+                      {errors.ramal && <span>{errors.ramal?.message}</span>}
+                    </Typography>
+                  }
                   type="text"
                   placeholder="Ramal"
                   fullWidth
                 />
               </Grid>
               <Grid item lg={12} sm={12} xs={12}>
-                <VTextField
-                  {...register('role')}
-                  name="role"
+                <TextField
+                  {...register('funcao')}
+                  name="funcao"
+                  error={!!errors.funcao}
+                  helperText={
+                    <Typography variant="body2" color="error">
+                      {errors.funcao && <span>{errors.funcao?.message}</span>}
+                    </Typography>
+                  }
                   type="text"
                   placeholder="Função"
                   fullWidth
                 />
               </Grid>
               <Grid item lg={12} sm={12} xs={12}>
-                <VTextField
-                  {...register('sector')}
-                  name="sector"
+                <TextField
+                  {...register('setor')}
+                  name="setor"
+                  error={!!errors.setor}
+                  helperText={
+                    <Typography variant="body2" color="error">
+                      {errors.setor && <span>{errors.setor?.message}</span>}
+                    </Typography>
+                  }
                   type="text"
                   placeholder="Setor"
                   fullWidth
                 />
               </Grid>
               <Grid item lg={12} sm={12} xs={12}>
-                <VTextField
-                  {...register('branch')}
-                  name="branch"
+                <TextField
+                  {...register('filial')}
+                  name="filial"
+                  error={!!errors.filial}
+                  helperText={
+                    <Typography variant="body2" color="error">
+                      {errors.filial && <span>{errors.filial?.message}</span>}
+                    </Typography>
+                  }
                   type="text"
                   placeholder="Filial"
                   fullWidth
                 />
               </Grid>
               <Grid container item lg={12} sm={12} xs={12}>
-                <VTextField
+                <TextField
                   {...register('password')}
                   name="password"
+                  error={!!errors.password}
+                  helperText={
+                    <Typography variant="body2" color="error">
+                      {errors.password && (
+                        <span>{errors.password?.message}</span>
+                      )}
+                    </Typography>
+                  }
                   type="password"
                   placeholder="Senha"
                   fullWidth
@@ -144,13 +231,16 @@ export const CadastroUsuario: React.FC = () => {
                   variant="contained"
                   disableElevation
                   sx={{ width: '100%', marginTop: '20px' }}
+                  endIcon={
+                    isLoading && <CircularProgress variant="indeterminate" />
+                  }
                 >
                   cadastrar
                 </Button>
                 <Button
                   type="submit"
                   variant="outlined"
-                  sx={{ width: '100%', marginTop: '20px' }}
+                  sx={{ width: '100%', marginTop: '10px' }}
                   onClick={() => navigate('/login')}
                 >
                   Voltar
@@ -160,9 +250,7 @@ export const CadastroUsuario: React.FC = () => {
           </Grid>
 
           {}
-        </VForm>
-
-        <pre>{output}</pre>
+        </form>
       </Box>
     </DefaultLayout>
   )
