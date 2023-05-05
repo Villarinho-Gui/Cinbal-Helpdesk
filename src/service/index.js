@@ -23,7 +23,7 @@ app.post('/cadastro', async (req, res) => {
   const data = req.body
 
   console.log(data)
-  res.send({ mensagem: 'Dados recebidos com sucesso!' })
+  res.send(data)
 })
 
 app.listen(8181, function (erro) {
