@@ -81,7 +81,7 @@ export const CadastroUsuario: React.FC = () => {
 
   console.log(errors)
 
-  const createUser: SubmitHandler<ICadastroUsuario> = async (data) => {
+  const createUser: SubmitHandler<ICadastroUsuario> = async (data, event) => {
     event?.preventDefault()
     setIsLoading(false)
     const formData = new FormData()
@@ -94,7 +94,8 @@ export const CadastroUsuario: React.FC = () => {
     formData.append('setor', data.setor)
     formData.append('filial', data.filial)
 
-    await Api.post<ICadastroUsuario>('/cadastro', formData).then(() => {
+    await Api.post<ICadastroUsuario>('/cadastro', formData).then((response) => {
+      console.log(response)
       setIsLoading(true)
       navigate('/login')
     })
@@ -113,7 +114,7 @@ export const CadastroUsuario: React.FC = () => {
         <form
           onSubmit={handleSubmit(createUser)}
           style={{ width: '100%' }}
-          action="POST"
+          method="post"
         >
           <Grid container direction="column" padding={5} spacing={2}>
             <Grid container item lg={6} spacing={2}>

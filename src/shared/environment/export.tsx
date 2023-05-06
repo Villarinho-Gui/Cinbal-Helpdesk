@@ -14,5 +14,5 @@ export const Environment = {
   /**
    *Link padrão do servidor para ser "escutado" pelo Axios
    */
-  URL_BASE: 'http://localhost:3333',
+  URL_BASE: 'http://localhost:8181',
 }
