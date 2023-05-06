@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
+import api from '../../../service/api/config/configApi'
 
 import DefaultLayout from '../../../shared/layouts/DefaultLayout'
 import {
@@ -16,7 +17,6 @@ import {
 
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { Api } from '../../../shared/services/api/Config/index'
 
 interface ICadastroUsuario {
   name: string
@@ -58,6 +58,7 @@ const createUserFormSchema = yup
 
 export const CadastroUsuario: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false)
+  const [name, setName] = useState('')
 
   const theme = useTheme()
   const navigate = useNavigate()
@@ -94,11 +95,18 @@ export const CadastroUsuario: React.FC = () => {
     formData.append('setor', data.setor)
     formData.append('filial', data.filial)
 
-    await Api.post<ICadastroUsuario>('/cadastro', formData).then((response) => {
-      console.log(response)
-      setIsLoading(true)
-      navigate('/login')
-    })
+    const headers = {
+      headers: {
+        'content-type': 'application/json',
+      },
+    }
+
+    await api
+      .post<ICadastroUsuario>('/cadastro', formData, headers)
+      .then((response) => {
+        setIsLoading(true)
+        navigate('/login')
+      })
   }
 
   return (
@@ -124,16 +132,18 @@ export const CadastroUsuario: React.FC = () => {
                 </Typography>
                 <TextField
                   {...register('name')}
+                  name="name"
                   error={!!errors.name}
                   helperText={
                     <Typography variant="body2" color="error">
                       {errors.name && <span>{errors.name?.message}</span>}
                     </Typography>
                   }
-                  name="name"
                   type="text"
                   placeholder="Nome completo"
                   fullWidth
+                  onChange={(event) => setName(event.target.value)}
+                  value={name}
                 />
               </Grid>
               <Grid item lg={12} sm={12} xs={12}>
