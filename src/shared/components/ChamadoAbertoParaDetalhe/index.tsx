@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { ChamadosService } from '../../services/api/Chamados/ChamadosServices'
+// import { ChamadosService } from '../../services/api/Chamados/ChamadosServices'
 import {
   Box,
   Card,
@@ -30,25 +30,25 @@ export const ChamadoAbertoParaDetalhe: React.FC = () => {
 
   const theme = useTheme()
 
-  useEffect(() => {
-    if (id !== 'novo') {
-      setIsLoading(true)
+  // useEffect(() => {
+  //   if (id !== 'novo') {
+  //     setIsLoading(true)
 
-      ChamadosService.getById(Number(id)).then((result) => {
-        setIsLoading(false)
-        if (result instanceof Error) {
-          alert(result.message)
-          navigate('/abrir-chamado')
-        } else {
-          setCategoria(result.categoria)
-          setDescricao(result.descricao)
-          setPublishedAt(Number(result.publishedAt))
-          setAutor(result.author)
-          setSetor(result.setor)
-        }
-      })
-    }
-  }, [id, navigate])
+  //     ChamadosService.getById(Number(id)).then((result) => {
+  //       setIsLoading(false)
+  //       if (result instanceof Error) {
+  //         alert(result.message)
+  //         navigate('/abrir-chamado')
+  //       } else {
+  //         setCategoria(result.categoria)
+  //         setDescricao(result.descricao)
+  //         setPublishedAt(Number(result.publishedAt))
+  //         setAutor(result.author)
+  //         setSetor(result.setor)
+  //       }
+  //     })
+  //   }
+  // }, [id, navigate])
 
   return (
     <>

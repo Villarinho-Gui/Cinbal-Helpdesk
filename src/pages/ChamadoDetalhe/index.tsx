@@ -5,7 +5,7 @@ import DefaultLayout from '../../shared/layouts/DefaultLayout'
 import { ChamadoAbertoParaDetalhe } from '../../shared/components/ChamadoAbertoParaDetalhe'
 import BarraFerramentasDetalhesChamado from '../../shared/components/BarraFerramentasDetalhesChamado'
 import { useNavigate, useParams } from 'react-router-dom'
-import { ChamadosService } from '../../shared/services/api/Chamados/ChamadosServices'
+// import { ChamadosService } from '../../shared/services/api/Chamados/ChamadosServices'
 
 const ChamadoDetalhe: React.FC = () => {
   const navigate = useNavigate()
@@ -14,22 +14,22 @@ const ChamadoDetalhe: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [titulo, setTitulo] = useState('')
 
-  useEffect(() => {
-    if (id !== 'novo') {
-      setIsLoading(true)
+  // useEffect(() => {
+  //   if (id !== 'novo') {
+  //     setIsLoading(true)
 
-      ChamadosService.getById(Number(id)).then((result) => {
-        setIsLoading(false)
-        if (result instanceof Error) {
-          alert(result.message)
-          navigate('/abrir-chamado')
-        } else {
-          setTitulo(result.titulo)
-          console.log(result)
-        }
-      })
-    }
-  }, [id, navigate])
+  //     ChamadosService.getById(Number(id)).then((result) => {
+  //       setIsLoading(false)
+  //       if (result instanceof Error) {
+  //         alert(result.message)
+  //         navigate('/abrir-chamado')
+  //       } else {
+  //         setTitulo(result.titulo)
+  //         console.log(result)
+  //       }
+  //     })
+  //   }
+  // }, [id, navigate])
 
   return (
     <DefaultLayout

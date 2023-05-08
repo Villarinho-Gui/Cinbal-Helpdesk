@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
+import api from '../../../service/api/config/configApi'
 
 import DefaultLayout from '../../../shared/layouts/DefaultLayout'
 import {
@@ -16,10 +17,9 @@ import {
 
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { Api } from '../../../shared/services/api/Config/index'
 
 interface ICadastroUsuario {
-  name: string
+  nome: string
   email: string
   ramal: string
   funcao: string
@@ -31,7 +31,7 @@ interface ICadastroUsuario {
 const createUserFormSchema = yup
   .object()
   .shape({
-    name: yup
+    nome: yup
       .string()
       .required('Esse campo precisa ser preenchido!')
       .min(3, 'Deve ter no mínimo 3 caracteres')
@@ -58,6 +58,7 @@ const createUserFormSchema = yup
 
 export const CadastroUsuario: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false)
+  const [nome, setNome] = useState('')
 
   const theme = useTheme()
   const navigate = useNavigate()
@@ -69,7 +70,7 @@ export const CadastroUsuario: React.FC = () => {
   } = useForm<ICadastroUsuario>({
     resolver: yupResolver(createUserFormSchema),
     defaultValues: {
-      name: '',
+      nome: '',
       email: '',
       password: '',
       ramal: '',
@@ -86,7 +87,7 @@ export const CadastroUsuario: React.FC = () => {
     setIsLoading(false)
     const formData = new FormData()
 
-    formData.append('name', data.name)
+    formData.append('nome', data.nome)
     formData.append('email', data.email)
     formData.append('password', data.password)
     formData.append('ramal', data.ramal)
@@ -94,11 +95,19 @@ export const CadastroUsuario: React.FC = () => {
     formData.append('setor', data.setor)
     formData.append('filial', data.filial)
 
-    await Api.post<ICadastroUsuario>('/cadastro', formData).then((response) => {
-      console.log(response)
-      setIsLoading(true)
-      navigate('/login')
-    })
+    const headers = {
+      headers: {
+        'content-type': 'application/json',
+      },
+    }
+
+    await api
+      .post<ICadastroUsuario>('/login/cadastro', formData, headers)
+      .then((response) => {
+        console.log(response)
+        setIsLoading(true)
+        navigate('/login')
+      })
   }
 
   return (
@@ -123,17 +132,19 @@ export const CadastroUsuario: React.FC = () => {
                   Cadastro de usuário
                 </Typography>
                 <TextField
-                  {...register('name')}
-                  error={!!errors.name}
+                  {...register('nome')}
+                  name="nome"
+                  error={!!errors.nome}
                   helperText={
                     <Typography variant="body2" color="error">
-                      {errors.name && <span>{errors.name?.message}</span>}
+                      {errors.nome && <span>{errors.nome?.message}</span>}
                     </Typography>
                   }
-                  name="name"
                   type="text"
                   placeholder="Nome completo"
                   fullWidth
+                  onChange={(event) => setNome(event.target.value)}
+                  value={nome}
                 />
               </Grid>
               <Grid item lg={12} sm={12} xs={12}>

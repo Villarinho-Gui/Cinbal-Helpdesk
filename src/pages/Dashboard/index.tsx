@@ -1,30 +1,30 @@
 /* eslint-disable prettier/prettier */
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import DefaultLayout from '../../shared/layouts/DefaultLayout'
-import { Box, Button, Card, CardContent, Chip, Grid, Skeleton, Typography, useTheme } from '@mui/material'
+import { Box, Button, Card, CardContent, Chip, Grid, Typography, useTheme } from '@mui/material'
 import BarraFerramentasDetalhesChamado from '../../shared/components/BarraFerramentasDetalhesChamado'
 import { BsGraphUpArrow } from 'react-icons/bs'
-import { ChamadosService } from '../../shared/services/api/Chamados/ChamadosServices'
+// import { ChamadosService } from '../../shared/services/api/Chamados/ChamadosServices'
 
 const Dashboard: React.FC = () => {
-  const [isLoadingChamados, setIsLoadingChamados] = useState<boolean>(false)
-  const [totalCountChamados, setTotalCountChamados] = useState<number | string>(0)
+  // const [isLoadingChamados, setIsLoadingChamados] = useState<boolean>(false)
+  // const [totalCountChamados, setTotalCountChamados] = useState<number | string>(0)
 
 
   const theme = useTheme()
 
-  useEffect(() => {
-      setIsLoadingChamados(true)
+  // useEffect(() => {
+  //     setIsLoadingChamados(true)
 
-      ChamadosService.getAll(1).then((result) => {
-        setIsLoadingChamados(false)
-        if (result instanceof Error) {
-          alert(result.message)
-        } else {
-          setTotalCountChamados(result.totalCount)
-        }
-      })
-    },[])
+  //     ChamadosService.getAll(1).then((result) => {
+  //       setIsLoadingChamados(false)
+  //       if (result instanceof Error) {
+  //         alert(result.message)
+  //       } else {
+  //         setTotalCountChamados(result.totalCount)
+  //       }
+  //     })
+  //   },[])
 
   return (
     <DefaultLayout 
@@ -58,7 +58,7 @@ const Dashboard: React.FC = () => {
               <CardContent>
                 <Box>
                   <Typography variant="h5" sx={{ fontSize: '1rem' }} color="text.secondary">Chamados Abertos</Typography>
-                  <Box display='flex' gap={2} width="100%" alignItems="center">
+                  {/* <Box display='flex' gap={2} width="100%" alignItems="center">
                     { isLoadingChamados ? 
                       <Skeleton
                         variant="text"
@@ -76,7 +76,7 @@ const Dashboard: React.FC = () => {
                     )
                     }
                     <Chip label="25.5%" icon={<BsGraphUpArrow size={10} />} size='medium' variant='filled'/>
-                  </Box>
+                  </Box> */}
 
                   <Button>Visualizar</Button>
                 </Box>
@@ -99,7 +99,7 @@ const Dashboard: React.FC = () => {
                 <Box>
                   <Typography variant="h5" sx={{ fontSize: '1rem' }} color="text.secondary">Chamados Assumidos</Typography>
                   <Box display='flex' gap={2} width="100%" alignItems="center">
-                  { isLoadingChamados ? 
+                  {/* { isLoadingChamados ? 
                       <Skeleton
                         variant="text"
                         sx={{ fontSize: '4rem' }}
@@ -114,7 +114,7 @@ const Dashboard: React.FC = () => {
                       2
                     </Typography>
                     )
-                    }
+                    } */}
                     <Chip label="25.5%" icon={<BsGraphUpArrow size={10} />} size='medium' variant='filled'/>
                   </Box>
 
@@ -139,7 +139,7 @@ const Dashboard: React.FC = () => {
                 <Box>
                   <Typography variant="h5" sx={{ fontSize: '1rem' }} color="text.secondary">Chamados Concluídos</Typography>
                   <Box display='flex' gap={2} width="100%" alignItems="center">
-                  { isLoadingChamados ? 
+                  {/* { isLoadingChamados ? 
                       <Skeleton
                         variant="text"
                         sx={{ fontSize: '4rem' }}
@@ -154,7 +154,7 @@ const Dashboard: React.FC = () => {
                       3
                     </Typography>
                     )
-                    }
+                    } */}
                     <Chip label="25.5%" icon={<BsGraphUpArrow size={10} />} size='medium' variant='filled'/>
                   </Box>
 
