@@ -2,6 +2,7 @@
 import express from 'express'
 import bodyParser from 'body-parser'
 import cors from 'cors'
+import db from './models/db.js'
 
 const app = express()
 
@@ -25,6 +26,8 @@ app.post('/cadastro', async (req, res) => {
   console.log(data)
   res.send(data)
 })
+
+db.sync(() => console.log(`Banco de dados conectado: ${process.env.DB_NAME}`))
 
 app.listen(8181, function (erro) {
   if (erro) {
