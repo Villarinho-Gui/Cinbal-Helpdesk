@@ -1,5 +1,5 @@
 import { Sequelize } from 'sequelize'
-import db from './db'
+import db from '../models/db.js'
 
 export default db.define('user', {
   id: {
@@ -16,5 +16,21 @@ export default db.define('user', {
     type: Sequelize.STRING,
     allowNull: false,
     unique: true,
+  },
+  ramal: {
+    type: Sequelize.INTEGER,
+    allowNull: false,
+  },
+  funcao: {
+    type: Sequelize.STRING,
+    allowNull: false,
+  },
+  setor: {
+    type: Sequelize.STRING,
+    allowNull: false,
+  },
+  password: {
+    type: Sequelize.STRING,
+    allowNull: false,
   },
 })
