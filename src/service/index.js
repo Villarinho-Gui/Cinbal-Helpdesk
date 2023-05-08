@@ -1,12 +1,10 @@
 /* eslint-disable no-unused-vars */
-import routes from './routes/routes.js'
 import express from 'express'
 import bodyParser from 'body-parser'
 import cors from 'cors'
-import db from './models/db.js'
+import UserModel from './models/UserModel.js'
 
 const app = express()
-app.use(routes)
 
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
@@ -22,14 +20,25 @@ app.use((_, res, next) => {
   next()
 })
 
-app.post('/cadastro', async (req, res) => {
-  const data = req.body
+app.post('/login/cadastro', async (req, res) => {
+  const nome = req.body.nome
+  const email = req.body.email
+  const ramal = req.body.ramal
+  const funcao = req.body.funcao
+  const setor = req.body.setor
+  const password = req.body.password
 
-  console.log(data)
-  res.send(data)
+  UserModel.create({
+    nome,
+    email,
+    ramal,
+    funcao,
+    setor,
+    password,
+  }).then(() => {
+    res.redirect('/login')
+  })
 })
-
-db.sync(() => console.log(`Banco de dados conectado: ${process.env.DB_NAME}`))
 
 app.listen(8181, function (erro) {
   if (erro) {
