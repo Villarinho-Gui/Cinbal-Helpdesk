@@ -1,10 +1,12 @@
 /* eslint-disable no-unused-vars */
+import routes from './routes/routes.js'
 import express from 'express'
 import bodyParser from 'body-parser'
 import cors from 'cors'
 import db from './models/db.js'
 
 const app = express()
+app.use(routes)
 
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
