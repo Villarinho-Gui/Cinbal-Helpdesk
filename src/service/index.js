@@ -7,7 +7,7 @@ import UserModel from './models/UserModel.js'
 const app = express()
 
 app.use(bodyParser.urlencoded({ extended: false }))
-// app.use(bodyParser.json())
+app.use(bodyParser.json())
 
 app.use((_, res, next) => {
   res.header('Access-Control-Allow-Origin', '*')
