@@ -1,7 +1,7 @@
 import { Sequelize } from 'sequelize'
 import db from '../db/db.js'
 
-export default db.define('user', {
+export const Colaborador = db.define('cadastro', {
   id: {
     type: Sequelize.INTEGER.UNSIGNED,
     primaryKey: true,
