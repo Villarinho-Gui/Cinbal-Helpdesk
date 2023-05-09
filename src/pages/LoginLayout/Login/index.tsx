@@ -109,7 +109,6 @@ export const Login: React.FC = () => {
 
         <Button
           variant="outlined"
-          type="submit"
           disableElevation
           onClick={() => navigate('/login/cadastro')}
         >
