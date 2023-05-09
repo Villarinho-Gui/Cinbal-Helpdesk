@@ -66,8 +66,6 @@ export const CadastroUsuario: React.FC = () => {
     },
   })
 
-  console.log(errors)
-
   const createUser: SubmitHandler<ICadastroUsuario> = async (data, event) => {
     event?.preventDefault()
     setIsLoading(false)
@@ -121,14 +119,14 @@ export const CadastroUsuario: React.FC = () => {
             <TextField
               {...register('nome')}
               name="nome"
+              type="text"
+              placeholder="Nome completo"
               error={!!errors.nome}
               helperText={
                 <Typography variant="body2" color="error">
                   {errors.nome && <span>{errors.nome?.message}</span>}
                 </Typography>
               }
-              type="text"
-              placeholder="Nome completo"
               autoComplete="username"
               fullWidth
               size="small"
@@ -172,7 +170,7 @@ export const CadastroUsuario: React.FC = () => {
               variant="h5"
               sx={{ marginBottom: '5px', fontWeight: '400', fontSize: '16px' }}
             >
-              Informações profissionais da Cinbal
+              Informações profissionais do colaborador na Cinbal
             </Typography>
             <Divider sx={{ marginBottom: '10px' }} />
             <TextField
@@ -236,14 +234,14 @@ export const CadastroUsuario: React.FC = () => {
               <TextField
                 {...register('filial')}
                 name="filial"
+                type="text"
+                placeholder="Filial"
                 error={!!errors.filial}
                 helperText={
                   <Typography variant="body2" color="error">
                     {errors.filial && <span>{errors.filial?.message}</span>}
                   </Typography>
                 }
-                type="text"
-                placeholder="Filial"
                 fullWidth
                 size="small"
               />
@@ -258,7 +256,7 @@ export const CadastroUsuario: React.FC = () => {
                 sx={{
                   width: '100%',
                   marginBottom: '10px',
-                  [theme.breakpoints.down('sm')]: { marginBottom: '0px' },
+                  [theme.breakpoints.down('lg')]: { marginBottom: '0px' },
                 }}
                 endIcon={
                   isLoading && <CircularProgress variant="indeterminate" />
