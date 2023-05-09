@@ -119,6 +119,7 @@ export const AppContainer = styled.div`
     img {
       width: 4.5rem;
       height: 4.5rem;
+      /* transform: rotate(45deg); */
     }
 
     &:hover {
@@ -129,6 +130,12 @@ export const AppContainer = styled.div`
   }
 
   @media (max-height: 900px) {
+    .panels-container {
+      height: 100vh;
+      width: 100vw;
+      overflow: hidden;
+    }
+
     .ouvidoria {
       display: none;
     }
@@ -142,8 +149,12 @@ export const AppContainer = styled.div`
   }
 
   @media (max-width: 570px) {
-    padding: 1.5rem;
-
+    .panels-container {
+      height: 100vh;
+      width: 100vw;
+      margin: auto;
+      overflow-y: none;
+    }
     .image {
       display: none;
     }
@@ -163,6 +174,10 @@ export const AppContainer = styled.div`
     }
 
     &:before {
+      display: none;
+    }
+
+    .ouvidoria {
       display: none;
     }
   }
@@ -170,7 +185,7 @@ export const AppContainer = styled.div`
   @media (max-width: 870px) {
     min-height: 800px;
     height: 100vh;
-    padding: 1.5rem;
+    /* padding: 1.5rem; */
 
     .image {
       display: none;
@@ -191,6 +206,10 @@ export const AppContainer = styled.div`
     }
 
     &:before {
+      display: none;
+    }
+
+    .ouvidoria {
       display: none;
     }
   }
@@ -225,5 +244,10 @@ export const AppContainer = styled.div`
     .panel {
       height: 100vh;
     }
+    /* .image {
+      height: 450px;
+      margin: 5px auto;
+      top: 10px;
+    } */
   }
 `
