@@ -135,14 +135,10 @@ export const AppContainer = styled.div`
       width: 100vw;
       overflow: hidden;
     }
-
-    .ouvidoria {
-      display: none;
-    }
   }
   @media (max-height: 600px) {
     overflow: auto;
-    height: 50px;
+    height: 100vh;
     .ouvidoria {
       display: none;
     }
