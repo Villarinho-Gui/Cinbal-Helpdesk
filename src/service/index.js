@@ -2,8 +2,11 @@
 import express from 'express'
 import bodyParser from 'body-parser'
 import cors from 'cors'
-import UserModel from './models/UserModel.js'
+import { Colaborador } from './models/UserModel.js'
 import bcrypt from 'bcryptjs'
+import { HttpStatusCode } from 'axios'
+import jwt from 'jsonwebtoken'
+import { eAdmin } from './middlewares/auth.js'
 
 const app = express()
 
@@ -21,6 +24,53 @@ app.use((_, res, next) => {
   next()
 })
 
+app.get('/', eAdmin, async (req, res) => {
+  return res.json({
+    erro: false,
+    mensagem: 'listagem de usuário',
+    id_usuario_logado: req.userId,
+  })
+})
+
+app.post('/login', async (req, res) => {
+  const user = await Colaborador.findOne({
+    attributes: ['id', 'nome', 'password'],
+    where: {
+      nome: req.body.nome,
+    },
+  })
+
+  if (user === null) {
+    return res.status(HttpStatusCode.BadRequest).json({
+      erro: true,
+      mensagem: 'Usuário ou senha incorretos!',
+    })
+  }
+
+  if (!(await bcrypt.compare(req.body.password, user.password))) {
+    return res.status(HttpStatusCode.BadRequest).json({
+      erro: true,
+      mensagem: 'Usuário ou senha incorretos!',
+    })
+  }
+
+  const token = jwt.sign(
+    {
+      id: user.id,
+    },
+    'laj20rqmfpajfç3jgçmalei0492494',
+    {
+      expiresIn: 600,
+    },
+  )
+
+  return res.json({
+    erro: false,
+    mensagem: 'Login realizado com sucesso!',
+    token,
+  })
+})
+
 app.post('/login/cadastro', async (req, res) => {
   const data = req.body
 
@@ -31,7 +81,7 @@ app.post('/login/cadastro', async (req, res) => {
   const setor = data.setor
   const password = await bcrypt.hash(data.password, 8)
 
-  UserModel.create({
+  Colaborador.create({
     nome,
     email,
     ramal,
