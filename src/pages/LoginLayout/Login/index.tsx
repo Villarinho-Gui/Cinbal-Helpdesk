@@ -6,9 +6,9 @@ import { Box, Typography, TextField, Button, useTheme } from '@mui/material'
 import logo from '../../../media/images/logo2-full.png'
 
 export const Login: React.FC = () => {
-  const [emailError, setEmailError] = useState('')
+  const [userError, setUserError] = useState('')
   const [passwordError, setPasswordError] = useState('')
-  const [email, setEmail] = useState('')
+  const [user, setUser] = useState('')
   const [password, setPassword] = useState('')
 
   const theme = useTheme()
@@ -44,12 +44,8 @@ export const Login: React.FC = () => {
       </Box>
 
       <form
-        // bgcolor={theme.palette.background.default}
-        // display={'flex'}
-        // flex={'1'}
-        // flexDirection={'column'}
-        // width={'70%'}
-        // gap={2}
+        id="form-login"
+        method="POST"
         style={{
           display: 'flex',
           flex: '1',
@@ -57,24 +53,24 @@ export const Login: React.FC = () => {
           width: '70%',
           gap: '8px',
         }}
-        id="form-login"
       >
         <TextField
-          fullWidth
           label="Usuário"
-          type="email "
-          value={email}
+          type="text"
+          value={user}
+          fullWidth
           // disabled={isLoading}
-          error={!!emailError}
-          helperText={emailError}
-          onChange={(e) => setEmail(e.target.value)}
-          onKeyDown={() => setEmailError('')}
+          error={!!userError}
+          helperText={userError}
+          onChange={(e) => setUser(e.target.value)}
+          onKeyDown={() => setUserError('')}
         />
         <TextField
-          fullWidth
           label="Senha"
           type="password"
           value={password}
+          autoComplete="password"
+          fullWidth
           // disabled={isLoading}
           error={!!passwordError}
           helperText={passwordError}
