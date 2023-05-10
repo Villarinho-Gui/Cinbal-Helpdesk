@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-import { useForm, SubmitHandler } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import api from '../../../service/api/config/configApi'
 
@@ -12,6 +12,8 @@ import {
   Grid,
   Divider,
   useTheme,
+  Snackbar,
+  Alert,
 } from '@mui/material'
 
 import * as yup from 'yup'
@@ -32,20 +34,27 @@ const createUserFormSchema = yup
   .shape({
     nome: yup.string().required().min(3).max(50),
     email: yup.string().email().required(),
-    ramal: yup.string().required().min(2).max(5),
+    ramal: yup.string().min(2).max(5),
     funcao: yup.string().required(),
     setor: yup.string().required(),
     filial: yup.string().required(),
-    password: yup
-      .string()
-      .required('Esse campo precisa ser preenchido!')
-      .min(6, 'Deve ter no mínimo 6 caracteres')
-      .max(8, 'Deve ter no mínimo 8 caracteres'),
+    password: yup.string().required().min(6).max(8),
   })
   .required()
 
 export const CadastroUsuario: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false)
+
+  const [nomeCompleto, setNomeCompleto] = useState('')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [ramal, setRamal] = useState('')
+  const [funcao, setFuncao] = useState('')
+  const [setor, setSetor] = useState('')
+  const [filial, setFilial] = useState('')
+
+  const [openSuccessMessage, setOpenSuccessMessage] = useState(false)
+
   const navigate = useNavigate()
   const theme = useTheme()
 
@@ -66,8 +75,7 @@ export const CadastroUsuario: React.FC = () => {
     },
   })
 
-  const createUser: SubmitHandler<ICadastroUsuario> = async (data, event) => {
-    event?.preventDefault()
+  const createUser = async (data: ICadastroUsuario) => {
     setIsLoading(false)
     const formData = new FormData()
 
@@ -84,14 +92,28 @@ export const CadastroUsuario: React.FC = () => {
         'content-type': 'application/json',
       },
     }
+    try {
+      await api
+        .post<ICadastroUsuario>('/login/cadastro', formData, headers)
+        .then(() => {
+          setOpenSuccessMessage(true)
+          navigate('/login')
+        })
+    } catch (error) {
+      console.log(error)
+    }
+    setIsLoading(true)
+  }
 
-    await api
-      .post<ICadastroUsuario>('/login/cadastro', formData, headers)
-      .then((response) => {
-        console.log(response)
-        setIsLoading(true)
-        navigate('/login')
-      })
+  const handleClose = (
+    event?: React.SyntheticEvent | Event,
+    reason?: string,
+  ) => {
+    if (reason === 'clickaway') {
+      return
+    }
+
+    setOpenSuccessMessage(false)
   }
 
   return (
@@ -121,6 +143,8 @@ export const CadastroUsuario: React.FC = () => {
               name="nome"
               type="text"
               placeholder="Nome completo"
+              value={nomeCompleto}
+              onChange={(e) => setNomeCompleto(e.target.value)}
               error={!!errors.nome}
               helperText={
                 <Typography variant="body2" color="error">
@@ -136,6 +160,8 @@ export const CadastroUsuario: React.FC = () => {
             <TextField
               {...register('email')}
               name="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               error={!!errors.email}
               helperText={
                 <Typography variant="body2" color="error">
@@ -153,6 +179,8 @@ export const CadastroUsuario: React.FC = () => {
               {...register('password')}
               name="password"
               error={!!errors.password}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               helperText={
                 <Typography variant="body2" color="error">
                   {errors.password && <span>{errors.password?.message}</span>}
@@ -177,6 +205,8 @@ export const CadastroUsuario: React.FC = () => {
               {...register('funcao')}
               name="funcao"
               error={!!errors.funcao}
+              value={funcao}
+              onChange={(e) => setFuncao(e.target.value)}
               helperText={
                 <Typography variant="body2" color="error">
                   {errors.funcao && <span>{errors.funcao?.message}</span>}
@@ -193,6 +223,8 @@ export const CadastroUsuario: React.FC = () => {
               {...register('setor')}
               name="setor"
               error={!!errors.setor}
+              value={setor}
+              onChange={(e) => setSetor(e.target.value)}
               helperText={
                 <Typography variant="body2" color="error">
                   {errors.setor && <span>{errors.setor?.message}</span>}
@@ -218,6 +250,8 @@ export const CadastroUsuario: React.FC = () => {
                 {...register('ramal')}
                 name="ramal"
                 error={!!errors.ramal}
+                value={ramal}
+                onChange={(e) => setRamal(e.target.value)}
                 helperText={
                   <Typography variant="body2" color="error">
                     {errors.ramal && <span>{errors.ramal?.message}</span>}
@@ -236,6 +270,8 @@ export const CadastroUsuario: React.FC = () => {
                 name="filial"
                 type="text"
                 placeholder="Filial"
+                value={filial}
+                onChange={(e) => setFilial(e.target.value)}
                 error={!!errors.filial}
                 helperText={
                   <Typography variant="body2" color="error">
@@ -253,17 +289,35 @@ export const CadastroUsuario: React.FC = () => {
                 type="submit"
                 variant="contained"
                 disableElevation
+                disabled={isLoading}
                 sx={{
                   width: '100%',
                   marginBottom: '10px',
                   [theme.breakpoints.down('lg')]: { marginBottom: '0px' },
                 }}
                 endIcon={
-                  isLoading && <CircularProgress variant="indeterminate" />
+                  isLoading ? (
+                    <CircularProgress
+                      variant="indeterminate"
+                      color="inherit"
+                      size={20}
+                      sx={{ alignSelf: 'end' }}
+                    />
+                  ) : undefined
                 }
               >
-                cadastrar
+                {isLoading ? 'Cadastrando...' : 'Cadastrar'}
               </Button>
+              <Snackbar
+                open={openSuccessMessage}
+                autoHideDuration={6000}
+                onClose={handleClose}
+                anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+              >
+                <Alert severity="success" onClose={handleClose}>
+                  Usuário ou senha incorretos
+                </Alert>
+              </Snackbar>
             </Grid>
             <Grid item lg={6} md={12} sm={12} xs={12}>
               <Button
