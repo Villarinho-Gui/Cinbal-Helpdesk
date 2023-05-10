@@ -88,8 +88,6 @@ app.post('/login/cadastro', async (req, res) => {
     funcao,
     setor,
     password,
-  }).then(() => {
-    res.redirect('/login')
   })
 })
 
