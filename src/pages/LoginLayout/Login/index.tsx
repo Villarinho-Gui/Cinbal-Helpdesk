@@ -9,6 +9,8 @@ import {
   Button,
   useTheme,
   CircularProgress,
+  Snackbar,
+  Alert,
 } from '@mui/material'
 
 import logo from '../../../media/images/logo2-full.png'
@@ -43,6 +45,7 @@ export const Login: React.FC = () => {
   const [passwordError, setPasswordError] = useState('')
   const [userNome, setUserNome] = useState('')
   const [userPassword, setUserPassword] = useState('')
+  const [openErrorMessage, setOpenErrorMessage] = useState(false)
 
   const theme = useTheme()
   const navigate = useNavigate()
@@ -67,11 +70,24 @@ export const Login: React.FC = () => {
     if (!userData) {
       setUserError('Usuário ou senha incorretos ')
       setPasswordError('Usuário ou senha incorretos ')
+      setOpenErrorMessage(true)
       return
     }
 
     // redirecionar para a página de home se o usuário existir
+
     navigate('/home')
+  }
+
+  const handleClose = (
+    event?: React.SyntheticEvent | Event,
+    reason?: string,
+  ) => {
+    if (reason === 'clickaway') {
+      return
+    }
+
+    setOpenErrorMessage(false)
   }
 
   return (
@@ -123,7 +139,7 @@ export const Login: React.FC = () => {
           fullWidth
           disabled={isLoading}
           error={!!userError}
-          helperText={userError}
+          onKeyDown={() => setUserError('')}
         />
         <TextField
           label="Senha"
@@ -134,7 +150,19 @@ export const Login: React.FC = () => {
           fullWidth
           disabled={isLoading}
           error={!!passwordError}
+          onKeyDown={() => setPasswordError('')}
         />
+
+        <Snackbar
+          open={openErrorMessage}
+          autoHideDuration={6000}
+          onClose={handleClose}
+          anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        >
+          <Alert severity="error" onClose={handleClose}>
+            Usuário ou senha incorretos
+          </Alert>
+        </Snackbar>
       </form>
 
       <Box
@@ -161,7 +189,7 @@ export const Login: React.FC = () => {
             ) : undefined
           }
         >
-          Entrar
+          {isLoading ? 'Entrando...' : 'Entrar'}
         </Button>
 
         <Button
