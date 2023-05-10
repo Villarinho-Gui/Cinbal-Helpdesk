@@ -1,19 +1,79 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import api from '../../../service/api/config/configApi'
 
-import { Box, Typography, TextField, Button, useTheme } from '@mui/material'
+import {
+  Box,
+  Typography,
+  TextField,
+  Button,
+  useTheme,
+  CircularProgress,
+} from '@mui/material'
 
 import logo from '../../../media/images/logo2-full.png'
+import { SubmitHandler } from 'react-hook-form'
+
+interface ILoginForm {
+  nome: string
+  password: string
+}
+
+const validateIfUserExistInDB: SubmitHandler<ILoginForm> = async (
+  data,
+  event,
+) => {
+  event?.preventDefault()
+
+  try {
+    const response = await api.post('/login', {
+      nome: data.nome,
+      password: data.password,
+    })
+
+    return response.data // ou o valor que você deseja retornar
+  } catch (error) {
+    return null // ou o valor que você deseja retornar
+  }
+}
 
 export const Login: React.FC = () => {
+  const [isLoading, setIsLoading] = useState(false)
   const [userError, setUserError] = useState('')
   const [passwordError, setPasswordError] = useState('')
-  const [user, setUser] = useState('')
-  const [password, setPassword] = useState('')
+  const [userNome, setUserNome] = useState('')
+  const [userPassword, setUserPassword] = useState('')
 
   const theme = useTheme()
-
   const navigate = useNavigate()
+
+  const triggerLogin = async () => {
+    if (!userNome) {
+      setUserError('Usuário não pode ser vazio')
+      return
+    }
+    if (!userPassword) {
+      setPasswordError('Senha não pode ser vazia')
+      return
+    }
+
+    setIsLoading(true)
+    const userData = await validateIfUserExistInDB({
+      nome: userNome,
+      password: userPassword,
+    })
+    setIsLoading(false)
+
+    if (!userData) {
+      setUserError('Usuário ou senha incorretos ')
+      setPasswordError('Usuário ou senha incorretos ')
+      return
+    }
+
+    // redirecionar para a página de home se o usuário existir
+    navigate('/home')
+  }
+
   return (
     <Box
       display={'flex'}
@@ -57,25 +117,23 @@ export const Login: React.FC = () => {
         <TextField
           label="Usuário"
           type="text"
-          value={user}
+          autoComplete="username"
+          value={userNome}
+          onChange={(e) => setUserNome(e.target.value)}
           fullWidth
-          // disabled={isLoading}
+          disabled={isLoading}
           error={!!userError}
           helperText={userError}
-          onChange={(e) => setUser(e.target.value)}
-          onKeyDown={() => setUserError('')}
         />
         <TextField
           label="Senha"
           type="password"
-          value={password}
-          autoComplete="password"
+          autoComplete="current-password"
+          value={userPassword}
+          onChange={(e) => setUserPassword(e.target.value)}
           fullWidth
-          // disabled={isLoading}
+          disabled={isLoading}
           error={!!passwordError}
-          helperText={passwordError}
-          onChange={(e) => setPassword(e.target.value)}
-          onKeyDown={() => setPasswordError('')}
         />
       </form>
 
@@ -90,19 +148,18 @@ export const Login: React.FC = () => {
           variant="contained"
           type="submit"
           disableElevation
-          onClick={() => navigate('/home')}
-          // onClick={triggerSubmit}
-          // disabled={isLoading}
-          // endIcon={
-          //   isLoading ? (
-          //     <CircularProgress
-          //       variant="indeterminate"
-          //       color="inherit"
-          //       size={20}
-          //       sx={{ alignSelf: 'end' }}
-          //     />
-          //   ) : undefined
-          // }
+          onClick={triggerLogin}
+          disabled={isLoading}
+          endIcon={
+            isLoading ? (
+              <CircularProgress
+                variant="indeterminate"
+                color="inherit"
+                size={20}
+                sx={{ alignSelf: 'end' }}
+              />
+            ) : undefined
+          }
         >
           Entrar
         </Button>
