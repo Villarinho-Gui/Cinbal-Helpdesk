@@ -79,6 +79,7 @@ const DefaultLayout: React.FC<IDefaultLayoutProps> = ({
               whiteSpace="nowrap"
               overflow="hidden"
               textOverflow="elipses"
+              sx={{ fontSize: '1.812rem' }}
             >
               {tituloPagina}
             </Typography>
