@@ -14,6 +14,7 @@ import {
   Divider,
   Select,
   MenuItem,
+  Alert,
 } from '@mui/material'
 import DefaultLayout from '../../shared/layouts/DefaultLayout'
 import { AiOutlinePaperClip } from 'react-icons/ai'
@@ -76,15 +77,19 @@ export default function AbrirChamado() {
       })
   }
 
-  function triggerNewImageChange() {
-    setNewUploadImage(event.target.value)
+  function triggerNewImageChange(e) {
+    setNewUploadImage(e.target.value)
   }
 
   function triggerSelectNewFile(e) {
     e.preventDefault()
-    setAttachedFiles([...attachedFiles, newUploadImage])
 
-    setNewUploadImage('')
+    if (attachedFiles.length >= 3) {
+      alert('Limite máximo de arquivos excedido')
+    } else {
+      setAttachedFiles([...attachedFiles, newUploadImage])
+      setNewUploadImage('')
+    }
   }
 
   function deleteImage(imageToDelete) {
@@ -179,7 +184,7 @@ export default function AbrirChamado() {
               </Grid>
             </Grid>
 
-            <Grid item xl={6} sx={{ marginY: '20px' }}>
+            <Grid item xl={6} lg={9} sx={{ marginY: '20px' }}>
               <TextField
                 id="descricao_id"
                 name="descricao"
@@ -220,7 +225,11 @@ export default function AbrirChamado() {
                 </Grid>
               )}
             </Grid>
-
+            <Grid item lg={6} md={8} sx={{ marginY: '10px' }}>
+              <Alert severity="info">
+                Serão aceitos no máximo 3 arquivos de até 2mb
+              </Alert>
+            </Grid>
             <Grid
               container
               direction={'row'}
@@ -242,7 +251,7 @@ export default function AbrirChamado() {
                       value={newUploadImage}
                       hidden
                       accept="image/*"
-                      multiple
+                      multiple="3"
                       type="file"
                       onChange={(e) => {
                         setImage([...image, ...e.target.files])
