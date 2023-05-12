@@ -1,38 +1,37 @@
 import { Sequelize } from 'sequelize'
 import db from '../db/db.js'
 
-export const Colaborador = db.define('cadastro', {
+export const Chamado = db.define('chamado', {
   id: {
     type: Sequelize.INTEGER.UNSIGNED,
     primaryKey: true,
     autoIncrement: true,
     allowNull: false,
   },
-  nome: {
+  titulo: {
     type: Sequelize.STRING,
     allowNull: false,
   },
-  email: {
-    type: Sequelize.STRING,
-    allowNull: false,
-    unique: true,
-  },
-  ramal: {
-    type: Sequelize.INTEGER,
-    allowNull: false,
-  },
-  funcao: {
+  categoria: {
     type: Sequelize.STRING,
     allowNull: false,
   },
-  setor: {
+  descricao: {
     type: Sequelize.STRING,
     allowNull: false,
   },
-  password: {
-    type: Sequelize.STRING,
+  image: {
+    type: Sequelize.STRING(255),
     allowNull: false,
+  },
+  responsavel: {
+    type: Sequelize.STRING,
+    allowNull: true,
+  },
+  status: {
+    type: Sequelize.STRING,
+    allowNull: true,
   },
 })
 
-// Colaborador.sync()
+Chamado.sync()

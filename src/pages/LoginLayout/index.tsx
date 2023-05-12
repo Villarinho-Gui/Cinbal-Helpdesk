@@ -83,7 +83,7 @@ export const LoginLayout: React.FC = () => {
 
         <Outlet />
 
-        <Tooltip title="Ouvidoria">
+        <Tooltip title="Ouvidoria" placement="top" arrow>
           <button
             className="ouvidoria"
             onClick={() =>

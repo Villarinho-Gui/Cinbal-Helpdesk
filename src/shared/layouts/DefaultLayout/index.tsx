@@ -11,6 +11,7 @@ import React, { ReactNode } from 'react'
 
 import { GiHamburgerMenu } from 'react-icons/gi'
 import { IoMdPerson } from 'react-icons/io'
+import { HiSun } from 'react-icons/hi'
 import { CgLogOut } from 'react-icons/cg'
 
 import { useDrawerContext } from '../../contexts/DrawerContext'
@@ -45,7 +46,7 @@ const DefaultLayout: React.FC<IDefaultLayoutProps> = ({
   const mdDown = useMediaQuery(theme.breakpoints.down('md'))
 
   const { toggleDrawerOpen } = useDrawerContext()
-  const { toggleTheme } = useAppThemeContext()
+  const { toggleTheme, themeName } = useAppThemeContext()
 
   const navigate = useNavigate()
 
@@ -79,6 +80,7 @@ const DefaultLayout: React.FC<IDefaultLayoutProps> = ({
               whiteSpace="nowrap"
               overflow="hidden"
               textOverflow="elipses"
+              sx={{ fontSize: '1.812rem' }}
             >
               {tituloPagina}
             </Typography>
@@ -105,7 +107,11 @@ const DefaultLayout: React.FC<IDefaultLayoutProps> = ({
 
             {mostrarBotaoTema && (
               <IconButton onClick={toggleTheme}>
-                <BsMoonFill size={20} />
+                {themeName === 'dark' ? (
+                  <HiSun size={20} />
+                ) : (
+                  <BsMoonFill size={20} />
+                )}
               </IconButton>
             )}
           </Box>

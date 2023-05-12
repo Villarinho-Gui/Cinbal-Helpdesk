@@ -1,113 +1,205 @@
 import React, { useState } from 'react'
-
 import { useNavigate } from 'react-router-dom'
+import api from '../../../service/api/config/configApi'
 
 import {
   Box,
   Typography,
-  Card,
-  CardContent,
-  CardActions,
   TextField,
-  Paper,
   Button,
   useTheme,
+  CircularProgress,
+  Snackbar,
+  Alert,
 } from '@mui/material'
 
+import logo from '../../../media/images/logo2-full.png'
+import { SubmitHandler } from 'react-hook-form'
+
+interface ILoginForm {
+  nome: string
+  password: string
+}
+
+const validateIfUserExistInDB: SubmitHandler<ILoginForm> = async (
+  data,
+  event,
+) => {
+  event?.preventDefault()
+
+  try {
+    const response = await api.post('/login', {
+      nome: data.nome,
+      password: data.password,
+    })
+
+    return response.data // ou o valor que você deseja retornar
+  } catch (error) {
+    return null // ou o valor que você deseja retornar
+  }
+}
+
 export const Login: React.FC = () => {
-  const [emailError, setEmailError] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
+  const [userError, setUserError] = useState('')
   const [passwordError, setPasswordError] = useState('')
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  const [userNome, setUserNome] = useState('')
+  const [userPassword, setUserPassword] = useState('')
+  const [openErrorMessage, setOpenErrorMessage] = useState(false)
 
   const theme = useTheme()
-
   const navigate = useNavigate()
+
+  const triggerLogin = async () => {
+    if (!userNome) {
+      setUserError('Usuário não pode ser vazio')
+      return
+    }
+    if (!userPassword) {
+      setPasswordError('Senha não pode ser vazia')
+      return
+    }
+
+    setIsLoading(true)
+    const userData = await validateIfUserExistInDB({
+      nome: userNome,
+      password: userPassword,
+    })
+    setIsLoading(false)
+
+    if (!userData) {
+      setUserError('Usuário ou senha incorretos ')
+      setPasswordError('Usuário ou senha incorretos ')
+      setOpenErrorMessage(true)
+      return
+    }
+
+    // redirecionar para a página de home se o usuário existir
+
+    navigate('/home')
+  }
+
+  const handleClose = (
+    event?: React.SyntheticEvent | Event,
+    reason?: string,
+  ) => {
+    if (reason === 'clickaway') {
+      return
+    }
+
+    setOpenErrorMessage(false)
+  }
+
   return (
     <Box
-      display="flex"
-      flexDirection="column"
-      alignItems="center"
-      justifyContent="center"
-      margin="auto"
-      width="100%"
-      height="100%"
+      display={'flex'}
+      flexDirection={'column'}
+      alignItems={'center'}
+      margin={'auto'}
+      width={'70%'}
+      maxWidth={'600px'}
+      padding={'20px'}
+      gap={'20px'}
+      boxSizing={'border-box'}
+      sx={{
+        [theme.breakpoints.down('sm')]: {
+          width: '100%',
+        },
+      }}
     >
-      <Typography variant="h6" align="center" sx={{ marginBottom: '10px' }}>
-        Bem vindo(a) ao seu HelpDesk!
-      </Typography>
-      <Card
-        elevation={0}
-        component={Paper}
-        background-color={theme.palette.background.default}
+      <Box
+        display={'flex'}
+        flexDirection={'column'}
+        width={'100%'}
+        justifyContent={'center'}
+        alignItems={'center'}
+        gap={2}
       >
-        <CardContent>
-          <Box display="flex" flexDirection="column" gap={2} width="300px">
-            <TextField
-              fullWidth
-              label="Usuário"
-              type="email "
-              value={email}
-              // disabled={isLoading}
-              error={!!emailError}
-              helperText={emailError}
-              onChange={(e) => setEmail(e.target.value)}
-              onKeyDown={() => setEmailError('')}
-            />
-            <TextField
-              fullWidth
-              label="Senha"
-              type="password"
-              value={password}
-              // disabled={isLoading}
-              error={!!passwordError}
-              helperText={passwordError}
-              onChange={(e) => setPassword(e.target.value)}
-              onKeyDown={() => setPasswordError('')}
-            />
-          </Box>
-        </CardContent>
-        <CardActions>
-          <Box
-            width="100%"
-            display="flex"
-            justifyContent="center"
-            flexDirection="column"
-            margin={1}
-            gap={1}
-          >
-            <Button
-              variant="contained"
-              type="submit"
-              disableElevation
-              onClick={() => navigate('/home')}
-              // onClick={triggerSubmit}
-              // disabled={isLoading}
-              // endIcon={
-              //   isLoading ? (
-              //     <CircularProgress
-              //       variant="indeterminate"
-              //       color="inherit"
-              //       size={20}
-              //       sx={{ alignSelf: 'end' }}
-              //     />
-              //   ) : undefined
-              // }
-            >
-              Entrar
-            </Button>
+        <img src={logo} height={60} alt="Cinbal App" />
+        <Typography>Bem vindo(a) ao seu HelpDesk!</Typography>
+      </Box>
 
-            <Button
-              variant="outlined"
-              type="submit"
-              disableElevation
-              onClick={() => navigate('/login/cadastro')}
-            >
-              Cadastrar
-            </Button>
-          </Box>
-        </CardActions>
-      </Card>
+      <form
+        id="form-login"
+        method="POST"
+        style={{
+          display: 'flex',
+          flex: '1',
+          flexDirection: 'column',
+          width: '70%',
+          gap: '8px',
+        }}
+      >
+        <TextField
+          label="Usuário"
+          type="text"
+          autoComplete="username"
+          value={userNome}
+          onChange={(e) => setUserNome(e.target.value)}
+          fullWidth
+          disabled={isLoading}
+          error={!!userError}
+          onKeyDown={() => setUserError('')}
+        />
+        <TextField
+          label="Senha"
+          type="password"
+          autoComplete="current-password"
+          value={userPassword}
+          onChange={(e) => setUserPassword(e.target.value)}
+          fullWidth
+          disabled={isLoading}
+          error={!!passwordError}
+          onKeyDown={() => setPasswordError('')}
+        />
+
+        <Snackbar
+          open={openErrorMessage}
+          autoHideDuration={6000}
+          onClose={handleClose}
+          anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        >
+          <Alert severity="error" onClose={handleClose}>
+            Usuário ou senha incorretos
+          </Alert>
+        </Snackbar>
+      </form>
+
+      <Box
+        width="70%"
+        display="flex"
+        justifyContent="center"
+        flexDirection="column"
+        gap={1}
+      >
+        <Button
+          variant="contained"
+          type="submit"
+          disableElevation
+          onClick={triggerLogin}
+          disabled={isLoading}
+          endIcon={
+            isLoading ? (
+              <CircularProgress
+                variant="indeterminate"
+                color="inherit"
+                size={20}
+                sx={{ alignSelf: 'end' }}
+              />
+            ) : undefined
+          }
+        >
+          {isLoading ? 'Entrando...' : 'Entrar'}
+        </Button>
+
+        <Button
+          variant="outlined"
+          disableElevation
+          onClick={() => navigate('/login/cadastro')}
+        >
+          Cadastrar
+        </Button>
+      </Box>
     </Box>
   )
 }
