@@ -1,8 +1,12 @@
 /* eslint-disable no-unused-vars */
 import express from 'express'
-import bodyParser from 'body-parser'
 import cors from 'cors'
+import multer from 'multer'
+import path from 'path'
+
 import { Colaborador } from './models/UserModel.js'
+import { Chamado } from './models/ChamadoModel.js'
+
 import bcrypt from 'bcryptjs'
 import { HttpStatusCode } from 'axios'
 import jwt from 'jsonwebtoken'
@@ -10,8 +14,16 @@ import { eAdmin } from './middlewares/auth.js'
 
 const app = express()
 
-app.use(bodyParser.urlencoded({ extended: false }))
-app.use(bodyParser.json())
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, path.join(process.cwd(), 'public/uploads'))
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + '-' + file.originalname)
+  },
+})
+
+const upload = multer({ storage })
 
 app.use((_, res, next) => {
   res.header('Access-Control-Allow-Origin', '*')
@@ -88,6 +100,22 @@ app.post('/login/cadastro', async (req, res) => {
     funcao,
     setor,
     password,
+  })
+})
+
+app.post('/abrir-chamado', upload.array('image'), async (req, res) => {
+  const data = req.body
+  const dataImg = req.files
+  const titulo = data.titulo
+  const categoria = data.categoria
+  const descricao = data.descricao
+  const image = dataImg[0]?.filename
+
+  Chamado.create({
+    titulo,
+    categoria,
+    descricao,
+    image,
   })
 })
 

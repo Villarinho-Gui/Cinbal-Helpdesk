@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import api from '../../service/api/config/configApi'
 import { FileList } from './components/FileList'
 import { uniqueId } from 'lodash'
+import { useForm } from 'react-hook-form'
 
 import {
   Button,
@@ -15,90 +16,101 @@ import {
   Select,
   MenuItem,
   Alert,
+  CircularProgress,
+  Typography,
 } from '@mui/material'
 import DefaultLayout from '../../shared/layouts/DefaultLayout'
 import { AiOutlinePaperClip } from 'react-icons/ai'
 
+import * as yup from 'yup'
+import { yupResolver } from '@hookform/resolvers/yup'
+
+const createChamadoSchema = yup
+  .object()
+  .shape({
+    titulo: yup.string().required().min(3).max(50),
+    categoria: yup.string().required(),
+    descricao: yup.string().min(3).max(500).required(),
+  })
+  .required()
+
 export default function AbrirChamado() {
-  const [image, setImage] = useState('')
   const [attachedFiles, setAttachedFiles] = useState([])
   const [newUploadImage, setNewUploadImage] = useState([])
 
-  const [status, setStatus] = useState({
-    type: '',
-    mensagem: '',
-  })
+  const [isLoading, setIsLoading] = useState(false)
 
   const [titulo, setTitulo] = useState('')
   const [descricao, setDescricao] = useState('')
-  const [categoria, setCategoria] = useState('Email')
+  const [categoria, setCategoria] = useState('')
+  const [image, setImage] = useState('')
 
-  const handleChange = (event) => {
-    setCategoria(event.target.value)
-  }
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(createChamadoSchema),
+    defaultValues: {
+      titulo: '',
+      categoria: '',
+      descricao: '',
+      image: '',
+    },
+  })
 
-  const PostChamado = async (e) => {
-    e.preventDefault()
-
+  const PostChamado = async () => {
+    event.preventDefault()
+    setIsLoading(true)
     const formData = new FormData()
-    formData.append('image', image)
+
     formData.append('titulo', titulo)
-    formData.append('descricao', descricao)
     formData.append('categoria', categoria)
+    formData.append('descricao', descricao)
 
     for (let i = 0; i < image.length; i++) {
       formData.append('image', image[i])
     }
+
     const headers = {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
     }
 
-    await api
-      .post('/upload', formData, headers)
-      .then((response) => {
-        console.log(response)
-        setStatus({
-          type: 'success',
-          mensagem: response.data.mensagem,
+    try {
+      await api
+        .post('/abrir-chamado', formData, headers)
+        .then((response) => {
+          console.log(response)
         })
-      })
-      .catch((err) => {
-        if (err.response) {
-          console.log(err.response)
-          setStatus({
-            type: 'error',
-            mensagem: err.response.data.mensagem,
-          })
-        } else {
-          console.log('Erro no banco de dados')
-        }
-      })
+        .then(() => {})
+    } catch (error) {
+      console.log(error)
+    }
+
+    setIsLoading(false)
   }
 
-  function triggerNewImageChange(e) {
-    const file = e.target.files[0]
-    setNewUploadImage(file)
+  function triggerNewImageChange(event) {
+    setNewUploadImage(event.target.value)
   }
 
   function triggerSelectNewFile(e) {
     e.preventDefault()
+    setAttachedFiles([...attachedFiles, newUploadImage])
 
-    if (attachedFiles.length >= 3) {
-      alert('Limite máximo de arquivos excedido')
-    } else {
-      setAttachedFiles([...attachedFiles, newUploadImage])
-      setNewUploadImage('')
-    }
+    setNewUploadImage('')
   }
 
   function deleteImage(imageToDelete) {
-    const newListImageWithoutDeletedOne = image.filter((imageName) => {
-      return imageName !== imageToDelete
+    const newListImageWithoutDeletedOne = image.filter((image) => {
+      return image !== imageToDelete
     })
 
     setImage(newListImageWithoutDeletedOne)
+
+    // console.log(`Deletar ${image}`);
   }
 
   const theme = useTheme()
@@ -131,14 +143,9 @@ export default function AbrirChamado() {
         >
           <form
             className="AbrirChamadoForm"
-            onSubmit={PostChamado}
-            method="post"
+            onSubmit={handleSubmit(PostChamado)}
+            method="POST"
           >
-            {status.type === 'success' ? (
-              <p>{status.mensagem}</p>
-            ) : (
-              <p>{status.mensagem}</p>
-            )}
             <Grid
               container
               item
@@ -150,11 +157,19 @@ export default function AbrirChamado() {
                 <Box sx={{ minWidth: 120, paddingTop: 3 }}>
                   <TextField
                     id="titulo_id"
+                    {...register('titulo')}
                     name="titulo"
                     label="Título"
+                    type="text"
                     variant="outlined"
                     value={titulo}
                     onChange={(e) => setTitulo(e.target.value)}
+                    error={!!errors.titulo}
+                    helperText={
+                      <Typography variant="body2" color="error">
+                        {errors.titulo && <span>{errors.titulo?.message}</span>}
+                      </Typography>
+                    }
                     sx={{ width: '100%' }}
                   />
                 </Box>
@@ -162,10 +177,20 @@ export default function AbrirChamado() {
               <Grid item xl={4}>
                 <Select
                   label="Categoria"
+                  {...register('categoria')}
                   placeholder="categoria"
                   name="categoria"
                   value={categoria}
-                  onChange={handleChange}
+                  type="text"
+                  onChange={(e) => setCategoria(e.target.value)}
+                  error={!!errors.categoria}
+                  helperText={
+                    <Typography variant="body2" color="error">
+                      {errors.categoria && (
+                        <span>{errors.categoria?.message}</span>
+                      )}
+                    </Typography>
+                  }
                   sx={{ width: '100%' }}
                 >
                   <MenuItem value={'email'}>Email</MenuItem>
@@ -190,13 +215,23 @@ export default function AbrirChamado() {
               <TextField
                 id="descricao_id"
                 name="descricao"
+                {...register('descricao')}
                 label="Descrição"
+                type="text"
                 variant="outlined"
                 multiline
                 rows={4}
                 sx={{ width: '100%' }}
                 value={descricao}
                 onChange={(e) => setDescricao(e.target.value)}
+                error={!!errors.descricao}
+                helperText={
+                  <Typography variant="body2" color="error">
+                    {errors.descricao && (
+                      <span>{errors.descricao?.message}</span>
+                    )}
+                  </Typography>
+                }
               />
             </Grid>
 
@@ -251,13 +286,14 @@ export default function AbrirChamado() {
                     <input
                       name="file"
                       value={newUploadImage}
+                      {...register('image')}
                       hidden
                       accept="image/*"
                       multiple="3"
                       type="file"
                       onChange={(e) => {
                         setImage([...image, ...e.target.files])
-                        triggerNewImageChange()
+                        triggerNewImageChange(e)
                       }}
                     />
                     <AiOutlinePaperClip size={25} />
@@ -272,10 +308,21 @@ export default function AbrirChamado() {
               <Grid item xl={2} lg={4}>
                 <Button
                   type="submit"
+                  disabled={isLoading}
                   variant="contained"
                   sx={{ width: '100%' }}
+                  endIcon={
+                    isLoading ? (
+                      <CircularProgress
+                        variant="indeterminate"
+                        color="inherit"
+                        size={20}
+                        sx={{ alignSelf: 'end' }}
+                      />
+                    ) : undefined
+                  }
                 >
-                  Enviar chamado
+                  {isLoading ? 'Enviando...' : 'Enviar Chamado'}
                 </Button>
               </Grid>
             </Grid>

@@ -33,7 +33,6 @@
     "cors": "^2.8.5",
     "date-fns": "^2.30.0",
     "dotenv": "^16.0.3",
-    "esbuild": "^0.17.18",
     "express": "^4.18.2",
     "filesize": "^10.0.7",
     "jsonwebtoken": "^9.0.0",
@@ -92,5 +91,4 @@
   "optionalDependencies": {
     "esbuild": "^0.12.28"
   }
-  
 }

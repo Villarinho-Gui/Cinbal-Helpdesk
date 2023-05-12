@@ -15,23 +15,22 @@ export const Chamado = db.define('chamado', {
   categoria: {
     type: Sequelize.STRING,
     allowNull: false,
-    unique: true,
   },
   descricao: {
-    type: Sequelize.INTEGER,
+    type: Sequelize.STRING,
     allowNull: false,
   },
   image: {
-    type: Sequelize.STRING,
+    type: Sequelize.STRING(255),
     allowNull: false,
   },
   responsavel: {
     type: Sequelize.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   status: {
     type: Sequelize.STRING,
-    allowNull: false,
+    allowNull: true,
   },
 })
 

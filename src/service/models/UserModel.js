@@ -35,4 +35,4 @@ export const Colaborador = db.define('cadastro', {
   },
 })
 
-Colaborador.sync()
+// Colaborador.sync()
