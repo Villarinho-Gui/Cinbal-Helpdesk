@@ -78,7 +78,8 @@ export default function AbrirChamado() {
   }
 
   function triggerNewImageChange(e) {
-    setNewUploadImage(e.target.value)
+    const file = e.target.files[0]
+    setNewUploadImage(file)
   }
 
   function triggerSelectNewFile(e) {
@@ -93,8 +94,8 @@ export default function AbrirChamado() {
   }
 
   function deleteImage(imageToDelete) {
-    const newListImageWithoutDeletedOne = image.filter((image) => {
-      return image !== imageToDelete
+    const newListImageWithoutDeletedOne = image.filter((imageName) => {
+      return imageName !== imageToDelete
     })
 
     setImage(newListImageWithoutDeletedOne)
@@ -160,7 +161,8 @@ export default function AbrirChamado() {
               </Grid>
               <Grid item xl={4}>
                 <Select
-                  id="combo-box-demo"
+                  label="Categoria"
+                  placeholder="categoria"
                   name="categoria"
                   value={categoria}
                   onChange={handleChange}
@@ -267,7 +269,7 @@ export default function AbrirChamado() {
                 orientation="vertical"
                 sx={{ height: '35px', marginTop: '20px' }}
               />
-              <Grid item xl={2} lg={6}>
+              <Grid item xl={2} lg={4}>
                 <Button
                   type="submit"
                   variant="contained"
