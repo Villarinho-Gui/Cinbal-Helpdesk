@@ -107,7 +107,11 @@ const DefaultLayout: React.FC<IDefaultLayoutProps> = ({
 
             {mostrarBotaoTema && (
               <IconButton onClick={toggleTheme}>
-                {themeName === 'dark' ? <HiSun /> : <BsMoonFill size={20} />}
+                {themeName === 'dark' ? (
+                  <HiSun size={20} />
+                ) : (
+                  <BsMoonFill size={20} />
+                )}
               </IconButton>
             )}
           </Box>
