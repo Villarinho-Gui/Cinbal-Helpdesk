@@ -1,12 +1,31 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { MdDelete, MdImage } from 'react-icons/md'
-import { Button, Card, Typography, Box } from '@mui/material'
+import {
+  Button,
+  Card,
+  Typography,
+  Box,
+  Dialog,
+  DialogTitle,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+} from '@mui/material'
 import { filesize } from 'filesize'
 
 export function FileList({ image, onDeleteImage }) {
+  const [openDialogAlert, setOpenDialogAlert] = useState(false)
+
   function triggerDeleteImage() {
-    // console.log("deletar");
     onDeleteImage(image)
+  }
+
+  const triggerOpenDialogAlert = () => {
+    setOpenDialogAlert(true)
+  }
+
+  const triggerCloseDialogAlert = () => {
+    setOpenDialogAlert(false)
   }
 
   return (
@@ -56,9 +75,36 @@ export function FileList({ image, onDeleteImage }) {
           </Box>
         </Box>
       </Box>
-      <Button color="error" onClick={triggerDeleteImage}>
+      <Button color="error" onClick={triggerOpenDialogAlert}>
         <MdDelete size={25} />
       </Button>
+      <Dialog open={openDialogAlert} onClose={triggerCloseDialogAlert}>
+        <DialogTitle>Tem certeza disso?</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            <Typography>
+              Ao apagar esta imagem você não estará enviado ela.
+            </Typography>
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={triggerCloseDialogAlert}
+            variant="outlined"
+            color="error"
+          >
+            Cancelar
+          </Button>
+          <Button
+            onClick={triggerDeleteImage}
+            autoFocus
+            variant="contained"
+            disableElevation
+          >
+            Apagar
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Card>
   )
 }

@@ -109,8 +109,6 @@ export default function AbrirChamado() {
     })
 
     setImage(newListImageWithoutDeletedOne)
-
-    // console.log(`Deletar ${image}`);
   }
 
   const theme = useTheme()
