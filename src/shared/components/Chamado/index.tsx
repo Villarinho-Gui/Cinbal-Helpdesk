@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable no-unused-vars */
 import {
   Avatar,
   Box,
@@ -7,13 +9,22 @@ import {
   Chip,
   Typography,
 } from '@mui/material'
-import React from 'react'
-import { IListagemChamados } from '../../services/api/Chamados/ChamadosServices'
+import React, { useState, useEffect } from 'react'
 
 import { MdImage } from 'react-icons/md'
 import { useNavigate } from 'react-router-dom'
+import api from '../../../service/api/config/configApi'
 
-export const Chamado: React.FC<IListagemChamados> = ({
+interface IChamadoProps {
+  id: number
+  author: string
+  titulo: string
+  descricao: string
+  publishedAt: Date
+  maxLines: number
+}
+
+export const Chamado: React.FC<IChamadoProps> = ({
   id,
   author,
   titulo,
@@ -21,6 +32,10 @@ export const Chamado: React.FC<IListagemChamados> = ({
   publishedAt,
   maxLines = 2,
 }) => {
+  const navigate = useNavigate()
+  const [chamadoData, setChamadoData] = useState<IChamadoProps | null>(null)
+  const [isLoading, setIsLoading] = useState(false)
+
   const descriptionStyle = {
     height: '35px',
     display: '-webkit-box',
@@ -29,7 +44,23 @@ export const Chamado: React.FC<IListagemChamados> = ({
     overflow: 'hidden',
   }
 
-  const navigate = useNavigate()
+  const fetchChamado = async () => {
+    setIsLoading(true)
+    try {
+      const response = await api.get<IChamadoProps>(`/chamado/${id}`)
+      const { data } = response
+
+      setChamadoData(data)
+      setIsLoading(false)
+    } catch (error) {
+      console.error('Erro ao obter os dados do chamado', error)
+      setIsLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    fetchChamado()
+  }, [])
 
   return (
     <CardActionArea onClick={() => navigate(`chamado/detalhe/${id}`)}>
@@ -56,7 +87,7 @@ export const Chamado: React.FC<IListagemChamados> = ({
             >
               {author}
             </Typography>
-            <time dateTime={String(publishedAt)}>
+            <time dateTime={String(chamadoData?.publishedAt)}>
               <Typography
                 variant="body2"
                 color="text.secondary"
@@ -73,7 +104,7 @@ export const Chamado: React.FC<IListagemChamados> = ({
               fontSize: 14,
             }}
           >
-            {titulo}
+            {chamadoData?.titulo}
           </Typography>
 
           <Typography
@@ -82,7 +113,7 @@ export const Chamado: React.FC<IListagemChamados> = ({
             sx={descriptionStyle}
           >
             {' '}
-            {descricao}
+            {chamadoData?.descricao}
           </Typography>
           <Box>
             <Chip
