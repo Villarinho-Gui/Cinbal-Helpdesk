@@ -136,6 +136,20 @@ app.post('/abrir-chamado', upload.array('image'), async (req, res) => {
   return res.json(chamado)
 })
 
+app.get('/chamados', async (req, res) => {
+  try {
+    const chamados = await Chamado.findAll()
+
+    return res.json(chamados)
+  } catch (error) {
+    console.error('Erro ao obter os chamados', error)
+    return res.status(HttpStatusCode.InternalServerError).json({
+      erro: true,
+      message: 'Erro ao obter os chamados',
+    })
+  }
+})
+
 app.get('/chamado/:id', async (req, res) => {
   const id = req.params.id
 
