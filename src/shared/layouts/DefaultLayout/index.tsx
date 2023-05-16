@@ -22,7 +22,7 @@ import { useAppThemeContext } from '../../contexts/ThemeContext'
 import { useNavigate } from 'react-router-dom'
 interface IDefaultLayoutProps {
   children: React.ReactNode
-  tituloPagina: string
+  tituloPagina: string | undefined
   barraDeFerramentas?: ReactNode
 
   mostrarBotaoLogout?: boolean
