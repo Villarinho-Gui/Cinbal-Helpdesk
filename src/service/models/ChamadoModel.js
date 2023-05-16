@@ -1,4 +1,4 @@
-import { Sequelize } from 'sequelize'
+import { DataTypes, Sequelize } from 'sequelize'
 import db from '../db/db.js'
 
 export const Chamado = db.define('chamado', {
@@ -17,7 +17,7 @@ export const Chamado = db.define('chamado', {
     allowNull: false,
   },
   descricao: {
-    type: Sequelize.STRING,
+    type: DataTypes.TEXT,
     allowNull: false,
   },
   image: {
@@ -34,4 +34,4 @@ export const Chamado = db.define('chamado', {
   },
 })
 
-Chamado.sync()
+// Chamado.sync()
