@@ -2,12 +2,12 @@ import React from 'react'
 
 import { Route, Routes, Navigate } from 'react-router-dom'
 import Dashboard from '../pages/Dashboard'
-import ChamadoDetalhe from '../pages/ChamadoDetalhe'
 import { CadastroUsuario } from '../pages/LoginLayout/CadastroUsuario'
 import { LoginLayout } from '../pages/LoginLayout'
 import { MenuLateral } from '../shared/components/MenuLateral'
 import { Login } from '../pages/LoginLayout/Login'
 import AbrirChamado from '../pages/AbrirChamado'
+import { ChamadoAbertoParaDetalhe } from '../shared/components/ChamadoAbertoParaDetalhe'
 
 export const AppRoutes: React.FC = () => {
   return (
@@ -19,7 +19,10 @@ export const AppRoutes: React.FC = () => {
       <Route path="/" element={<MenuLateral />}>
         <Route path="/home" element={<Dashboard />} />
         <Route path="/abrir-chamado" element={<AbrirChamado />} />
-        <Route path="/chamado/detalhe/:id" element={<ChamadoDetalhe />} />
+        <Route
+          path="/chamado/detalhe/:id"
+          element={<ChamadoAbertoParaDetalhe />}
+        />
       </Route>
       <Route path="*" element={<Navigate to="/login" />} />
     </Routes>

@@ -126,12 +126,29 @@ app.post('/abrir-chamado', upload.array('image'), async (req, res) => {
   const descricao = data.descricao
   const image = dataImg[0]?.filename
 
-  Chamado.create({
+  const chamado = await Chamado.create({
     titulo,
     categoria,
     descricao,
     image,
   })
+
+  return res.json(chamado)
+})
+
+app.get('/chamado/:id', async (req, res) => {
+  const id = req.params.id
+
+  const chamado = await Chamado.findByPk(id)
+
+  if (chamado) {
+    return res.json(chamado)
+  } else {
+    return res.status(HttpStatusCode.NotFound).json({
+      erro: true,
+      mensagem: 'Chamado não encontrado',
+    })
+  }
 })
 
 app.listen(8181, function (erro) {
