@@ -1,7 +1,12 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-// import { ChamadosService } from '../../services/api/Chamados/ChamadosServices'
+import DefaultLayout from '../../layouts/DefaultLayout'
+import BarraFerramentasDetalhesChamado from '../../../shared/components/BarraFerramentasDetalhesChamado'
+import { format, formatDistanceToNow } from 'date-fns'
+import ptBR from 'date-fns/locale/pt-BR'
+
 import {
   Box,
   Card,
@@ -13,85 +18,148 @@ import {
   Typography,
 } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
-import { BsFillImageFill } from 'react-icons/bs'
+import api from '../../../service/api/config/configApi'
+
+interface IChamadoAbertoParaDetalheProps {
+  author: string
+  // setor: string
+  titulo: string
+  categoria: string
+  descricao: string
+  maxLines: number
+  createdAt: Date
+}
 
 export const ChamadoAbertoParaDetalhe: React.FC = () => {
-  const { id = 'novo' } = useParams<'id'>()
-
-  const [isLoading, setIsLoading] = useState<boolean>(false)
-  const [categoria, setCategoria] = useState<string>('')
-  const [descricao, setDescricao] = useState<string>('')
-  const [autor, setAutor] = useState<string>('')
-  const [setor, setSetor] = useState<string>('')
-
-  const [publishedAt, setPublishedAt] = useState<number>(0)
+  const [isLoading, setIsLoading] = useState(false)
+  const [chamadoData, setChamadoData] =
+    useState<IChamadoAbertoParaDetalheProps | null>(null)
 
   const navigate = useNavigate()
-
   const theme = useTheme()
+  const { id } = useParams()
 
-  // useEffect(() => {
-  //   if (id !== 'novo') {
-  //     setIsLoading(true)
+  const fetchChamado = async () => {
+    setIsLoading(true)
+    try {
+      const response = await api.get<IChamadoAbertoParaDetalheProps>(
+        `/chamado/${id}`,
+      )
+      const { data } = response
+      console.log(data)
 
-  //     ChamadosService.getById(Number(id)).then((result) => {
-  //       setIsLoading(false)
-  //       if (result instanceof Error) {
-  //         alert(result.message)
-  //         navigate('/abrir-chamado')
-  //       } else {
-  //         setCategoria(result.categoria)
-  //         setDescricao(result.descricao)
-  //         setPublishedAt(Number(result.publishedAt))
-  //         setAutor(result.author)
-  //         setSetor(result.setor)
-  //       }
-  //     })
-  //   }
-  // }, [id, navigate])
+      data.createdAt = new Date(data.createdAt)
+
+      setChamadoData(data)
+      setIsLoading(false)
+    } catch (error) {
+      console.error('Erro ao obter os dados do chamado', error)
+      setIsLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    fetchChamado()
+  }, [id])
+
+  const publishedDateFormatted = (data: Date) => {
+    return format(data, "d 'de' LLLL 'às' HH:mm'h'", {
+      locale: ptBR,
+    })
+  }
+
+  const publishedDateRelativeToNow = (data: Date) => {
+    return formatDistanceToNow(data, {
+      locale: ptBR,
+      addSuffix: true,
+    })
+  }
 
   return (
     <>
-      <Box
-        padding={5}
-        borderRadius={1}
-        margin={1}
-        width="auto"
-        border="1px solid"
-        height="57vh"
-        borderColor={theme.palette.divider}
+      <DefaultLayout
+        mostrarBotaoTema={true}
+        mostrarBotaoLogout
+        mostrarBotaoPerfil
+        tituloPagina={id === 'novo' ? '' : chamadoData?.titulo}
+        barraDeFerramentas={
+          <BarraFerramentasDetalhesChamado
+            aoClicarEmVoltar={() => navigate('/abrir-chamado')}
+            mostrarBotaoAssumirChamado={true}
+          />
+        }
       >
-        <Box display="flex" justifyContent="space-between" paddingBottom={2}>
-          <Box>
-            {isLoading ? (
-              <Skeleton
-                variant="text"
-                sx={{ fontSize: '1.5rem' }}
-                width="200px"
-              />
-            ) : (
-              <Typography variant="h5" sx={{ fontSize: '1rem' }}>
-                {autor}
-              </Typography>
-            )}
+        <Box
+          padding={5}
+          borderRadius={1}
+          margin={1}
+          width="auto"
+          border="1px solid"
+          height="57vh"
+          borderColor={theme.palette.divider}
+        >
+          <Box display="flex" justifyContent="space-between" paddingBottom={2}>
+            <Box>
+              {isLoading ? (
+                <Skeleton
+                  variant="text"
+                  sx={{ fontSize: '1.5rem' }}
+                  width="200px"
+                />
+              ) : (
+                <Typography variant="h5" sx={{ fontSize: '1rem' }}>
+                  {chamadoData?.author}
+                </Typography>
+              )}
 
-            {isLoading ? (
-              <Skeleton
-                variant="text"
-                sx={{ fontSize: '1.5rem' }}
-                width="50px"
-              />
-            ) : (
-              <Typography
-                variant="body2"
-                color="text.secondary"
-                sx={{ fontSize: '0.8rem' }}
-              >
-                {setor}
-              </Typography>
-            )}
+              {isLoading ? (
+                <Skeleton
+                  variant="text"
+                  sx={{ fontSize: '1.5rem' }}
+                  width="50px"
+                />
+              ) : (
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                  sx={{ fontSize: '0.8rem' }}
+                >
+                  {/* {chamadoData?.setor} */}
+                </Typography>
+              )}
+            </Box>
+            <time
+              title={
+                chamadoData?.createdAt
+                  ? publishedDateFormatted(chamadoData.createdAt)
+                  : ''
+              }
+              dateTime={
+                chamadoData?.createdAt
+                  ? chamadoData.createdAt.toISOString()
+                  : ''
+              }
+            >
+              {isLoading ? (
+                <Skeleton
+                  variant="text"
+                  sx={{ fontSize: '1.5rem' }}
+                  width="90px"
+                />
+              ) : chamadoData?.createdAt ? (
+                <Typography
+                  variant="body2"
+                  sx={{ fontSize: '0.8rem' }}
+                  color="text.secondary"
+                >
+                  {publishedDateRelativeToNow(chamadoData.createdAt)}
+                </Typography>
+              ) : null}
+            </time>
           </Box>
-          <time>
+          <Divider />
+
+          <Box paddingY={2} marginLeft={0}>
             {isLoading ? (
               <Skeleton
                 variant="text"
@@ -99,116 +167,36 @@ export const ChamadoAbertoParaDetalhe: React.FC = () => {
                 width="90px"
               />
             ) : (
+              <Chip
+                label={chamadoData?.categoria}
+                size="small"
+                color="default"
+              />
+            )}
+          </Box>
+
+          <Box>
+            {isLoading ? (
+              <Skeleton
+                variant="rounded"
+                sx={{ fontSize: '1.5rem' }}
+                width="100%"
+                height="100px"
+              />
+            ) : (
               <Typography
                 variant="body2"
-                sx={{ fontSize: '0.8rem' }}
                 color="text.secondary"
+                sx={{ paddingBottom: '40px' }}
               >
-                há 20 horas
+                {chamadoData?.descricao}
               </Typography>
             )}
-          </time>
-        </Box>
-        <Divider />
-
-        <Box paddingY={2} marginLeft={0}>
-          {isLoading ? (
-            <Skeleton variant="text" sx={{ fontSize: '1.5rem' }} width="90px" />
-          ) : (
-            <Chip label={categoria} size="small" color="default" />
-          )}
-        </Box>
-
-        <Box>
-          {isLoading ? (
-            <Skeleton
-              variant="rounded"
-              sx={{ fontSize: '1.5rem' }}
-              width="100%"
-              height="100px"
-            />
-          ) : (
-            <Typography
-              variant="body2"
-              color="text.secondary"
-              sx={{ paddingBottom: '40px' }}
-            >
-              {descricao}
-            </Typography>
-          )}
-          <Divider />
-          <Box display="flex" gap="10px">
-            <Card
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                width: '300px',
-                marginY: '30px',
-                height: '70px',
-              }}
-            >
-              <CardContent
-                sx={{
-                  display: 'flex',
-                  flex: '1',
-                  alignItems: 'center',
-                  paddingBottom: '0px',
-                  gap: '10px',
-                  height: 'max-content',
-                }}
-              >
-                <CardMedia>
-                  <BsFillImageFill size={35} color="secondary" />
-                </CardMedia>
-                <Box display="flex" flexDirection="column">
-                  <Typography>WhatsApp-0975939-img.JPG</Typography>
-                  <Typography
-                    variant="body2"
-                    sx={{ fontSize: '0.8rem' }}
-                    color="text.secondary"
-                  >
-                    64kb
-                  </Typography>
-                </Box>
-              </CardContent>
-            </Card>
-            <Card
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                width: '300px',
-                marginY: '30px',
-                height: '70px',
-              }}
-            >
-              <CardContent
-                sx={{
-                  display: 'flex',
-                  flex: '1',
-                  alignItems: 'center',
-                  paddingBottom: '0px',
-                  gap: '10px',
-                  height: 'max-content',
-                }}
-              >
-                <CardMedia>
-                  <BsFillImageFill size={35} color="secondary" />
-                </CardMedia>
-                <Box display="flex" flexDirection="column">
-                  <Typography>WhatsApp-0975939-img.JPG</Typography>
-                  <Typography
-                    variant="body2"
-                    sx={{ fontSize: '0.8rem' }}
-                    color="text.secondary"
-                  >
-                    64kb
-                  </Typography>
-                </Box>
-              </CardContent>
-            </Card>
+            <Divider />
+            <Box display="flex" gap="10px"></Box>
           </Box>
         </Box>
-      </Box>
+      </DefaultLayout>
     </>
   )
 }
