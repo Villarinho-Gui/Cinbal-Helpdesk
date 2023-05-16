@@ -84,7 +84,7 @@ export const ChamadoAbertoParaDetalhe: React.FC = () => {
         tituloPagina={id === 'novo' ? '' : chamadoData?.titulo}
         barraDeFerramentas={
           <BarraFerramentasDetalhesChamado
-            aoClicarEmVoltar={() => navigate('/abrir-chamado')}
+            aoClicarEmVoltar={() => navigate('/home')}
             mostrarBotaoAssumirChamado={true}
           />
         }
