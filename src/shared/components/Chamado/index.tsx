@@ -7,39 +7,45 @@ import {
   CardActionArea,
   CardContent,
   Chip,
+  Skeleton,
   Typography,
 } from '@mui/material'
 import React, { useState, useEffect } from 'react'
 
 import { MdImage } from 'react-icons/md'
 import { useNavigate } from 'react-router-dom'
+
 import api from '../../../service/api/config/configApi'
+import { format, formatDistanceToNow } from 'date-fns'
+import ptBR from 'date-fns/locale/pt-BR'
 
 interface IChamadoProps {
   id: number
   author: string
   titulo: string
+  categoria: string
   descricao: string
-  publishedAt: Date
   maxLines: number
+  createdAt: Date
 }
-
 export const Chamado: React.FC<IChamadoProps> = ({
   id,
   author,
   titulo,
+  categoria,
   descricao,
-  publishedAt,
-  maxLines = 2,
+  maxLines,
+  createdAt,
 }) => {
-  const navigate = useNavigate()
   const [chamadoData, setChamadoData] = useState<IChamadoProps | null>(null)
   const [isLoading, setIsLoading] = useState(false)
+
+  const navigate = useNavigate()
 
   const descriptionStyle = {
     height: '35px',
     display: '-webkit-box',
-    WebkitLineClamp: maxLines,
+    WebkitLineClamp: 2,
     WebkitBoxOrient: 'vertical',
     overflow: 'hidden',
   }
@@ -49,6 +55,9 @@ export const Chamado: React.FC<IChamadoProps> = ({
     try {
       const response = await api.get<IChamadoProps>(`/chamado/${id}`)
       const { data } = response
+      console.log(data)
+
+      data.createdAt = new Date(data.createdAt)
 
       setChamadoData(data)
       setIsLoading(false)
@@ -60,7 +69,20 @@ export const Chamado: React.FC<IChamadoProps> = ({
 
   useEffect(() => {
     fetchChamado()
-  }, [])
+  }, [id])
+
+  const publishedDateFormatted = (data: Date) => {
+    return format(data, "d 'de' LLLL 'às' HH:mm'h'", {
+      locale: ptBR,
+    })
+  }
+
+  const publishedDateRelativeToNow = (data: Date) => {
+    return formatDistanceToNow(data, {
+      locale: ptBR,
+      addSuffix: true,
+    })
+  }
 
   return (
     <CardActionArea onClick={() => navigate(`chamado/detalhe/${id}`)}>
@@ -85,16 +107,35 @@ export const Chamado: React.FC<IChamadoProps> = ({
               sx={{ fontSize: '14px' }}
               color="text.secondary"
             >
-              {author}
+              {chamadoData?.author}
             </Typography>
-            <time dateTime={String(chamadoData?.publishedAt)}>
-              <Typography
-                variant="body2"
-                color="text.secondary"
-                sx={{ fontSize: '14px' }}
-              >
-                há 20 horas
-              </Typography>
+            <time
+              title={
+                chamadoData?.createdAt
+                  ? publishedDateFormatted(chamadoData.createdAt)
+                  : ''
+              }
+              dateTime={
+                chamadoData?.createdAt
+                  ? chamadoData.createdAt.toISOString()
+                  : ''
+              }
+            >
+              {isLoading ? (
+                <Skeleton
+                  variant="text"
+                  sx={{ fontSize: '1.5rem' }}
+                  width="90px"
+                />
+              ) : chamadoData?.createdAt ? (
+                <Typography
+                  variant="body2"
+                  sx={{ fontSize: '0.8rem' }}
+                  color="text.secondary"
+                >
+                  {publishedDateRelativeToNow(chamadoData.createdAt)}
+                </Typography>
+              ) : null}
             </time>
           </Box>
           <Typography
