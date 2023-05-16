@@ -109,8 +109,6 @@ export default function AbrirChamado() {
     })
 
     setImage(newListImageWithoutDeletedOne)
-
-    // console.log(`Deletar ${image}`);
   }
 
   const theme = useTheme()
@@ -163,6 +161,7 @@ export default function AbrirChamado() {
                     type="text"
                     variant="outlined"
                     value={titulo}
+                    disabled={isLoading}
                     onChange={(e) => setTitulo(e.target.value)}
                     error={!!errors.titulo}
                     helperText={
@@ -181,6 +180,7 @@ export default function AbrirChamado() {
                   placeholder="categoria"
                   name="categoria"
                   value={categoria}
+                  disabled={isLoading}
                   type="text"
                   onChange={(e) => setCategoria(e.target.value)}
                   error={!!errors.categoria}
@@ -224,6 +224,7 @@ export default function AbrirChamado() {
                 sx={{ width: '100%' }}
                 value={descricao}
                 onChange={(e) => setDescricao(e.target.value)}
+                disabled={isLoading}
                 error={!!errors.descricao}
                 helperText={
                   <Typography variant="body2" color="error">
