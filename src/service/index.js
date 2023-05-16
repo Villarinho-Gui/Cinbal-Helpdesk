@@ -12,7 +12,16 @@ import { HttpStatusCode } from 'axios'
 import jwt from 'jsonwebtoken'
 import { eAdmin } from './middlewares/auth.js'
 
+import bodyParser from 'body-parser'
+
 const app = express()
+
+// ...
+
+app.use(bodyParser.urlencoded({ extended: true }))
+app.use(bodyParser.json())
+
+// ...
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -43,6 +52,12 @@ app.get('/', eAdmin, async (req, res) => {
     id_usuario_logado: req.userId,
   })
 })
+
+// ...
+
+app.use(express.urlencoded({ extended: true }))
+
+// ...
 
 app.post('/login', async (req, res) => {
   const user = await Colaborador.findOne({
