@@ -26,6 +26,7 @@ interface IChamadoProps {
   categoria: string
   descricao: string
   maxLines: number
+  image: string
   createdAt: Date
 }
 export const Chamado: React.FC<IChamadoProps> = ({
@@ -35,6 +36,7 @@ export const Chamado: React.FC<IChamadoProps> = ({
   categoria,
   descricao,
   maxLines,
+  image,
   createdAt,
 }) => {
   const [chamadoData, setChamadoData] = useState<IChamadoProps | null>(null)
@@ -157,18 +159,20 @@ export const Chamado: React.FC<IChamadoProps> = ({
             {chamadoData?.descricao}
           </Typography>
           <Box>
-            <Chip
-              size="small"
-              variant="outlined"
-              color="primary"
-              avatar={
-                <Avatar>
-                  <MdImage />
-                </Avatar>
-              }
-              label="Avatar"
-              sx={{ marginY: 2 }}
-            />
+            {chamadoData?.image && (
+              <Chip
+                size="small"
+                variant="outlined"
+                color="primary"
+                avatar={
+                  <Avatar>
+                    <MdImage />
+                  </Avatar>
+                }
+                label="arquivo"
+                sx={{ marginY: 2 }}
+              />
+            )}
           </Box>
         </CardContent>
       </Card>
