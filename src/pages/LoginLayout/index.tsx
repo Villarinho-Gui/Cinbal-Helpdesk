@@ -3,61 +3,11 @@ import { AppContainer } from './styles'
 
 import loginImage from '../../media/images/login.svg'
 import ouvidoria from '../../media/images/flandericoouvidoria.png'
-import {
-  Box,
+import { Box, Tooltip, Typography } from '@mui/material'
 
-  // CircularProgress,
-  Tooltip,
-  Typography,
-} from '@mui/material'
-// import { useAuthContext } from '../../contexts/AuthContext'
 import { Outlet } from 'react-router-dom'
-// import * as yup from 'yup'
-// interface ILoginProps {
-//   children: React.ReactNode
-// }
-
-// const loginSchema = yup
-//   .object({
-//     email: yup.string().required('Esse campo precisa ser preenchido').email(),
-//     password: yup
-//       .string()
-//       .required('Esse campo precisa ser preenchido')
-//       .min(5, 'Esse campo precisa de pelo menos 5 caracteres'),
-//   })
-//   .required()
 
 export const LoginLayout: React.FC = () => {
-  // const { isAuthenticated, login } = useAuthContext()
-
-  // const [isLoading, setIsLoading] = useState(false)
-
-  // if (isAuthenticated) return <>{children}</>
-
-  // const triggerSubmit = () => {
-  //   setIsLoading(true)
-  //   loginSchema
-  //     .validate({ email, password }, { abortEarly: false })
-  //     .then((dadosValidados) => {
-  //       setIsLoading(true)
-
-  //       login(dadosValidados.email, dadosValidados.password).then(() => {
-  //         setIsLoading(false)
-  //       })
-  //     })
-  //     .catch((errors: yup.ValidationError) => {
-  //       setIsLoading(false)
-
-  //       errors.inner.forEach((error) => {
-  //         if (error.path === 'email') {
-  //           setEmailError(error.message)
-  //         } else if (error.path === 'password') {
-  //           setPasswordError(error.message)
-  //         }
-  //       })
-  //     })
-  // }
-
   return (
     <AppContainer>
       <Box className="panels-container">
