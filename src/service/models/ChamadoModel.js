@@ -26,7 +26,7 @@ export const Chamado = db.define('chamado', {
   },
   image: {
     type: Sequelize.STRING(255),
-    allowNull: false,
+    allowNull: true,
   },
   responsavel: {
     type: Sequelize.STRING,
@@ -38,4 +38,9 @@ export const Chamado = db.define('chamado', {
   },
 })
 
-Chamado.sync()
+// Adicione a declaração ALTER TABLE aqui
+// Chamado.sync().then(() => {
+//   return Chamado.sequelize.query(
+//     'ALTER TABLE chamados MODIFY COLUMN image VARCHAR(255) NULL;',
+//   )
+// })
