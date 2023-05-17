@@ -16,6 +16,7 @@ interface IListagemChamadoProp {
   categoria: string
   setor: string
   descricao: string
+  image: string
   createdAt: Date
 }
 
@@ -95,6 +96,7 @@ export const ListagemDeChamados: React.FC = () => {
                   descricao={chamado.descricao}
                   maxLines={2}
                   createdAt={chamado.createdAt}
+                  image={chamado.image}
                 />
               </ListItem>
             ))}
@@ -112,6 +114,7 @@ export const ListagemDeChamados: React.FC = () => {
                 descricao={chamado.descricao}
                 maxLines={2}
                 createdAt={chamado.createdAt}
+                image={chamado.image}
               />
             </ListItem>
           ))}
