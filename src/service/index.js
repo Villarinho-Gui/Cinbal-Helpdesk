@@ -138,7 +138,9 @@ app.post('/abrir-chamado', upload.array('image'), async (req, res) => {
 
 app.get('/chamados', async (req, res) => {
   try {
-    const chamados = await Chamado.findAll()
+    const chamados = await Chamado.findAll({
+      order: [['createdAt', 'DESC']], // Ordena pelo campo 'createdAt' em ordem descendente
+    })
 
     return res.json(chamados)
   } catch (error) {
