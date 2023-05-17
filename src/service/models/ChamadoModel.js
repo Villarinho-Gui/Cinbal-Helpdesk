@@ -8,6 +8,10 @@ export const Chamado = db.define('chamado', {
     autoIncrement: true,
     allowNull: false,
   },
+  autor: {
+    type: Sequelize.STRING,
+    allowNull: true,
+  },
   titulo: {
     type: Sequelize.STRING,
     allowNull: false,
@@ -34,4 +38,4 @@ export const Chamado = db.define('chamado', {
   },
 })
 
-// Chamado.sync()
+Chamado.sync()
