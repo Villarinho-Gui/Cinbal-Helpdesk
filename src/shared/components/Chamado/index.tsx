@@ -2,11 +2,13 @@
 /* eslint-disable no-unused-vars */
 import {
   Avatar,
+  Badge,
   Box,
   Card,
   CardActionArea,
   CardContent,
   Chip,
+  Icon,
   Skeleton,
   Typography,
 } from '@mui/material'
@@ -160,18 +162,9 @@ export const Chamado: React.FC<IChamadoProps> = ({
           </Typography>
           <Box>
             {chamadoData?.image && (
-              <Chip
-                size="small"
-                variant="outlined"
-                color="primary"
-                avatar={
-                  <Avatar>
-                    <MdImage />
-                  </Avatar>
-                }
-                label="arquivo"
-                sx={{ marginY: 2 }}
-              />
+              <Avatar sx={{ width: '25px', height: '25px' }}>
+                <MdImage size={15} color="info" />
+              </Avatar>
             )}
           </Box>
         </CardContent>
