@@ -5,13 +5,20 @@ import { Chamado } from '../Chamado'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 
 import { useDebounce } from '../../hooks/UseDebounce'
-import { Alert, LinearProgress, List, ListItem } from '@mui/material'
-import { Environment } from '../../environment/export'
-
-import { VscError } from 'react-icons/vsc'
+import { LinearProgress, List, ListItem } from '@mui/material'
 import { BarraFerramentasListagemDeChamados } from '../BarraFerramentasListagemDeChamados'
 
 import api from '../../../service/api/config/configApi'
+
+interface IListagemChamadoProp {
+  id: number
+  author: string
+  title: string
+  category: string
+  sector: string
+  description: string
+  createdAt: Date
+}
 
 export const ListagemDeChamados: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -21,7 +28,6 @@ export const ListagemDeChamados: React.FC = () => {
   const navigate = useNavigate()
 
   const [chamados, setChamados] = useState([])
-  const [totalCount, setTotalCount] = useState<number>(0)
   const [isLoading, setIsLoading] = useState<boolean>(true)
 
   const busca = useMemo(() => {
@@ -36,16 +42,12 @@ export const ListagemDeChamados: React.FC = () => {
     setIsLoading(true)
     debounce(async () => {
       await api
-        .get('/chamados', {
-          params: { pagina, busca },
-        })
+        .get('/chamados')
         .then((response) => {
           const { data } = response
           data.createdAt = new Date(data.createdAt)
           setIsLoading(false)
-          console.log(data)
           setChamados(data)
-          setTotalCount(Number(data.totalCount))
         })
         .catch((error) => {
           console.log(error)
@@ -74,31 +76,20 @@ export const ListagemDeChamados: React.FC = () => {
       }
     >
       <List sx={{ overflow: 'auto', padding: '0px' }}>
-        {chamados.map((chamado) => (
+        {chamados.map((chamado: IListagemChamadoProp) => (
           <ListItem disablePadding>
             <Chamado
               id={chamado.id}
-              author={''}
-              titulo={''}
-              categoria={''}
-              descricao={''}
-              maxLines={0}
-              createdAt={null}
+              author={chamado.author}
+              titulo={chamado.title}
+              categoria={chamado.category}
+              descricao={chamado.description}
+              maxLines={2}
+              createdAt={chamado.createdAt}
             />
           </ListItem>
         ))}
       </List>
-
-      {totalCount === 0 && !isLoading && (
-        <Alert
-          variant="standard"
-          color="error"
-          icon={<VscError />}
-          sx={{ width: 'auto', marginX: '16px' }}
-        >
-          {Environment.LISTAGEM_VAZIA}
-        </Alert>
-      )}
 
       {isLoading && (
         <LinearProgress variant="indeterminate" sx={{ marginX: '10px' }} />
