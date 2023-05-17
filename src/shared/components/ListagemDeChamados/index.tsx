@@ -48,12 +48,14 @@ export const ListagemDeChamados: React.FC = () => {
   }, [])
   const filteredChamados =
     search.length > 0
-      ? chamados.filter((chamado) => {
-          return (
-            (chamado.titulo && chamado.titulo.includes(search)) ||
-            (chamado.descricao && chamado.descricao.includes(search))
-          )
-        })
+      ? chamados
+          .filter((chamado) => {
+            return (
+              (chamado.titulo && chamado.titulo.includes(search)) ||
+              (chamado.descricao && chamado.descricao.includes(search))
+            )
+          })
+          .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
       : []
 
   return (
@@ -78,7 +80,9 @@ export const ListagemDeChamados: React.FC = () => {
       {isLoading && <LinearProgress variant="indeterminate" />}
       {search.length > 0 ? (
         filteredChamados.length === 0 ? (
-          <Typography variant="body2">Nenhum chamado correspondente</Typography>
+          <Typography variant="body2" sx={{ marginLeft: '10px' }}>
+            Nenhum chamado correspondente
+          </Typography>
         ) : (
           <List sx={{ overflow: 'auto', padding: '0px' }}>
             {filteredChamados.map((chamado: IListagemChamadoProp) => (
