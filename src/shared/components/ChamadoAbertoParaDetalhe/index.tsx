@@ -9,7 +9,9 @@ import ptBR from 'date-fns/locale/pt-BR'
 
 import {
   Box,
+  Button,
   Card,
+  CardActionArea,
   CardContent,
   CardMedia,
   Chip,
@@ -19,6 +21,7 @@ import {
 } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 import api from '../../../service/api/config/configApi'
+import { BsFillImageFill } from 'react-icons/bs'
 
 interface IChamadoAbertoParaDetalheProps {
   author: string
@@ -28,6 +31,7 @@ interface IChamadoAbertoParaDetalheProps {
   descricao: string
   maxLines: number
   createdAt: Date
+  image: string
 }
 
 export const ChamadoAbertoParaDetalhe: React.FC = () => {
@@ -194,6 +198,19 @@ export const ChamadoAbertoParaDetalhe: React.FC = () => {
             )}
             <Divider />
             <Box display="flex" gap="10px"></Box>
+          </Box>
+
+          <Box>
+            {chamadoData?.image && (
+              <Button
+                variant="contained"
+                endIcon={<BsFillImageFill />}
+                sx={{ display: 'flex', alignItems: 'center', marginY: '20px' }}
+                disableElevation
+              >
+                {chamadoData.image}
+              </Button>
+            )}
           </Box>
         </Box>
       </DefaultLayout>
