@@ -162,7 +162,7 @@ export const Chamado: React.FC<IChamadoProps> = ({
           </Typography>
           <Box>
             {chamadoData?.image && (
-              <Avatar sx={{ width: '25px', height: '25px' }}>
+              <Avatar sx={{ width: '25px', height: '25px', marginY: '10px' }}>
                 <MdImage size={15} color="info" />
               </Avatar>
             )}
