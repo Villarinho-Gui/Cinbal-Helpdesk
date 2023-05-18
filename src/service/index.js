@@ -124,13 +124,13 @@ app.post('/abrir-chamado', upload.array('image'), async (req, res) => {
   const titulo = data.titulo
   const categoria = data.categoria
   const descricao = data.descricao
-  const image = dataImg.length > 0 ? dataImg[0]?.filename : null
+  const images = dataImg.map((file) => file.filename) // Obter a lista de nomes de arquivos
 
   const chamado = await Chamado.create({
     titulo,
     categoria,
     descricao,
-    image,
+    image: images, // Armazenar a lista de nomes de arquivos no campo "image"
   })
 
   return res.json(chamado)
