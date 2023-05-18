@@ -25,7 +25,7 @@ export const Chamado = db.define('chamado', {
     allowNull: false,
   },
   image: {
-    type: Sequelize.STRING(255),
+    type: DataTypes.JSON, // Usar o tipo de dados JSON para permitir vários arquivos
     allowNull: true,
   },
   responsavel: {
@@ -38,9 +38,6 @@ export const Chamado = db.define('chamado', {
   },
 })
 
-// Adicione a declaração ALTER TABLE aqui
-// Chamado.sync().then(() => {
-//   return Chamado.sequelize.query(
-//     'ALTER TABLE chamados MODIFY COLUMN image VARCHAR(255) NULL;',
-//   )
-// })
+Chamado.sync().then(() => {
+  // O modelo foi sincronizado, agora você pode realizar outras operações
+})
