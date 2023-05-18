@@ -7,18 +7,7 @@ import BarraFerramentasDetalhesChamado from '../../../shared/components/BarraFer
 import { format, formatDistanceToNow } from 'date-fns'
 import ptBR from 'date-fns/locale/pt-BR'
 
-import {
-  Box,
-  Button,
-  Card,
-  CardActionArea,
-  CardContent,
-  CardMedia,
-  Chip,
-  Divider,
-  Skeleton,
-  Typography,
-} from '@mui/material'
+import { Box, Button, Chip, Divider, Skeleton, Typography } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 import api from '../../../service/api/config/configApi'
 import { BsFillImageFill } from 'react-icons/bs'
@@ -206,9 +195,10 @@ export const ChamadoAbertoParaDetalhe: React.FC = () => {
                 variant="contained"
                 endIcon={<BsFillImageFill />}
                 sx={{ display: 'flex', alignItems: 'center', marginY: '20px' }}
+                onClick={() => navigate(`/download/${chamadoData.image}`)}
                 disableElevation
               >
-                {chamadoData.image}
+                Arquivo anexado
               </Button>
             )}
           </Box>
