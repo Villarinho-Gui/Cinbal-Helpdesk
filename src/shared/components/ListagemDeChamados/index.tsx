@@ -47,6 +47,11 @@ export const ListagemDeChamados: React.FC = () => {
         alert('Ocorreu um erro ao buscar os chamados')
       })
   }, [])
+
+  /**
+   * Função para verificar se há algo escrito na caixa de pesquisa, e caso tenha, retorne o chamado de acordo com o título ou a descrição pelo mais recente primeiro.
+   */
+
   const filteredChamados =
     search.length > 0
       ? chamados
