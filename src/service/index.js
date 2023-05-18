@@ -139,7 +139,7 @@ app.post('/abrir-chamado', upload.array('image'), async (req, res) => {
 app.get('/chamados', async (req, res) => {
   try {
     const chamados = await Chamado.findAll({
-      order: [['createdAt', 'DESC']], // Ordena pelo campo 'createdAt' em ordem descendente
+      order: [['createdAt', 'DESC']], // Ordena pelo campo 'createdAt' em ordem do mais recente primeiro
     })
 
     return res.json(chamados)
@@ -168,8 +168,8 @@ app.get('/chamado/:id', async (req, res) => {
 })
 
 app.get('/download/:filename', (req, res) => {
-  const filename = req.params.filename
-  const filePath = path.join(process.cwd(), 'public/uploads', filename)
+  const filename = req.params.filename // pega o nome do arquivo
+  const filePath = path.join(process.cwd(), 'public/uploads', filename) // Pega o caminho absoluto do arquivo e faz o download
 
   res.download(filePath, (error) => {
     if (error) {
