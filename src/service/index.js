@@ -167,6 +167,18 @@ app.get('/chamado/:id', async (req, res) => {
   }
 })
 
+app.get('/download/:filename', (req, res) => {
+  const filename = req.params.filename
+  const filePath = path.join(process.cwd(), 'public/uploads', filename)
+
+  res.download(filePath, (error) => {
+    if (error) {
+      console.error('Erro ao fazer o download do arquivo:', error)
+      res.status(404).json({ error: 'Arquivo não encontrado' })
+    }
+  })
+})
+
 app.listen(8181, function (erro) {
   if (erro) {
     console.log('erro')
