@@ -2,13 +2,10 @@
 /* eslint-disable no-unused-vars */
 import {
   Avatar,
-  Badge,
   Box,
   Card,
   CardActionArea,
   CardContent,
-  Chip,
-  Icon,
   Skeleton,
   Typography,
 } from '@mui/material'
@@ -28,19 +25,10 @@ interface IChamadoProps {
   categoria: string
   descricao: string
   maxLines: number
-  image: string
+  image?: string[] | undefined
   createdAt: Date
 }
-export const Chamado: React.FC<IChamadoProps> = ({
-  id,
-  author,
-  titulo,
-  categoria,
-  descricao,
-  maxLines,
-  image,
-  createdAt,
-}) => {
+export const Chamado: React.FC<IChamadoProps> = ({ id }) => {
   const [chamadoData, setChamadoData] = useState<IChamadoProps | null>(null)
   const [isLoading, setIsLoading] = useState(false)
 
@@ -160,11 +148,12 @@ export const Chamado: React.FC<IChamadoProps> = ({
             {chamadoData?.descricao}
           </Typography>
           <Box>
-            {chamadoData?.image && (
-              <Avatar sx={{ width: '25px', height: '25px', marginY: '10px' }}>
-                <MdImage size={15} color="info" />
-              </Avatar>
-            )}
+            {Array.isArray(chamadoData?.image) &&
+              chamadoData?.image?.length > 0 && (
+                <Avatar sx={{ width: '25px', height: '25px', marginY: '10px' }}>
+                  <MdImage size={15} color="info" />
+                </Avatar>
+              )}
           </Box>
         </CardContent>
       </Card>
