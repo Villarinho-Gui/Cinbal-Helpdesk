@@ -59,7 +59,6 @@ export const Chamado: React.FC<IChamadoProps> = ({
     try {
       const response = await api.get<IChamadoProps>(`/chamado/${id}`)
       const { data } = response
-      console.log(data)
 
       data.createdAt = new Date(data.createdAt)
 
