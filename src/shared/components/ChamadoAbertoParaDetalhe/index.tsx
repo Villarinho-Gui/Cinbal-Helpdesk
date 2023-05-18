@@ -27,6 +27,7 @@ export const ChamadoAbertoParaDetalhe: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [chamadoData, setChamadoData] =
     useState<IChamadoAbertoParaDetalheProps | null>(null)
+  const [arquivosAnexados, setArquivosAnexados] = useState<string[]>([])
 
   const navigate = useNavigate()
   const theme = useTheme()
@@ -43,7 +44,13 @@ export const ChamadoAbertoParaDetalhe: React.FC = () => {
 
       data.createdAt = new Date(data.createdAt)
 
+      /**
+       * Extrai os nomes dos arquivos anexados
+       */
+      const nomesArquivos = data.image ? [data.image] : []
+
       setChamadoData(data)
+      setArquivosAnexados(nomesArquivos)
       setIsLoading(false)
     } catch (error) {
       console.error('Erro ao obter os dados do chamado', error)
@@ -189,19 +196,26 @@ export const ChamadoAbertoParaDetalhe: React.FC = () => {
             <Box display="flex" gap="10px"></Box>
           </Box>
 
-          <Box>
-            {chamadoData?.image && (
-              <Button
-                variant="contained"
-                endIcon={<BsFillImageFill />}
-                sx={{ display: 'flex', alignItems: 'center', marginY: '20px' }}
-                onClick={() => navigate(`/download/${chamadoData.image}`)}
-                disableElevation
-              >
-                Arquivo anexado
-              </Button>
-            )}
-          </Box>
+          {chamadoData?.image && chamadoData?.image.length > 0 && (
+            <Box display="flex" width="100%" gap={2}>
+              {chamadoData?.image?.map((imagem: string, index: number) => (
+                <Button
+                  key={index}
+                  variant="outlined"
+                  endIcon={<BsFillImageFill />}
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    marginY: '20px',
+                  }}
+                  onClick={() => navigate(`/download/${imagem}`)}
+                  disableElevation
+                >
+                  Imagem anexada
+                </Button>
+              ))}
+            </Box>
+          )}
         </Box>
       </DefaultLayout>
     </>
