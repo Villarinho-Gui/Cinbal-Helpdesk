@@ -18,6 +18,7 @@ import {
   Alert,
   CircularProgress,
   Typography,
+  Snackbar,
 } from '@mui/material'
 import DefaultLayout from '../../shared/layouts/DefaultLayout'
 import { AiOutlinePaperClip } from 'react-icons/ai'
@@ -44,6 +45,7 @@ export default function AbrirChamado() {
   const [descricao, setDescricao] = useState('')
   const [categoria, setCategoria] = useState('')
   const [image, setImage] = useState('')
+  const [openSuccessMessage, setOpenSuccessMessage] = useState(false)
 
   const {
     register,
@@ -79,12 +81,22 @@ export default function AbrirChamado() {
     }
 
     try {
-      await api.post('/abrir-chamado', formData, headers).then(() => {})
+      await api.post('/abrir-chamado', formData, headers).then(() => {
+        setOpenSuccessMessage(true)
+      })
     } catch (error) {
       console.log(error)
     }
 
     setIsLoading(false)
+  }
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return
+    }
+
+    setOpenSuccessMessage(false)
   }
 
   function triggerNewImageChange(event) {
@@ -320,6 +332,16 @@ export default function AbrirChamado() {
                 >
                   {isLoading ? 'Enviando...' : 'Enviar Chamado'}
                 </Button>
+                <Snackbar
+                  open={openSuccessMessage}
+                  autoHideDuration={6000}
+                  onClose={handleClose}
+                  anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+                >
+                  <Alert severity="success" onClose={handleClose}>
+                    Chamado aberto com sucesso!
+                  </Alert>
+                </Snackbar>
               </Grid>
             </Grid>
           </form>
