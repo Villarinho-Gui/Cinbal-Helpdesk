@@ -124,13 +124,58 @@ app.post('/abrir-chamado', upload.array('image'), async (req, res) => {
   const titulo = data.titulo
   const categoria = data.categoria
   const descricao = data.descricao
-  const image = dataImg[0]?.filename
+  const images = dataImg.map((file) => file.filename) // Obter a lista de nomes de arquivos
 
-  Chamado.create({
+  const chamado = await Chamado.create({
     titulo,
     categoria,
     descricao,
-    image,
+    image: images, // Armazenar a lista de nomes de arquivos no campo "image"
+  })
+
+  return res.json(chamado)
+})
+
+app.get('/chamados', async (req, res) => {
+  try {
+    const chamados = await Chamado.findAll({
+      order: [['createdAt', 'DESC']], // Ordena pelo campo 'createdAt' em ordem do mais recente primeiro
+    })
+
+    return res.json(chamados)
+  } catch (error) {
+    console.error('Erro ao obter os chamados', error)
+    return res.status(HttpStatusCode.InternalServerError).json({
+      erro: true,
+      message: 'Erro ao obter os chamados',
+    })
+  }
+})
+
+app.get('/chamado/:id', async (req, res) => {
+  const id = req.params.id
+
+  const chamado = await Chamado.findByPk(id)
+
+  if (chamado) {
+    return res.json(chamado)
+  } else {
+    return res.status(HttpStatusCode.NotFound).json({
+      erro: true,
+      mensagem: 'Chamado não encontrado',
+    })
+  }
+})
+
+app.get('/download/:filename', (req, res) => {
+  const filename = req.params.filename // pega o nome do arquivo
+  const filePath = path.join(process.cwd(), 'public/uploads', filename) // Pega o caminho absoluto do arquivo e faz o download
+
+  res.download(filePath, (error) => {
+    if (error) {
+      console.error('Erro ao fazer o download do arquivo:', error)
+      res.status(404).json({ error: 'Arquivo não encontrado' })
+    }
   })
 })
 

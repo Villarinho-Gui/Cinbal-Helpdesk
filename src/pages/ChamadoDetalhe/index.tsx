@@ -39,7 +39,7 @@ const ChamadoDetalhe: React.FC = () => {
       tituloPagina={id === 'novo' ? '' : titulo}
       barraDeFerramentas={
         <BarraFerramentasDetalhesChamado
-          aoClicarEmVoltar={() => navigate('/abrir-chamado')}
+          aoClicarEmVoltar={() => navigate('/home')}
           mostrarBotaoAssumirChamado={true}
         />
       }

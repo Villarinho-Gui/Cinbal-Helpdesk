@@ -79,12 +79,7 @@ export default function AbrirChamado() {
     }
 
     try {
-      await api
-        .post('/abrir-chamado', formData, headers)
-        .then((response) => {
-          console.log(response)
-        })
-        .then(() => {})
+      await api.post('/abrir-chamado', formData, headers).then(() => {})
     } catch (error) {
       console.log(error)
     }
