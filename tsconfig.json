@@ -19,6 +19,6 @@
       "date-fns"
     ]
   },
-  "include": ["src/**/*.tsx", "src/index.d.ts"],
+  "include": ["src/**/*.tsx"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
