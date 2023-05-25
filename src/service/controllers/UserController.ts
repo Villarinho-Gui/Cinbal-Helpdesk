@@ -1,19 +1,33 @@
 import { NextFunction, Request, Response } from 'express'
 import { PrismaClient } from '@prisma/client'
-import bcrypt from 'bcryptjs'
 import { HttpStatusCode } from 'axios'
 
-// interface IUserDataProps {
-//   email: string
-//   password: string
-// }
+import bcrypt from 'bcryptjs'
+// import { Jwt } from 'jsonwebtoken'
+
+interface IUserDataProps {
+  id: number
+  name: string
+  email: string
+  password: string
+  extension: number
+  position: string
+  sector: string
+}
 
 const prisma = new PrismaClient()
 
 export class UserController {
   async create(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { name, email, password, extension, position, sector } = req.body
+      const {
+        name,
+        email,
+        password,
+        extension,
+        position,
+        sector,
+      }: IUserDataProps = req.body
 
       const hashedPassword = await bcrypt.hash(password, 8)
 
@@ -44,18 +58,25 @@ export class UserController {
 
   async login(req: Request, res: Response, next: NextFunction) {
     try {
-      const { email, password } = req.body
+      const { email, password }: IUserDataProps = req.body
 
-      const user = prisma.user.findUnique({
+      const user = await prisma.user.findUnique({
         where: { email },
       })
 
-      const passwordVerify = await bcrypt.compare(password, password)
-
-      if (user === null && passwordVerify) {
+      if (!user) {
         return res.status(HttpStatusCode.BadRequest).json({
           error: true,
-          message: 'Usuário ou senha incorretos',
+          message: 'Usuário ou senha incorretos a',
+        })
+      }
+
+      const passwordVerify = await bcrypt.compare(password, user.password)
+
+      if (!passwordVerify) {
+        return res.status(HttpStatusCode.BadRequest).json({
+          error: true,
+          message: 'Usuário ou senha incorretos b',
         })
       }
 
