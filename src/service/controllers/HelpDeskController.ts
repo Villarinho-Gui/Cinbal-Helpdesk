@@ -28,7 +28,7 @@ export class HelpDeskController {
 
       const createdFiles = files.map((file: Express.Multer.File) => ({
         id: uuidv4(),
-        url: file.filename,
+        url: file.path,
       }))
 
       const callHelpDesk = await prisma.call.create({
@@ -50,6 +50,8 @@ export class HelpDeskController {
       })
     } catch (error) {
       console.error(error)
+
+      next(error)
       res.status(HttpStatusCode.BadRequest).json({
         error: true,
         message: 'Ocorreu um erro ao tentar abrir o chamado',
@@ -80,6 +82,7 @@ export class HelpDeskController {
       }
     } catch (error) {
       console.error(error)
+      next(error)
       return res.status(HttpStatusCode.NotFound).json({
         erro: true,
         mensagem: 'Chamado não encontrado',
@@ -87,7 +90,7 @@ export class HelpDeskController {
     }
   }
 
-  async findAll(req: Request, res: Response, next: NextFunction) {
+  async findAll(_: Request, res: Response, next: NextFunction) {
     const prisma = new PrismaClient()
 
     try {
