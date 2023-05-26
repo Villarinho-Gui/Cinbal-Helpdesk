@@ -102,7 +102,7 @@ export class UserController {
         },
         process.env.JWT_SECRET_KEY ?? '',
         {
-          expiresIn: 600,
+          expiresIn: '1d',
         },
       )
 
