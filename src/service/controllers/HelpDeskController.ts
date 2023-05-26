@@ -15,6 +15,7 @@ interface HelpDeskData {
   category: string
   description: string
   files: FileData[]
+  createdAt: Date
 }
 
 export class HelpDeskController {
@@ -38,6 +39,7 @@ export class HelpDeskController {
           files: {
             create: createdFiles,
           },
+          createdAt: new Date(),
         },
       })
 
@@ -81,6 +83,26 @@ export class HelpDeskController {
       return res.status(HttpStatusCode.NotFound).json({
         erro: true,
         mensagem: 'Chamado não encontrado',
+      })
+    }
+  }
+
+  async findAll(req: Request, res: Response, next: NextFunction) {
+    const prisma = new PrismaClient()
+
+    try {
+      const allCallHelpDesk = await prisma.call.findMany()
+      return res.status(HttpStatusCode.Accepted).json({
+        allCallHelpDesk,
+        error: false,
+        message: 'Foram encontrado todos os chamados com sucesso!',
+      })
+    } catch (error) {
+      console.error(error)
+      next(error)
+      return res.status(HttpStatusCode.BadRequest).json({
+        error: true,
+        message: 'Falha ao listar os chamados',
       })
     }
   }
