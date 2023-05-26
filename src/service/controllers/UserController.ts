@@ -18,7 +18,11 @@ interface IUserDataProps {
 const prisma = new PrismaClient()
 
 export class UserController {
-  async create(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async create(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<Response | void> {
     try {
       const {
         name,
@@ -28,6 +32,17 @@ export class UserController {
         position,
         sector,
       }: IUserDataProps = req.body
+
+      const userExist = await prisma.user.findUnique({
+        where: { email },
+      })
+
+      if (userExist) {
+        return res.status(HttpStatusCode.Conflict).json({
+          error: true,
+          message: `O e-mail ${userExist} já existe!`,
+        })
+      }
 
       const hashedPassword = await bcrypt.hash(password, 8)
 
