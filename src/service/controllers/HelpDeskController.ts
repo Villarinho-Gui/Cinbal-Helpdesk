@@ -54,4 +54,34 @@ export class HelpDeskController {
       })
     }
   }
+
+  async find(req: Request, res: Response, next: NextFunction) {
+    try {
+      const id = req.params.id
+
+      const prisma = new PrismaClient()
+
+      const callHelpDesk = await prisma.call.findUnique({
+        where: {
+          id,
+        },
+        include: {
+          files: true,
+        },
+      })
+      if (callHelpDesk) {
+        return res.status(HttpStatusCode.Accepted).json({
+          callHelpDesk,
+          error: false,
+          message: 'Chamado encontrado com sucesso!',
+        })
+      }
+    } catch (error) {
+      console.error(error)
+      return res.status(HttpStatusCode.NotFound).json({
+        erro: true,
+        mensagem: 'Chamado não encontrado',
+      })
+    }
+  }
 }
