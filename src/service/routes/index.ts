@@ -14,4 +14,6 @@ router.post(
   new HelpDeskController().create,
 )
 
+router.get('/chamado/:id', new HelpDeskController().find)
+
 export { router }
