@@ -3,7 +3,8 @@ import { PrismaClient } from '@prisma/client'
 import { HttpStatusCode } from 'axios'
 
 import bcrypt from 'bcryptjs'
-// import { Jwt } from 'jsonwebtoken'
+import jwt from 'jsonwebtoken'
+import 'dotenv/config'
 
 interface IUserDataProps {
   id: number
@@ -95,9 +96,20 @@ export class UserController {
         })
       }
 
+      const token = jwt.sign(
+        {
+          id: user.id,
+        },
+        process.env.JWT_SECRET_KEY ?? '',
+        {
+          expiresIn: 600,
+        },
+      )
+
       return res.status(HttpStatusCode.Accepted).json({
         error: false,
         message: 'Login Realizado com sucesso!',
+        token,
       })
     } catch (error) {
       console.error(error)
