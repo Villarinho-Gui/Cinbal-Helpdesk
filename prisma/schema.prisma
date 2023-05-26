@@ -26,5 +26,12 @@ model call {
   title       String
   category    String
   description String
-  file        String
+  files       files[] @relation("CallToFiles")
+}
+
+model files {
+  id     String  @id @default(uuid())
+  url    String
+  text   call?   @relation("CallToFiles", fields: [callId], references: [id])
+  callId String?
 }
