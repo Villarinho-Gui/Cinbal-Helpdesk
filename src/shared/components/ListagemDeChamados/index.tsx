@@ -77,7 +77,7 @@ export const ListagemDeChamados: React.FC = () => {
           aoMudarTextoDeBusca={(value) => setSearch(value)}
           mostrarBotaoNovo
           mostrarBotaoFiltro
-          aoClicarEmNovo={() => navigate('/abrir-chamado')}
+          aoClicarEmNovo={() => navigate('/home/abrir-chamado')}
           aoClicarEmFiltrar={() => {}}
         />
         // ...
