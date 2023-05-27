@@ -13,7 +13,7 @@ import DownloadPage from '../pages/DownloadPage'
 export const AppRoutes: React.FC = () => {
   return (
     <Routes>
-      <Route path="/" element={<LoginLayout />}>
+      <Route path="/login" element={<LoginLayout />}>
         <Route path="/login" element={<Login />} />
         <Route path="/login/cadastro" element={<CadastroUsuario />} />
       </Route>
