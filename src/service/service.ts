@@ -9,7 +9,6 @@ const service = express()
 
 service.use(bodyParser.urlencoded({ extended: true }))
 service.use(bodyParser.json())
-service.use(router)
 service.use(cors())
 
 service.use((_, res: Response, next: NextFunction) => {
@@ -22,6 +21,7 @@ service.use((_, res: Response, next: NextFunction) => {
 
   next()
 })
+service.use(router)
 
 service.listen(process.env.PORT, () => {
   console.log('Servidor iniciado com sucesso!')
