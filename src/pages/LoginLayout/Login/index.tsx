@@ -17,7 +17,7 @@ import {
 import { SubmitHandler } from 'react-hook-form'
 
 interface LoginData {
-  nome: string
+  email: string
   password: string
 }
 
@@ -25,7 +25,7 @@ export const Login: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [userError, setUserError] = useState('')
   const [passwordError, setPasswordError] = useState('')
-  const [userNome, setUserNome] = useState('')
+  const [userEmail, setUserEmail] = useState('')
   const [userPassword, setUserPassword] = useState('')
   const [openErrorMessage, setOpenErrorMessage] = useState(false)
 
@@ -40,7 +40,7 @@ export const Login: React.FC = () => {
 
     try {
       const response = await api.post('/login', {
-        nome: data.nome,
+        email: data.email,
         password: data.password,
       })
 
@@ -52,7 +52,7 @@ export const Login: React.FC = () => {
   }
 
   const triggerLogin = async () => {
-    if (!userNome) {
+    if (!userEmail) {
       setUserError('Usuário não pode ser vazio')
       return
     }
@@ -63,7 +63,7 @@ export const Login: React.FC = () => {
 
     setIsLoading(true)
     const userData = await validateIfUserExistInDB({
-      nome: userNome,
+      email: userEmail,
       password: userPassword,
     })
     setIsLoading(false)
@@ -75,7 +75,7 @@ export const Login: React.FC = () => {
       return
     }
 
-    navigate('/home')
+    navigate('/home/dashboard')
   }
 
   const handleClose = (
@@ -133,8 +133,8 @@ export const Login: React.FC = () => {
           label="Usuário"
           type="text"
           autoComplete="username"
-          value={userNome}
-          onChange={(e) => setUserNome(e.target.value)}
+          value={userEmail}
+          onChange={(e) => setUserEmail(e.target.value)}
           fullWidth
           disabled={isLoading}
           error={!!userError}
