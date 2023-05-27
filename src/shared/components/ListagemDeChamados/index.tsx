@@ -10,13 +10,13 @@ import { BarraFerramentasListagemDeChamados } from '../BarraFerramentasListagemD
 import api from '../../../service/api/config/configApi'
 
 interface IListagemChamadoProp {
-  id: number
-  autor: string
-  titulo: string
-  categoria: string
-  setor: string
-  descricao: string
-  image: string
+  id: string
+  author: string
+  title: string
+  category: string
+  sector: string
+  description: string
+  files: string
   createdAt: Date
 }
 
@@ -40,6 +40,7 @@ export const ListagemDeChamados: React.FC = () => {
           createdAt: new Date(chamado.createdAt),
         }))
         setIsLoading(false)
+
         setChamados(chamadosFormatted)
       })
       .catch((error) => {
@@ -57,8 +58,8 @@ export const ListagemDeChamados: React.FC = () => {
       ? chamados
           .filter((chamado) => {
             return (
-              (chamado.titulo && chamado.titulo.includes(search)) ||
-              (chamado.descricao && chamado.descricao.includes(search))
+              (chamado.title && chamado.title.includes(search)) ||
+              (chamado.description && chamado.description.includes(search))
             )
           })
           .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
@@ -95,13 +96,13 @@ export const ListagemDeChamados: React.FC = () => {
               <ListItem key={chamado.id} disablePadding>
                 <Chamado
                   id={chamado.id}
-                  author={chamado.autor}
-                  titulo={chamado.titulo}
-                  categoria={chamado.categoria}
-                  descricao={chamado.descricao}
+                  author={chamado.author}
+                  title={chamado.title}
+                  category={chamado.category}
+                  description={chamado.description}
                   maxLines={2}
                   createdAt={chamado.createdAt}
-                  image={chamado.image}
+                  files={chamado.files}
                 />
               </ListItem>
             ))}
@@ -113,13 +114,13 @@ export const ListagemDeChamados: React.FC = () => {
             <ListItem key={chamado.id} disablePadding>
               <Chamado
                 id={chamado.id}
-                author={chamado.autor}
-                titulo={chamado.titulo}
-                categoria={chamado.categoria}
-                descricao={chamado.descricao}
+                author={chamado.author}
+                title={chamado.title}
+                category={chamado.category}
+                description={chamado.description}
                 maxLines={2}
                 createdAt={chamado.createdAt}
-                image={chamado.image}
+                files={chamado.files}
               />
             </ListItem>
           ))}
