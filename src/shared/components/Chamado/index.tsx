@@ -19,13 +19,13 @@ import { format, formatDistanceToNow } from 'date-fns'
 import ptBR from 'date-fns/locale/pt-BR'
 
 interface IChamadoProps {
-  id: number
+  id: string
   author: string
-  titulo: string
-  categoria: string
-  descricao: string
+  title: string
+  category: string
+  description: string
   maxLines: number
-  image?: string[] | undefined
+  files?: string[]
   createdAt: Date
 }
 export const Chamado: React.FC<IChamadoProps> = ({ id }) => {
@@ -47,10 +47,12 @@ export const Chamado: React.FC<IChamadoProps> = ({ id }) => {
     try {
       const response = await api.get<IChamadoProps>(`/chamado/${id}`)
       const { data } = response
+      console.log(data)
 
       data.createdAt = new Date(data.createdAt)
 
       setChamadoData(data)
+      console.log(chamadoData)
       setIsLoading(false)
     } catch (error) {
       console.error('Erro ao obter os dados do chamado', error)
@@ -136,7 +138,7 @@ export const Chamado: React.FC<IChamadoProps> = ({ id }) => {
               fontSize: 14,
             }}
           >
-            {chamadoData?.titulo}
+            {chamadoData?.title}
           </Typography>
 
           <Typography
@@ -145,11 +147,11 @@ export const Chamado: React.FC<IChamadoProps> = ({ id }) => {
             sx={descriptionStyle}
           >
             {' '}
-            {chamadoData?.descricao}
+            {chamadoData?.description}
           </Typography>
           <Box>
-            {Array.isArray(chamadoData?.image) &&
-              chamadoData?.image?.length > 0 && (
+            {Array.isArray(chamadoData?.files) &&
+              chamadoData?.files?.length > 0 && (
                 <Avatar sx={{ width: '25px', height: '25px', marginY: '10px' }}>
                   <MdImage size={15} color="info" />
                 </Avatar>
