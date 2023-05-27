@@ -13,30 +13,12 @@ import {
   Alert,
 } from '@mui/material'
 
-import logo from '../../../media/images/logo2-full.png'
+// import logo from '../../../media/images/logo2-full.png'
 import { SubmitHandler } from 'react-hook-form'
 
-interface ILoginForm {
+interface LoginData {
   nome: string
   password: string
-}
-
-const validateIfUserExistInDB: SubmitHandler<ILoginForm> = async (
-  data,
-  event,
-) => {
-  event?.preventDefault()
-
-  try {
-    const response = await api.post('/login', {
-      nome: data.nome,
-      password: data.password,
-    })
-
-    return response.data // ou o valor que você deseja retornar
-  } catch (error) {
-    return null // ou o valor que você deseja retornar
-  }
 }
 
 export const Login: React.FC = () => {
@@ -49,6 +31,25 @@ export const Login: React.FC = () => {
 
   const theme = useTheme()
   const navigate = useNavigate()
+
+  const validateIfUserExistInDB: SubmitHandler<LoginData> = async (
+    data,
+    event,
+  ) => {
+    event?.preventDefault()
+
+    try {
+      const response = await api.post('/login', {
+        nome: data.nome,
+        password: data.password,
+      })
+
+      return response.data
+    } catch (error) {
+      console.error(error)
+      return null
+    }
+  }
 
   const triggerLogin = async () => {
     if (!userNome) {
@@ -73,8 +74,6 @@ export const Login: React.FC = () => {
       setOpenErrorMessage(true)
       return
     }
-
-    // redirecionar para a página de home se o usuário existir
 
     navigate('/home')
   }
@@ -115,7 +114,7 @@ export const Login: React.FC = () => {
         alignItems={'center'}
         gap={2}
       >
-        <img src={logo} height={60} alt="Cinbal App" />
+        {/* <img src={logo} height={60} alt="Cinbal App" /> */}
         <Typography>Bem vindo(a) ao seu HelpDesk!</Typography>
       </Box>
 

@@ -10,6 +10,7 @@ const service = express()
 service.use(bodyParser.urlencoded({ extended: true }))
 service.use(bodyParser.json())
 service.use(router)
+service.use(cors())
 
 service.use((_, res: Response, next: NextFunction) => {
   res.header('Access-Control-Allow-Origin', '*')
@@ -18,7 +19,7 @@ service.use((_, res: Response, next: NextFunction) => {
     'Access-Control-Allow-Headers',
     'X-PINGOTHER, Content-Type, Authorization',
   )
-  service.use(cors())
+
   next()
 })
 
