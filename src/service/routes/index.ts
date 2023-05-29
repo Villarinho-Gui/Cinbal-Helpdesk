@@ -15,6 +15,7 @@ router.post(
 )
 
 router.get('/chamado/:id', new HelpDeskController().find)
+router.delete('/chamado/:id', new HelpDeskController().findIdAndDelete)
 router.get('/chamados', new HelpDeskController().findAll)
 
 export { router }
