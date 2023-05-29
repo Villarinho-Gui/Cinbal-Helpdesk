@@ -41,10 +41,10 @@ export default function AbrirChamado() {
 
   const [isLoading, setIsLoading] = useState(false)
 
-  const [titulo, setTitulo] = useState('')
-  const [descricao, setDescricao] = useState('')
-  const [categoria, setCategoria] = useState('')
-  const [image, setImage] = useState('')
+  const [title, setTitle] = useState('')
+  const [description, setDescription] = useState('')
+  const [category, setCategory] = useState('')
+  const [files, setFiles] = useState('')
   const [openSuccessMessage, setOpenSuccessMessage] = useState(false)
 
   const {
@@ -54,10 +54,10 @@ export default function AbrirChamado() {
   } = useForm({
     resolver: yupResolver(createChamadoSchema),
     defaultValues: {
-      titulo: '',
-      categoria: '',
-      descricao: '',
-      image: '',
+      title: '',
+      category: '',
+      description: '',
+      files: '',
     },
   })
 
@@ -66,12 +66,12 @@ export default function AbrirChamado() {
     setIsLoading(true)
     const formData = new FormData()
 
-    formData.append('titulo', titulo)
-    formData.append('categoria', categoria)
-    formData.append('descricao', descricao)
+    formData.append('title', title)
+    formData.append('category', category)
+    formData.append('description', description)
 
-    for (let i = 0; i < image.length; i++) {
-      formData.append('image', image[i])
+    for (let i = 0; i < files.length; i++) {
+      formData.append('files', files[i])
     }
 
     const headers = {
@@ -111,11 +111,11 @@ export default function AbrirChamado() {
   }
 
   function deleteImage(imageToDelete) {
-    const newListImageWithoutDeletedOne = image.filter((image) => {
+    const newListImageWithoutDeletedOne = files.filter((image) => {
       return image !== imageToDelete
     })
 
-    setImage(newListImageWithoutDeletedOne)
+    setFiles(newListImageWithoutDeletedOne)
   }
 
   const theme = useTheme()
@@ -167,13 +167,13 @@ export default function AbrirChamado() {
                     label="Título"
                     type="text"
                     variant="outlined"
-                    value={titulo}
+                    value={title}
                     disabled={isLoading}
-                    onChange={(e) => setTitulo(e.target.value)}
-                    error={!!errors.titulo}
+                    onChange={(e) => setTitle(e.target.value)}
+                    error={!!errors.title}
                     helperText={
                       <Typography variant="body2" color="error">
-                        {errors.titulo && <span>{errors.titulo?.message}</span>}
+                        {errors.title && <span>{errors.title?.message}</span>}
                       </Typography>
                     }
                     sx={{ width: '100%' }}
@@ -186,15 +186,15 @@ export default function AbrirChamado() {
                   {...register('categoria')}
                   placeholder="categoria"
                   name="categoria"
-                  value={categoria}
+                  value={category}
                   disabled={isLoading}
                   type="text"
-                  onChange={(e) => setCategoria(e.target.value)}
-                  error={!!errors.categoria}
+                  onChange={(e) => setCategory(e.target.value)}
+                  error={!!errors.category}
                   helperText={
                     <Typography variant="body2" color="error">
-                      {errors.categoria && (
-                        <span>{errors.categoria?.message}</span>
+                      {errors.category && (
+                        <span>{errors.category?.message}</span>
                       )}
                     </Typography>
                   }
@@ -229,14 +229,14 @@ export default function AbrirChamado() {
                 multiline
                 rows={4}
                 sx={{ width: '100%' }}
-                value={descricao}
-                onChange={(e) => setDescricao(e.target.value)}
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
                 disabled={isLoading}
-                error={!!errors.descricao}
+                error={!!errors.description}
                 helperText={
                   <Typography variant="body2" color="error">
-                    {errors.descricao && (
-                      <span>{errors.descricao?.message}</span>
+                    {errors.description && (
+                      <span>{errors.description?.message}</span>
                     )}
                   </Typography>
                 }
@@ -250,7 +250,7 @@ export default function AbrirChamado() {
               alignItems={'center'}
               gap={2}
             >
-              {image && image.length > 0 && (
+              {files && files.length > 0 && (
                 <Grid
                   container
                   gap={2}
@@ -258,7 +258,7 @@ export default function AbrirChamado() {
                   paddingX={2}
                   className="FileList"
                 >
-                  {image.map((file) => {
+                  {files.map((file) => {
                     return (
                       <FileList
                         image={file}
@@ -300,7 +300,7 @@ export default function AbrirChamado() {
                       multiple="3"
                       type="file"
                       onChange={(e) => {
-                        setImage([...image, ...e.target.files])
+                        setFiles([...files, ...e.target.files])
                         triggerNewImageChange(e)
                       }}
                     />
