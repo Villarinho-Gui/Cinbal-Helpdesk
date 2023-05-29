@@ -18,18 +18,29 @@ import api from '../../../service/api/config/configApi'
 import { format, formatDistanceToNow } from 'date-fns'
 import ptBR from 'date-fns/locale/pt-BR'
 
-interface IChamadoProps {
+export interface HelpDeskDataProps {
   id: string
-  author: string
+  author?: string
   title: string
-  category: string
+  category?: string
   description: string
   maxLines: number
   files?: string[]
   createdAt: Date
 }
-export const Chamado: React.FC<IChamadoProps> = ({ id }) => {
-  const [chamadoData, setChamadoData] = useState<IChamadoProps | null>(null)
+export const Chamado: React.FC<HelpDeskDataProps> = ({
+  id,
+  author,
+  description,
+  createdAt,
+  title,
+  category,
+  maxLines,
+  files,
+}) => {
+  const [helpDeskData, setHelpDeskData] = useState<HelpDeskDataProps | null>(
+    null,
+  )
   const [isLoading, setIsLoading] = useState(false)
 
   const navigate = useNavigate()
@@ -45,14 +56,10 @@ export const Chamado: React.FC<IChamadoProps> = ({ id }) => {
   const fetchChamado = async () => {
     setIsLoading(true)
     try {
-      const response = await api.get<IChamadoProps>(`/chamado/${id}`)
+      const response = await api.get<HelpDeskDataProps>(`/chamado/${id}`)
       const { data } = response
-      console.log(data)
 
-      data.createdAt = new Date(data.createdAt)
-
-      setChamadoData(data)
-      console.log(chamadoData)
+      setHelpDeskData(data)
       setIsLoading(false)
     } catch (error) {
       console.error('Erro ao obter os dados do chamado', error)
@@ -100,19 +107,11 @@ export const Chamado: React.FC<IChamadoProps> = ({ id }) => {
               sx={{ fontSize: '14px' }}
               color="text.secondary"
             >
-              {chamadoData?.author}
+              {author}
             </Typography>
-            <time
-              title={
-                chamadoData?.createdAt
-                  ? publishedDateFormatted(chamadoData.createdAt)
-                  : ''
-              }
-              dateTime={
-                chamadoData?.createdAt
-                  ? chamadoData.createdAt.toISOString()
-                  : ''
-              }
+            {/* <time
+              title={createdAt ? publishedDateFormatted(createdAt) : ''}
+              dateTime={createdAt ? createdAt.toISOString() : ''}
             >
               {isLoading ? (
                 <Skeleton
@@ -120,16 +119,16 @@ export const Chamado: React.FC<IChamadoProps> = ({ id }) => {
                   sx={{ fontSize: '1.5rem' }}
                   width="90px"
                 />
-              ) : chamadoData?.createdAt ? (
+              ) : createdAt ? (
                 <Typography
                   variant="body2"
                   sx={{ fontSize: '0.8rem' }}
                   color="text.secondary"
                 >
-                  {publishedDateRelativeToNow(chamadoData.createdAt)}
+                  {publishedDateRelativeToNow(createdAt)}
                 </Typography>
               ) : null}
-            </time>
+            </time> */}
           </Box>
           <Typography
             variant="h6"
@@ -138,7 +137,7 @@ export const Chamado: React.FC<IChamadoProps> = ({ id }) => {
               fontSize: 14,
             }}
           >
-            {chamadoData?.title}
+            {title}
           </Typography>
 
           <Typography
@@ -146,17 +145,16 @@ export const Chamado: React.FC<IChamadoProps> = ({ id }) => {
             color="text.secondary"
             sx={descriptionStyle}
           >
-            {' '}
-            {chamadoData?.description}
+            {description}
           </Typography>
-          <Box>
+          {/* <Box>
             {Array.isArray(chamadoData?.files) &&
               chamadoData?.files?.length > 0 && (
                 <Avatar sx={{ width: '25px', height: '25px', marginY: '10px' }}>
                   <MdImage size={15} color="info" />
                 </Avatar>
               )}
-          </Box>
+          </Box> */}
         </CardContent>
       </Card>
     </CardActionArea>
