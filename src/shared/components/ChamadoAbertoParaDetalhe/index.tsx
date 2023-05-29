@@ -12,21 +12,22 @@ import { useTheme } from '@mui/material/styles'
 import api from '../../../service/api/config/configApi'
 import { BsFillImageFill } from 'react-icons/bs'
 
-interface IChamadoAbertoParaDetalheProps {
+interface HelpDeskDetailsProps {
   author: string
   // setor: string
-  titulo: string
-  categoria: string
-  descricao: string
+  title: string
+  category: string
+  description: string
   maxLines: number
   createdAt: Date
-  image: string
+  files: string
 }
 
-export const ChamadoAbertoParaDetalhe: React.FC = () => {
+export const ChamadoAbertoParaDetalhe: React.FC<HelpDeskDetailsProps> = () => {
   const [isLoading, setIsLoading] = useState(false)
-  const [chamadoData, setChamadoData] =
-    useState<IChamadoAbertoParaDetalheProps | null>(null)
+  const [chamadoData, setChamadoData] = useState<HelpDeskDetailsProps | null>(
+    null,
+  )
   const [arquivosAnexados, setArquivosAnexados] = useState<string[]>([])
 
   const navigate = useNavigate()
@@ -36,20 +37,19 @@ export const ChamadoAbertoParaDetalhe: React.FC = () => {
   const fetchChamado = async () => {
     setIsLoading(true)
     try {
-      const response = await api.get<IChamadoAbertoParaDetalheProps>(
-        `/chamado/${id}`,
-      )
+      const response = await api.get<HelpDeskDetailsProps>(`/chamado/${id}`)
       const { data } = response
-      console.log(data)
+      const helpDeskData = Array.isArray(data) ? data : [data]
+      console.log(helpDeskData[0])
 
       data.createdAt = new Date(data.createdAt)
 
       /**
        * Extrai os nomes dos arquivos anexados
        */
-      const nomesArquivos = data.image ? [data.image] : []
+      const nomesArquivos = data.files ? [data.files] : []
 
-      setChamadoData(data)
+      setChamadoData(helpDeskData[0].callHelpDesk)
       setArquivosAnexados(nomesArquivos)
       setIsLoading(false)
     } catch (error) {
@@ -81,7 +81,7 @@ export const ChamadoAbertoParaDetalhe: React.FC = () => {
         mostrarBotaoTema={true}
         mostrarBotaoLogout
         mostrarBotaoPerfil
-        tituloPagina={id === 'novo' ? '' : chamadoData?.titulo}
+        tituloPagina={id === 'novo' ? '' : chamadoData?.title}
         barraDeFerramentas={
           <BarraFerramentasDetalhesChamado
             aoClicarEmVoltar={() => navigate('/home/dashboard')}
@@ -128,7 +128,7 @@ export const ChamadoAbertoParaDetalhe: React.FC = () => {
                 </Typography>
               )}
             </Box>
-            <time
+            {/* <time
               title={
                 chamadoData?.createdAt
                   ? publishedDateFormatted(chamadoData.createdAt)
@@ -155,7 +155,7 @@ export const ChamadoAbertoParaDetalhe: React.FC = () => {
                   {publishedDateRelativeToNow(chamadoData.createdAt)}
                 </Typography>
               ) : null}
-            </time>
+            </time> */}
           </Box>
           <Divider />
 
@@ -168,7 +168,7 @@ export const ChamadoAbertoParaDetalhe: React.FC = () => {
               />
             ) : (
               <Chip
-                label={chamadoData?.categoria}
+                label={chamadoData?.category}
                 size="small"
                 color="default"
               />
@@ -189,14 +189,14 @@ export const ChamadoAbertoParaDetalhe: React.FC = () => {
                 color="text.secondary"
                 sx={{ paddingBottom: '40px' }}
               >
-                {chamadoData?.descricao}
+                {chamadoData?.description}
               </Typography>
             )}
             <Divider />
             <Box display="flex" gap="10px"></Box>
           </Box>
 
-          {chamadoData?.image && chamadoData?.image.length > 0 && (
+          {/* {chamadoData?.image && chamadoData?.image.length > 0 && (
             <Box display="flex" width="100%" gap={2}>
               {chamadoData?.image?.map((imagem: string, index: number) => (
                 <Button
@@ -215,7 +215,7 @@ export const ChamadoAbertoParaDetalhe: React.FC = () => {
                 </Button>
               ))}
             </Box>
-          )}
+          )} */}
         </Box>
       </DefaultLayout>
     </>
