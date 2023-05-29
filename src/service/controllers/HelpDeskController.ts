@@ -1,16 +1,15 @@
 import { NextFunction, Request, Response, Express } from 'express'
 import { HttpStatusCode } from 'axios'
-import { v4 as uuidv4 } from 'uuid'
 
 import { PrismaClient } from '@prisma/client'
 
 interface FileData {
-  id: string
+  id: number
   url: string
 }
 
 interface HelpDeskData {
-  id: string
+  id: number
   title: string
   category: string
   description: string
@@ -27,7 +26,7 @@ export class HelpDeskController {
       const prisma = new PrismaClient()
 
       const createdFiles = files.map((file: Express.Multer.File) => ({
-        id: uuidv4(),
+        id: req.params.id,
         url: file.path,
       }))
 
@@ -67,7 +66,7 @@ export class HelpDeskController {
 
       const callHelpDesk = await prisma.call.findUnique({
         where: {
-          id,
+          id: Number(id),
         },
         include: {
           files: true,
