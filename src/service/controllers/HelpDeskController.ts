@@ -1,15 +1,16 @@
 import { NextFunction, Request, Response, Express } from 'express'
 import { HttpStatusCode } from 'axios'
+import { v4 as uuidv4 } from 'uuid'
 
 import { PrismaClient } from '@prisma/client'
 
 interface FileData {
-  id: number
+  id: string
   url: string
 }
 
 interface HelpDeskData {
-  id: number
+  id: string
   title: string
   category: string
   description: string
@@ -26,7 +27,7 @@ export class HelpDeskController {
       const prisma = new PrismaClient()
 
       const createdFiles = files.map((file: Express.Multer.File) => ({
-        id: req.params.id,
+        id: uuidv4(),
         url: file.path,
       }))
 
@@ -66,7 +67,7 @@ export class HelpDeskController {
 
       const callHelpDesk = await prisma.call.findUnique({
         where: {
-          id: Number(id),
+          id,
         },
         include: {
           files: true,
@@ -107,5 +108,20 @@ export class HelpDeskController {
         message: 'Falha ao listar os chamados',
       })
     }
+  }
+
+  async findIdAndDelete(req: Request, res: Response, next: NextFunction) {
+    const id = req.params.id
+
+    const prisma = new PrismaClient()
+
+    const callHelpDesk = await prisma.call.delete({
+      where: {
+        id,
+      },
+    })
+    next()
+
+    return res.json({ message: 'Chamado apagado com sucesso!', callHelpDesk })
   }
 }
