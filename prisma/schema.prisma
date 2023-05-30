@@ -6,7 +6,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
@@ -21,13 +21,13 @@ model user {
 }
 
 model call {
-  id          String  @id @default(uuid())
+  id          String   @id @default(uuid())
   author      String?
   title       String
   category    String
   description String
-  files       files[] @relation("CallToFiles")
-  createdAt   String
+  files       files[]  @relation("CallToFiles")
+  createdAt   DateTime @db.DateTime()
 }
 
 model files {
