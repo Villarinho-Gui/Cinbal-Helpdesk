@@ -21,13 +21,13 @@ model user {
 }
 
 model call {
-  id          String   @id @default(uuid())
+  id          String  @id @default(uuid())
   author      String?
   title       String
   category    String
   description String
-  files       files[]  @relation("CallToFiles")
-  createdAt   DateTime @default(now())
+  files       files[] @relation("CallToFiles")
+  createdAt   String
 }
 
 model files {
