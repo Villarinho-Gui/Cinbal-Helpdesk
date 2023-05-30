@@ -3,6 +3,7 @@ import { HttpStatusCode } from 'axios'
 import { v4 as uuidv4 } from 'uuid'
 
 import { PrismaClient } from '@prisma/client'
+import { DateTime } from 'luxon'
 
 interface FileData {
   id: string
@@ -26,6 +27,8 @@ export class HelpDeskController {
 
       const prisma = new PrismaClient()
 
+      const createdAt = DateTime.now().toISO()!
+
       const createdFiles = files.map((file: Express.Multer.File) => ({
         id: uuidv4(),
         url: file.path,
@@ -39,7 +42,7 @@ export class HelpDeskController {
           files: {
             create: createdFiles,
           },
-          createdAt: new Date(),
+          createdAt,
         },
       })
 
