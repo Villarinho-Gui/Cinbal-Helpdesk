@@ -38,9 +38,8 @@ export const ListagemDeChamados: React.FC = () => {
         const formattedHelpDesks = helpDeskData.map((helpDesk) => ({
           ...helpDesk,
         }))
-        // console.log(formattedHelpDesks[0].allCallHelpDesk)
+
         setIsLoading(false)
-        // setHelpDesks(formattedHelpDesks)
         setHelpDesks(formattedHelpDesks[0].allCallHelpDesk)
       })
       .catch((error) => {
@@ -103,7 +102,7 @@ export const ListagemDeChamados: React.FC = () => {
                   category={UniqueHelpDesk.category}
                   description={UniqueHelpDesk.description}
                   maxLines={2}
-                  createdAt={UniqueHelpDesk.createdAt}
+                  createdAt={new Date(UniqueHelpDesk.createdAt)}
                   files={UniqueHelpDesk.files}
                 />
               </ListItem>
@@ -121,7 +120,7 @@ export const ListagemDeChamados: React.FC = () => {
                 category={UniqueHelpDesk.category}
                 description={UniqueHelpDesk.description}
                 maxLines={2}
-                createdAt={UniqueHelpDesk.createdAt}
+                createdAt={new Date(UniqueHelpDesk.createdAt)}
               />
             </ListItem>
           ))}
