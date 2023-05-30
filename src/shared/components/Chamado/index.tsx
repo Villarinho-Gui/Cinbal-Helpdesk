@@ -1,7 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
 import {
-  Avatar,
   Box,
   Card,
   CardActionArea,
@@ -15,7 +14,7 @@ import { MdImage } from 'react-icons/md'
 import { useNavigate } from 'react-router-dom'
 
 import api from '../../../service/api/config/configApi'
-import { format, formatDistanceToNow } from 'date-fns'
+import { format, formatDistanceToNow, parseISO } from 'date-fns'
 import ptBR from 'date-fns/locale/pt-BR'
 
 export interface HelpDeskDataProps {
@@ -34,13 +33,8 @@ export const Chamado: React.FC<HelpDeskDataProps> = ({
   description,
   createdAt,
   title,
-  category,
-  maxLines,
-  files,
 }) => {
-  const [helpDeskData, setHelpDeskData] = useState<HelpDeskDataProps | null>(
-    null,
-  )
+  const [_, setHelpDeskData] = useState<HelpDeskDataProps | null>(null)
   const [isLoading, setIsLoading] = useState(false)
 
   const navigate = useNavigate()
@@ -58,7 +52,6 @@ export const Chamado: React.FC<HelpDeskDataProps> = ({
     try {
       const response = await api.get<HelpDeskDataProps>(`/chamado/${id}`)
       const { data } = response
-
       setHelpDeskData(data)
       setIsLoading(false)
     } catch (error) {
@@ -71,14 +64,14 @@ export const Chamado: React.FC<HelpDeskDataProps> = ({
     fetchChamado()
   }, [id])
 
-  const publishedDateFormatted = (data: Date) => {
-    return format(data, "d 'de' LLLL 'às' HH:mm'h'", {
+  const publishedDateFormatted = () => {
+    return format(createdAt, "d 'de' LLLL 'às' HH:mm'h'", {
       locale: ptBR,
     })
   }
 
-  const publishedDateRelativeToNow = (data: Date) => {
-    return formatDistanceToNow(data, {
+  const publishedDateRelativeToNow = () => {
+    return formatDistanceToNow(createdAt, {
       locale: ptBR,
       addSuffix: true,
     })
@@ -109,8 +102,8 @@ export const Chamado: React.FC<HelpDeskDataProps> = ({
             >
               {author}
             </Typography>
-            {/* <time
-              title={createdAt ? publishedDateFormatted(createdAt) : ''}
+            <time
+              title={createdAt ? publishedDateFormatted() : ''}
               dateTime={createdAt ? createdAt.toISOString() : ''}
             >
               {isLoading ? (
@@ -125,10 +118,10 @@ export const Chamado: React.FC<HelpDeskDataProps> = ({
                   sx={{ fontSize: '0.8rem' }}
                   color="text.secondary"
                 >
-                  {publishedDateRelativeToNow(createdAt)}
+                  {publishedDateRelativeToNow()}
                 </Typography>
               ) : null}
-            </time> */}
+            </time>
           </Box>
           <Typography
             variant="h6"
