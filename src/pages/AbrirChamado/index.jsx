@@ -135,6 +135,7 @@ export default function AbrirChamado() {
       mostrarBotaoLogout
       mostrarBotaoPerfil
       mostrarBotaoTema
+      mostrarBotaoHome
     >
       <Box
         borderRadius={1}
