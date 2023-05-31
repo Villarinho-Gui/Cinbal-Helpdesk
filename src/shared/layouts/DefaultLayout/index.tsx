@@ -122,13 +122,15 @@ const DefaultLayout: React.FC<IDefaultLayoutProps> = ({
             )}
 
             {mostrarBotaoTema && (
-              <IconButton onClick={toggleTheme}>
-                {themeName === 'dark' ? (
-                  <HiSun size={20} />
-                ) : (
-                  <BsMoonFill size={20} />
-                )}
-              </IconButton>
+              <Tooltip title="Alterar Tema" placement="bottom" arrow>
+                <IconButton onClick={toggleTheme}>
+                  {themeName === 'dark' ? (
+                    <HiSun size={20} />
+                  ) : (
+                    <BsMoonFill size={20} />
+                  )}
+                </IconButton>
+              </Tooltip>
             )}
           </Box>
         </Box>
