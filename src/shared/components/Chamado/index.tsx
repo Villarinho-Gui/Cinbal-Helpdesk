@@ -7,14 +7,16 @@ import {
   CardContent,
   Skeleton,
   Typography,
+  Icon,
+  Chip,
 } from '@mui/material'
 import React, { useState, useEffect } from 'react'
 
-import { MdImage } from 'react-icons/md'
+import { FiPaperclip } from 'react-icons/fi'
 import { useNavigate } from 'react-router-dom'
 
 import api from '../../../service/api/config/configApi'
-import { format, formatDistanceToNow, parseISO } from 'date-fns'
+import { format, formatDistanceToNow } from 'date-fns'
 import ptBR from 'date-fns/locale/pt-BR'
 
 export interface HelpDeskDataProps {
@@ -33,9 +35,13 @@ export const Chamado: React.FC<HelpDeskDataProps> = ({
   description,
   createdAt,
   title,
+  files,
 }) => {
-  const [_, setHelpDeskData] = useState<HelpDeskDataProps | null>(null)
+  const [helpDeskData, setHelpDeskData] = useState<HelpDeskDataProps | null>(
+    null,
+  )
   const [isLoading, setIsLoading] = useState(false)
+  const [attachedFiles, setAttachedFiles] = useState<string[]>([])
 
   const navigate = useNavigate()
 
@@ -53,6 +59,7 @@ export const Chamado: React.FC<HelpDeskDataProps> = ({
       const response = await api.get<HelpDeskDataProps>(`/chamado/${id}`)
       const { data } = response
       setHelpDeskData(data)
+      setAttachedFiles(Object.values(data)[0].files)
       setIsLoading(false)
     } catch (error) {
       console.error('Erro ao obter os dados do chamado', error)
@@ -140,14 +147,25 @@ export const Chamado: React.FC<HelpDeskDataProps> = ({
           >
             {description}
           </Typography>
-          {/* <Box>
-            {Array.isArray(chamadoData?.files) &&
-              chamadoData?.files?.length > 0 && (
-                <Avatar sx={{ width: '25px', height: '25px', marginY: '10px' }}>
-                  <MdImage size={15} color="info" />
-                </Avatar>
-              )}
-          </Box> */}
+          <Box
+            display={'flex'}
+            alignItems={'center'}
+            justifyContent={'space-between'}
+          >
+            {attachedFiles && attachedFiles.length > 0 ? (
+              <Icon>
+                <FiPaperclip size={15} color="#49B3E8" />
+              </Icon>
+            ) : (
+              ''
+            )}
+
+            <Chip
+              label={id}
+              size="small"
+              sx={{ width: '12ch', position: 'absolute', right: '10px' }}
+            />
+          </Box>
         </CardContent>
       </Card>
     </CardActionArea>
