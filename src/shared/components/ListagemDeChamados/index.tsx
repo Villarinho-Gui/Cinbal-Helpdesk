@@ -20,7 +20,7 @@ interface HelpDeskListProp extends HelpDeskDataProps {
 }
 
 export const ListagemDeChamados: React.FC = () => {
-  const [helpDesks, setHelpDesks] = useState<HelpDeskListProp[]>([])
+  const [helpDeskData, setHelpDeskData] = useState<HelpDeskListProp[]>([])
   const [search, setSearch] = useState('')
   const [isLoading, setIsLoading] = useState<boolean>(true)
 
@@ -33,13 +33,9 @@ export const ListagemDeChamados: React.FC = () => {
       .get('/chamados')
       .then((response) => {
         const { data } = response
-        const helpDeskData = Array.isArray(data) ? data : [data]
-        const formattedHelpDesks = helpDeskData.map((helpDesk) => ({
-          ...helpDesk,
-        }))
 
         setIsLoading(false)
-        setHelpDesks(formattedHelpDesks[0].allCallHelpDesk)
+        setHelpDeskData(Object.values(data)[0] as HelpDeskListProp[])
       })
       .catch((error) => {
         console.log(error)
@@ -53,14 +49,12 @@ export const ListagemDeChamados: React.FC = () => {
 
   const filteredHelpDesks =
     search.length > 0
-      ? helpDesks
-          .filter((helpDesk) => {
-            return (
-              (helpDesk.title && helpDesk.title.includes(search)) ||
-              (helpDesk.description && helpDesk.description.includes(search))
-            )
-          })
-          .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+      ? helpDeskData.filter((helpDesk) => {
+          return (
+            (helpDesk.title && helpDesk.title.includes(search)) ||
+            (helpDesk.description && helpDesk.description.includes(search))
+          )
+        })
       : []
 
   return (
@@ -110,7 +104,7 @@ export const ListagemDeChamados: React.FC = () => {
         )
       ) : (
         <List sx={{ overflow: 'auto', padding: '0px' }}>
-          {helpDesks.map((UniqueHelpDesk) => (
+          {helpDeskData.map((UniqueHelpDesk) => (
             <ListItem key={UniqueHelpDesk.id} disablePadding>
               <Chamado
                 id={UniqueHelpDesk.id}
