@@ -12,22 +12,24 @@ import { useTheme } from '@mui/material/styles'
 import api from '../../../service/api/config/configApi'
 import { BsFillImageFill } from 'react-icons/bs'
 
-interface IChamadoAbertoParaDetalheProps {
+interface HelpDeskDetailsProps {
   author: string
-  // setor: string
-  titulo: string
-  categoria: string
-  descricao: string
+  title: string
+  category: string
+  description: string
   maxLines: number
   createdAt: Date
-  image: string
+  files: string
 }
 
-export const ChamadoAbertoParaDetalhe: React.FC = () => {
+export const ChamadoAbertoParaDetalhe: React.FC<HelpDeskDetailsProps> = () => {
   const [isLoading, setIsLoading] = useState(false)
-  const [chamadoData, setChamadoData] =
-    useState<IChamadoAbertoParaDetalheProps | null>(null)
-  const [arquivosAnexados, setArquivosAnexados] = useState<string[]>([])
+  const [helpDeskData, setHelpDeskData] = useState<HelpDeskDetailsProps | null>(
+    null,
+  )
+
+  const [createdAtFormatted, setCreatedAtFormatted] = useState<Date>()
+  // const [arquivosAnexados, setArquivosAnexados] = useState<string[]>([])
 
   const navigate = useNavigate()
   const theme = useTheme()
@@ -36,21 +38,18 @@ export const ChamadoAbertoParaDetalhe: React.FC = () => {
   const fetchChamado = async () => {
     setIsLoading(true)
     try {
-      const response = await api.get<IChamadoAbertoParaDetalheProps>(
-        `/chamado/${id}`,
-      )
+      const response = await api.get<HelpDeskDetailsProps>(`/chamado/${id}`)
       const { data } = response
-      console.log(data)
-
-      data.createdAt = new Date(data.createdAt)
-
       /**
        * Extrai os nomes dos arquivos anexados
        */
-      const nomesArquivos = data.image ? [data.image] : []
+      // const nomesArquivos = data.files ? [data.files] : []
 
-      setChamadoData(data)
-      setArquivosAnexados(nomesArquivos)
+      const formattedCreatedAt = new Date(Object.values(data)[0].createdAt)
+
+      setHelpDeskData(Object.values(data)[0])
+      setCreatedAtFormatted(formattedCreatedAt)
+      // setArquivosAnexados(nomesArquivos)
       setIsLoading(false)
     } catch (error) {
       console.error('Erro ao obter os dados do chamado', error)
@@ -81,10 +80,10 @@ export const ChamadoAbertoParaDetalhe: React.FC = () => {
         mostrarBotaoTema={true}
         mostrarBotaoLogout
         mostrarBotaoPerfil
-        tituloPagina={id === 'novo' ? '' : chamadoData?.titulo}
+        tituloPagina={id === 'novo' ? '' : helpDeskData?.title}
         barraDeFerramentas={
           <BarraFerramentasDetalhesChamado
-            aoClicarEmVoltar={() => navigate('/home')}
+            aoClicarEmVoltar={() => navigate('/home/dashboard')}
             mostrarBotaoAssumirChamado={true}
           />
         }
@@ -108,7 +107,7 @@ export const ChamadoAbertoParaDetalhe: React.FC = () => {
                 />
               ) : (
                 <Typography variant="h5" sx={{ fontSize: '1rem' }}>
-                  {chamadoData?.author}
+                  {helpDeskData?.author}
                 </Typography>
               )}
 
@@ -130,14 +129,12 @@ export const ChamadoAbertoParaDetalhe: React.FC = () => {
             </Box>
             <time
               title={
-                chamadoData?.createdAt
-                  ? publishedDateFormatted(chamadoData.createdAt)
+                createdAtFormatted
+                  ? publishedDateFormatted(createdAtFormatted)
                   : ''
               }
               dateTime={
-                chamadoData?.createdAt
-                  ? chamadoData.createdAt.toISOString()
-                  : ''
+                createdAtFormatted ? createdAtFormatted.toISOString() : ''
               }
             >
               {isLoading ? (
@@ -146,13 +143,13 @@ export const ChamadoAbertoParaDetalhe: React.FC = () => {
                   sx={{ fontSize: '1.5rem' }}
                   width="90px"
                 />
-              ) : chamadoData?.createdAt ? (
+              ) : createdAtFormatted ? (
                 <Typography
                   variant="body2"
                   sx={{ fontSize: '0.8rem' }}
                   color="text.secondary"
                 >
-                  {publishedDateRelativeToNow(chamadoData.createdAt)}
+                  {publishedDateRelativeToNow(createdAtFormatted)}
                 </Typography>
               ) : null}
             </time>
@@ -168,7 +165,7 @@ export const ChamadoAbertoParaDetalhe: React.FC = () => {
               />
             ) : (
               <Chip
-                label={chamadoData?.categoria}
+                label={helpDeskData?.category}
                 size="small"
                 color="default"
               />
@@ -189,14 +186,14 @@ export const ChamadoAbertoParaDetalhe: React.FC = () => {
                 color="text.secondary"
                 sx={{ paddingBottom: '40px' }}
               >
-                {chamadoData?.descricao}
+                {helpDeskData?.description}
               </Typography>
             )}
             <Divider />
             <Box display="flex" gap="10px"></Box>
           </Box>
 
-          {chamadoData?.image && chamadoData?.image.length > 0 && (
+          {/* {chamadoData?.image && chamadoData?.image.length > 0 && (
             <Box display="flex" width="100%" gap={2}>
               {chamadoData?.image?.map((imagem: string, index: number) => (
                 <Button
@@ -215,7 +212,7 @@ export const ChamadoAbertoParaDetalhe: React.FC = () => {
                 </Button>
               ))}
             </Box>
-          )}
+          )} */}
         </Box>
       </DefaultLayout>
     </>

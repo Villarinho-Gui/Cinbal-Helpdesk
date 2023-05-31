@@ -1,7 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
 import {
-  Avatar,
   Box,
   Card,
   CardActionArea,
@@ -15,21 +14,27 @@ import { MdImage } from 'react-icons/md'
 import { useNavigate } from 'react-router-dom'
 
 import api from '../../../service/api/config/configApi'
-import { format, formatDistanceToNow } from 'date-fns'
+import { format, formatDistanceToNow, parseISO } from 'date-fns'
 import ptBR from 'date-fns/locale/pt-BR'
 
-interface IChamadoProps {
-  id: number
-  author: string
-  titulo: string
-  categoria: string
-  descricao: string
+export interface HelpDeskDataProps {
+  id: string
+  author?: string
+  title: string
+  category?: string
+  description: string
   maxLines: number
-  image?: string[] | undefined
+  files?: string[]
   createdAt: Date
 }
-export const Chamado: React.FC<IChamadoProps> = ({ id }) => {
-  const [chamadoData, setChamadoData] = useState<IChamadoProps | null>(null)
+export const Chamado: React.FC<HelpDeskDataProps> = ({
+  id,
+  author,
+  description,
+  createdAt,
+  title,
+}) => {
+  const [_, setHelpDeskData] = useState<HelpDeskDataProps | null>(null)
   const [isLoading, setIsLoading] = useState(false)
 
   const navigate = useNavigate()
@@ -45,12 +50,9 @@ export const Chamado: React.FC<IChamadoProps> = ({ id }) => {
   const fetchChamado = async () => {
     setIsLoading(true)
     try {
-      const response = await api.get<IChamadoProps>(`/chamado/${id}`)
+      const response = await api.get<HelpDeskDataProps>(`/chamado/${id}`)
       const { data } = response
-
-      data.createdAt = new Date(data.createdAt)
-
-      setChamadoData(data)
+      setHelpDeskData(data)
       setIsLoading(false)
     } catch (error) {
       console.error('Erro ao obter os dados do chamado', error)
@@ -62,14 +64,14 @@ export const Chamado: React.FC<IChamadoProps> = ({ id }) => {
     fetchChamado()
   }, [id])
 
-  const publishedDateFormatted = (data: Date) => {
-    return format(data, "d 'de' LLLL 'às' HH:mm'h'", {
+  const publishedDateFormatted = () => {
+    return format(createdAt, "d 'de' LLLL 'às' HH:mm'h'", {
       locale: ptBR,
     })
   }
 
-  const publishedDateRelativeToNow = (data: Date) => {
-    return formatDistanceToNow(data, {
+  const publishedDateRelativeToNow = () => {
+    return formatDistanceToNow(createdAt, {
       locale: ptBR,
       addSuffix: true,
     })
@@ -98,19 +100,11 @@ export const Chamado: React.FC<IChamadoProps> = ({ id }) => {
               sx={{ fontSize: '14px' }}
               color="text.secondary"
             >
-              {chamadoData?.author}
+              {author}
             </Typography>
             <time
-              title={
-                chamadoData?.createdAt
-                  ? publishedDateFormatted(chamadoData.createdAt)
-                  : ''
-              }
-              dateTime={
-                chamadoData?.createdAt
-                  ? chamadoData.createdAt.toISOString()
-                  : ''
-              }
+              title={createdAt ? publishedDateFormatted() : ''}
+              dateTime={createdAt ? createdAt.toISOString() : ''}
             >
               {isLoading ? (
                 <Skeleton
@@ -118,13 +112,13 @@ export const Chamado: React.FC<IChamadoProps> = ({ id }) => {
                   sx={{ fontSize: '1.5rem' }}
                   width="90px"
                 />
-              ) : chamadoData?.createdAt ? (
+              ) : createdAt ? (
                 <Typography
                   variant="body2"
                   sx={{ fontSize: '0.8rem' }}
                   color="text.secondary"
                 >
-                  {publishedDateRelativeToNow(chamadoData.createdAt)}
+                  {publishedDateRelativeToNow()}
                 </Typography>
               ) : null}
             </time>
@@ -136,7 +130,7 @@ export const Chamado: React.FC<IChamadoProps> = ({ id }) => {
               fontSize: 14,
             }}
           >
-            {chamadoData?.titulo}
+            {title}
           </Typography>
 
           <Typography
@@ -144,17 +138,16 @@ export const Chamado: React.FC<IChamadoProps> = ({ id }) => {
             color="text.secondary"
             sx={descriptionStyle}
           >
-            {' '}
-            {chamadoData?.descricao}
+            {description}
           </Typography>
-          <Box>
-            {Array.isArray(chamadoData?.image) &&
-              chamadoData?.image?.length > 0 && (
+          {/* <Box>
+            {Array.isArray(chamadoData?.files) &&
+              chamadoData?.files?.length > 0 && (
                 <Avatar sx={{ width: '25px', height: '25px', marginY: '10px' }}>
                   <MdImage size={15} color="info" />
                 </Avatar>
               )}
-          </Box>
+          </Box> */}
         </CardContent>
       </Card>
     </CardActionArea>

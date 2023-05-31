@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-key */
 import React, { useState, useEffect } from 'react'
 import DefaultLayout from '../../layouts/DefaultLayout'
-import { Chamado } from '../Chamado'
+import { Chamado, HelpDeskDataProps } from '../Chamado'
 import { useNavigate } from 'react-router-dom'
 
 import { LinearProgress, List, ListItem, Typography } from '@mui/material'
@@ -9,19 +9,18 @@ import { BarraFerramentasListagemDeChamados } from '../BarraFerramentasListagemD
 
 import api from '../../../service/api/config/configApi'
 
-interface IListagemChamadoProp {
-  id: number
-  autor: string
-  titulo: string
-  categoria: string
-  setor: string
-  descricao: string
-  image: string
+interface HelpDeskListProp extends HelpDeskDataProps {
+  id: string
+  author: string
+  title: string
+  category: string
+  description: string
+  files?: string[]
   createdAt: Date
 }
 
 export const ListagemDeChamados: React.FC = () => {
-  const [chamados, setChamados] = useState<IListagemChamadoProp[]>([])
+  const [helpDeskData, setHelpDeskData] = useState<HelpDeskListProp[]>([])
   const [search, setSearch] = useState('')
   const [isLoading, setIsLoading] = useState<boolean>(true)
 
@@ -34,13 +33,9 @@ export const ListagemDeChamados: React.FC = () => {
       .get('/chamados')
       .then((response) => {
         const { data } = response
-        const chamadosData = Array.isArray(data) ? data : [data]
-        const chamadosFormatted = chamadosData.map((chamado) => ({
-          ...chamado,
-          createdAt: new Date(chamado.createdAt),
-        }))
+
         setIsLoading(false)
-        setChamados(chamadosFormatted)
+        setHelpDeskData(Object.values(data)[0] as HelpDeskListProp[])
       })
       .catch((error) => {
         console.log(error)
@@ -52,16 +47,14 @@ export const ListagemDeChamados: React.FC = () => {
    * Função para verificar se há algo escrito na caixa de pesquisa, e caso tenha, retorne o chamado de acordo com o título ou a descrição pelo mais recente primeiro.
    */
 
-  const filteredChamados =
+  const filteredHelpDesks =
     search.length > 0
-      ? chamados
-          .filter((chamado) => {
-            return (
-              (chamado.titulo && chamado.titulo.includes(search)) ||
-              (chamado.descricao && chamado.descricao.includes(search))
-            )
-          })
-          .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+      ? helpDeskData.filter((helpDesk) => {
+          return (
+            (helpDesk.title && helpDesk.title.includes(search)) ||
+            (helpDesk.description && helpDesk.description.includes(search))
+          )
+        })
       : []
 
   return (
@@ -74,10 +67,12 @@ export const ListagemDeChamados: React.FC = () => {
         <BarraFerramentasListagemDeChamados
           mostrarInputBusca
           textoBusca={search}
-          aoMudarTextoDeBusca={(value) => setSearch(value)}
+          aoMudarTextoDeBusca={(value) => {
+            setSearch(value)
+          }}
           mostrarBotaoNovo
           mostrarBotaoFiltro
-          aoClicarEmNovo={() => navigate('/abrir-chamado')}
+          aoClicarEmNovo={() => navigate('/home/abrir-chamado')}
           aoClicarEmFiltrar={() => {}}
         />
         // ...
@@ -85,23 +80,23 @@ export const ListagemDeChamados: React.FC = () => {
     >
       {isLoading && <LinearProgress variant="indeterminate" />}
       {search.length > 0 ? (
-        filteredChamados.length === 0 ? (
+        filteredHelpDesks.length === 0 ? (
           <Typography variant="body2" sx={{ marginLeft: '10px' }}>
             Nenhum chamado correspondente
           </Typography>
         ) : (
           <List sx={{ overflow: 'auto', padding: '0px' }}>
-            {filteredChamados.map((chamado: IListagemChamadoProp) => (
-              <ListItem key={chamado.id} disablePadding>
+            {filteredHelpDesks.map((UniqueHelpDesk) => (
+              <ListItem key={UniqueHelpDesk.id} disablePadding>
                 <Chamado
-                  id={chamado.id}
-                  author={chamado.autor}
-                  titulo={chamado.titulo}
-                  categoria={chamado.categoria}
-                  descricao={chamado.descricao}
+                  id={UniqueHelpDesk.id}
+                  author={UniqueHelpDesk.author}
+                  title={UniqueHelpDesk.title}
+                  category={UniqueHelpDesk.category}
+                  description={UniqueHelpDesk.description}
                   maxLines={2}
-                  createdAt={chamado.createdAt}
-                  image={chamado.image}
+                  createdAt={new Date(UniqueHelpDesk.createdAt)}
+                  files={UniqueHelpDesk.files}
                 />
               </ListItem>
             ))}
@@ -109,17 +104,16 @@ export const ListagemDeChamados: React.FC = () => {
         )
       ) : (
         <List sx={{ overflow: 'auto', padding: '0px' }}>
-          {chamados.map((chamado: IListagemChamadoProp) => (
-            <ListItem key={chamado.id} disablePadding>
+          {helpDeskData.map((UniqueHelpDesk) => (
+            <ListItem key={UniqueHelpDesk.id} disablePadding>
               <Chamado
-                id={chamado.id}
-                author={chamado.autor}
-                titulo={chamado.titulo}
-                categoria={chamado.categoria}
-                descricao={chamado.descricao}
+                id={UniqueHelpDesk.id}
+                author={UniqueHelpDesk.author}
+                title={UniqueHelpDesk.title}
+                category={UniqueHelpDesk.category}
+                description={UniqueHelpDesk.description}
                 maxLines={2}
-                createdAt={chamado.createdAt}
-                image={chamado.image}
+                createdAt={new Date(UniqueHelpDesk.createdAt)}
               />
             </ListItem>
           ))}

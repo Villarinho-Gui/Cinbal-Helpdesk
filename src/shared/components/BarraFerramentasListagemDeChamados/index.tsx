@@ -66,7 +66,7 @@ export const BarraFerramentasListagemDeChamados: React.FC<
       <Box display="flex" flex={1} justifyContent="end">
         {mostrarBotaoHome && (
           <Tooltip title="Página Inicial" placement="top" arrow>
-            <IconButton onClick={() => navigate('/home')}>
+            <IconButton onClick={() => navigate('/home/dashboard')}>
               <Icon>
                 <AiFillHome size={20} />
               </Icon>

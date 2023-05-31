@@ -13,45 +13,46 @@ import {
   Alert,
 } from '@mui/material'
 
-import logo from '../../../media/images/logo2-full.png'
+// import logo from '../../../media/images/logo2-full.png'
 import { SubmitHandler } from 'react-hook-form'
 
-interface ILoginForm {
-  nome: string
+interface LoginData {
+  email: string
   password: string
-}
-
-const validateIfUserExistInDB: SubmitHandler<ILoginForm> = async (
-  data,
-  event,
-) => {
-  event?.preventDefault()
-
-  try {
-    const response = await api.post('/login', {
-      nome: data.nome,
-      password: data.password,
-    })
-
-    return response.data // ou o valor que você deseja retornar
-  } catch (error) {
-    return null // ou o valor que você deseja retornar
-  }
 }
 
 export const Login: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [userError, setUserError] = useState('')
   const [passwordError, setPasswordError] = useState('')
-  const [userNome, setUserNome] = useState('')
+  const [userEmail, setUserEmail] = useState('')
   const [userPassword, setUserPassword] = useState('')
   const [openErrorMessage, setOpenErrorMessage] = useState(false)
 
   const theme = useTheme()
   const navigate = useNavigate()
 
+  const validateIfUserExistInDB: SubmitHandler<LoginData> = async (
+    data,
+    event,
+  ) => {
+    event?.preventDefault()
+
+    try {
+      const response = await api.post('/login', {
+        email: data.email,
+        password: data.password,
+      })
+
+      return response.data
+    } catch (error) {
+      console.error(error)
+      return null
+    }
+  }
+
   const triggerLogin = async () => {
-    if (!userNome) {
+    if (!userEmail) {
       setUserError('Usuário não pode ser vazio')
       return
     }
@@ -62,7 +63,7 @@ export const Login: React.FC = () => {
 
     setIsLoading(true)
     const userData = await validateIfUserExistInDB({
-      nome: userNome,
+      email: userEmail,
       password: userPassword,
     })
     setIsLoading(false)
@@ -74,9 +75,7 @@ export const Login: React.FC = () => {
       return
     }
 
-    // redirecionar para a página de home se o usuário existir
-
-    navigate('/home')
+    navigate('/home/dashboard')
   }
 
   const handleClose = (
@@ -115,7 +114,7 @@ export const Login: React.FC = () => {
         alignItems={'center'}
         gap={2}
       >
-        <img src={logo} height={60} alt="Cinbal App" />
+        {/* <img src={logo} height={60} alt="Cinbal App" /> */}
         <Typography>Bem vindo(a) ao seu HelpDesk!</Typography>
       </Box>
 
@@ -134,8 +133,8 @@ export const Login: React.FC = () => {
           label="Usuário"
           type="text"
           autoComplete="username"
-          value={userNome}
-          onChange={(e) => setUserNome(e.target.value)}
+          value={userEmail}
+          onChange={(e) => setUserEmail(e.target.value)}
           fullWidth
           disabled={isLoading}
           error={!!userError}
