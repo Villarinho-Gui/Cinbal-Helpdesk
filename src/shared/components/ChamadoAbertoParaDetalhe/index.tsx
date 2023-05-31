@@ -168,33 +168,37 @@ export const ChamadoAbertoParaDetalhe: React.FC<HelpDeskDetailsProps> = () => {
           </Box>
           <Divider />
 
-          <Box
-            paddingY={2}
-            marginLeft={0}
+          <Grid
+            container
+            spacing={2}
             display={'flex'}
+            flex={1}
             justifyContent={'space-between'}
+            paddingY={'20px'}
           >
-            {isLoading ? (
-              <Skeleton
-                variant="text"
-                sx={{ fontSize: '1.5rem' }}
-                width="90px"
-              />
-            ) : (
-              <Chip
-                label={helpDeskData?.category}
-                size="small"
-                color="default"
-              />
-            )}
+            <Grid item xs={12} lg={2}>
+              {isLoading ? (
+                <Skeleton
+                  variant="text"
+                  sx={{ fontSize: '1.5rem' }}
+                  width="90px"
+                />
+              ) : (
+                <Chip
+                  label={helpDeskData?.category}
+                  size="small"
+                  color="default"
+                />
+              )}
+            </Grid>
 
-            <Box
-              display={'flex'}
-              justifyContent={'space-between'}
-              gap={2}
-              alignItems={'center'}
+            <Grid
+              item
+              xl={4}
+              xs={12}
+              sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}
             >
-              <Typography variant="body2">Id do Chamado:</Typography>
+              <Typography variant="body2">Id:</Typography>
               {isLoading ? (
                 <Skeleton
                   variant="text"
@@ -204,8 +208,8 @@ export const ChamadoAbertoParaDetalhe: React.FC<HelpDeskDetailsProps> = () => {
               ) : (
                 <Chip label={helpDeskData?.id} size="small" color="default" />
               )}
-            </Box>
-          </Box>
+            </Grid>
+          </Grid>
 
           <Box>
             {isLoading ? (
