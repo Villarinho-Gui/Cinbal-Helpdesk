@@ -32,6 +32,7 @@ const Dashboard: React.FC = () => {
       mostrarBotaoTema       
       mostrarBotaoLogout
       mostrarBotaoPerfil 
+      mostrarBotaoOpenHelpDesk
       barraDeFerramentas={<BarraFerramentasDetalhesChamado />}
     >
       <Box         
