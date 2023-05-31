@@ -1,25 +1,46 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import DefaultLayout from '../../layouts/DefaultLayout'
-import BarraFerramentasDetalhesChamado from '../../../shared/components/BarraFerramentasDetalhesChamado'
 import { format, formatDistanceToNow } from 'date-fns'
 import ptBR from 'date-fns/locale/pt-BR'
 
-import { Box, Button, Chip, Divider, Skeleton, Typography } from '@mui/material'
+import {
+  Box,
+  CardContent,
+  Chip,
+  Divider,
+  Skeleton,
+  Typography,
+  Card,
+  Icon,
+  IconButton,
+  CardActions,
+  Grid,
+} from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 import api from '../../../service/api/config/configApi'
-import { BsFillImageFill } from 'react-icons/bs'
+import { MdImage, MdDownload } from 'react-icons/md'
+import { HelpDeskDataProps } from '../Chamado'
 
-interface HelpDeskDetailsProps {
+interface FileProps {
+  id: string
+  filename: string
+  type: string
+  size: number
+  url: string
+  callId: string
+}
+interface HelpDeskDetailsProps extends HelpDeskDataProps {
+  id: string
   author: string
   title: string
   category: string
   description: string
   maxLines: number
   createdAt: Date
-  files: string
+  files?: FileProps[]
 }
 
 export const ChamadoAbertoParaDetalhe: React.FC<HelpDeskDetailsProps> = () => {
@@ -29,9 +50,8 @@ export const ChamadoAbertoParaDetalhe: React.FC<HelpDeskDetailsProps> = () => {
   )
 
   const [createdAtFormatted, setCreatedAtFormatted] = useState<Date>()
-  // const [arquivosAnexados, setArquivosAnexados] = useState<string[]>([])
+  const [attachedFiles, setAttachedFiles] = useState<FileProps[]>([])
 
-  const navigate = useNavigate()
   const theme = useTheme()
   const { id } = useParams()
 
@@ -40,16 +60,12 @@ export const ChamadoAbertoParaDetalhe: React.FC<HelpDeskDetailsProps> = () => {
     try {
       const response = await api.get<HelpDeskDetailsProps>(`/chamado/${id}`)
       const { data } = response
-      /**
-       * Extrai os nomes dos arquivos anexados
-       */
-      // const nomesArquivos = data.files ? [data.files] : []
 
       const formattedCreatedAt = new Date(Object.values(data)[0].createdAt)
 
       setHelpDeskData(Object.values(data)[0])
       setCreatedAtFormatted(formattedCreatedAt)
-      // setArquivosAnexados(nomesArquivos)
+      setAttachedFiles(Object.values(data)[0].files)
       setIsLoading(false)
     } catch (error) {
       console.error('Erro ao obter os dados do chamado', error)
@@ -81,12 +97,7 @@ export const ChamadoAbertoParaDetalhe: React.FC<HelpDeskDetailsProps> = () => {
         mostrarBotaoLogout
         mostrarBotaoPerfil
         tituloPagina={id === 'novo' ? '' : helpDeskData?.title}
-        barraDeFerramentas={
-          <BarraFerramentasDetalhesChamado
-            aoClicarEmVoltar={() => navigate('/home/dashboard')}
-            mostrarBotaoAssumirChamado={true}
-          />
-        }
+        barraDeFerramentas={''}
       >
         <Box
           padding={5}
@@ -156,7 +167,12 @@ export const ChamadoAbertoParaDetalhe: React.FC<HelpDeskDetailsProps> = () => {
           </Box>
           <Divider />
 
-          <Box paddingY={2} marginLeft={0}>
+          <Box
+            paddingY={2}
+            marginLeft={0}
+            display={'flex'}
+            justifyContent={'space-between'}
+          >
             {isLoading ? (
               <Skeleton
                 variant="text"
@@ -170,6 +186,24 @@ export const ChamadoAbertoParaDetalhe: React.FC<HelpDeskDetailsProps> = () => {
                 color="default"
               />
             )}
+
+            <Box
+              display={'flex'}
+              justifyContent={'space-between'}
+              gap={2}
+              alignItems={'center'}
+            >
+              <Typography variant="body2">Id do Chamado:</Typography>
+              {isLoading ? (
+                <Skeleton
+                  variant="text"
+                  sx={{ fontSize: '1.5rem' }}
+                  width="90px"
+                />
+              ) : (
+                <Chip label={helpDeskData?.id} size="small" color="default" />
+              )}
+            </Box>
           </Box>
 
           <Box>
@@ -193,26 +227,47 @@ export const ChamadoAbertoParaDetalhe: React.FC<HelpDeskDetailsProps> = () => {
             <Box display="flex" gap="10px"></Box>
           </Box>
 
-          {/* {chamadoData?.image && chamadoData?.image.length > 0 && (
-            <Box display="flex" width="100%" gap={2}>
-              {chamadoData?.image?.map((imagem: string, index: number) => (
-                <Button
-                  key={index}
-                  variant="outlined"
-                  endIcon={<BsFillImageFill />}
-                  sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    marginY: '20px',
-                  }}
-                  onClick={() => navigate(`/download/${imagem}`)}
-                  disableElevation
-                >
-                  Imagem anexada
-                </Button>
+          {helpDeskData?.files && helpDeskData?.files.length > 0 && (
+            <Grid container spacing={2} maxWidth={'100%'} paddingY={'20px'}>
+              {attachedFiles.map((file: FileProps) => (
+                <Grid item xl={2} lg={6} md={6} sm={12} xs={12} key={file.id}>
+                  <Card
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      height: '60px',
+                      justifyContent: 'space-between',
+                    }}
+                    variant="outlined"
+                  >
+                    <Box display={'flex'} alignItems={'center'} gap={'2px'}>
+                      {file.url.includes('.png') ? (
+                        <Icon sx={{ margin: '5px' }}>
+                          <MdImage size={25} color="#49b3e8" />
+                        </Icon>
+                      ) : (
+                        ''
+                      )}
+                      <Box
+                        display={'flex'}
+                        width={'200px'}
+                        justifyContent={'center'}
+                        flexDirection={'column'}
+                      >
+                        <Typography fontSize={'14px'} width={'30ch'} noWrap>
+                          {file.url}
+                        </Typography>
+                      </Box>
+                    </Box>
+
+                    <IconButton>
+                      <MdDownload />
+                    </IconButton>
+                  </Card>
+                </Grid>
               ))}
-            </Box>
-          )} */}
+            </Grid>
+          )}
         </Box>
       </DefaultLayout>
     </>
