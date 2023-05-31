@@ -14,7 +14,6 @@ interface HelpDeskListProp extends HelpDeskDataProps {
   author: string
   title: string
   category: string
-  // sector: string
   description: string
   files?: string[]
   createdAt: Date
