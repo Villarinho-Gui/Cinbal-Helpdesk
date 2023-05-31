@@ -14,7 +14,6 @@ import { BsFillImageFill } from 'react-icons/bs'
 
 interface HelpDeskDetailsProps {
   author: string
-  // setor: string
   title: string
   category: string
   description: string
@@ -25,10 +24,12 @@ interface HelpDeskDetailsProps {
 
 export const ChamadoAbertoParaDetalhe: React.FC<HelpDeskDetailsProps> = () => {
   const [isLoading, setIsLoading] = useState(false)
-  const [chamadoData, setChamadoData] = useState<HelpDeskDetailsProps | null>(
+  const [helpDeskData, setHelpDeskData] = useState<HelpDeskDetailsProps | null>(
     null,
   )
-  const [arquivosAnexados, setArquivosAnexados] = useState<string[]>([])
+
+  const [createdAtFormatted, setCreatedAtFormatted] = useState<Date>()
+  // const [arquivosAnexados, setArquivosAnexados] = useState<string[]>([])
 
   const navigate = useNavigate()
   const theme = useTheme()
@@ -39,18 +40,16 @@ export const ChamadoAbertoParaDetalhe: React.FC<HelpDeskDetailsProps> = () => {
     try {
       const response = await api.get<HelpDeskDetailsProps>(`/chamado/${id}`)
       const { data } = response
-      const helpDeskData = Array.isArray(data) ? data : [data]
-      console.log(helpDeskData[0])
-
-      data.createdAt = new Date(data.createdAt)
-
       /**
        * Extrai os nomes dos arquivos anexados
        */
-      const nomesArquivos = data.files ? [data.files] : []
+      // const nomesArquivos = data.files ? [data.files] : []
 
-      setChamadoData(helpDeskData[0].callHelpDesk)
-      setArquivosAnexados(nomesArquivos)
+      const formattedCreatedAt = new Date(Object.values(data)[0].createdAt)
+
+      setHelpDeskData(Object.values(data)[0])
+      setCreatedAtFormatted(formattedCreatedAt)
+      // setArquivosAnexados(nomesArquivos)
       setIsLoading(false)
     } catch (error) {
       console.error('Erro ao obter os dados do chamado', error)
@@ -81,7 +80,7 @@ export const ChamadoAbertoParaDetalhe: React.FC<HelpDeskDetailsProps> = () => {
         mostrarBotaoTema={true}
         mostrarBotaoLogout
         mostrarBotaoPerfil
-        tituloPagina={id === 'novo' ? '' : chamadoData?.title}
+        tituloPagina={id === 'novo' ? '' : helpDeskData?.title}
         barraDeFerramentas={
           <BarraFerramentasDetalhesChamado
             aoClicarEmVoltar={() => navigate('/home/dashboard')}
@@ -108,7 +107,7 @@ export const ChamadoAbertoParaDetalhe: React.FC<HelpDeskDetailsProps> = () => {
                 />
               ) : (
                 <Typography variant="h5" sx={{ fontSize: '1rem' }}>
-                  {chamadoData?.author}
+                  {helpDeskData?.author}
                 </Typography>
               )}
 
@@ -128,16 +127,14 @@ export const ChamadoAbertoParaDetalhe: React.FC<HelpDeskDetailsProps> = () => {
                 </Typography>
               )}
             </Box>
-            {/* <time
+            <time
               title={
-                chamadoData?.createdAt
-                  ? publishedDateFormatted(chamadoData.createdAt)
+                createdAtFormatted
+                  ? publishedDateFormatted(createdAtFormatted)
                   : ''
               }
               dateTime={
-                chamadoData?.createdAt
-                  ? chamadoData.createdAt.toISOString()
-                  : ''
+                createdAtFormatted ? createdAtFormatted.toISOString() : ''
               }
             >
               {isLoading ? (
@@ -146,16 +143,16 @@ export const ChamadoAbertoParaDetalhe: React.FC<HelpDeskDetailsProps> = () => {
                   sx={{ fontSize: '1.5rem' }}
                   width="90px"
                 />
-              ) : chamadoData?.createdAt ? (
+              ) : createdAtFormatted ? (
                 <Typography
                   variant="body2"
                   sx={{ fontSize: '0.8rem' }}
                   color="text.secondary"
                 >
-                  {publishedDateRelativeToNow(chamadoData.createdAt)}
+                  {publishedDateRelativeToNow(createdAtFormatted)}
                 </Typography>
               ) : null}
-            </time> */}
+            </time>
           </Box>
           <Divider />
 
@@ -168,7 +165,7 @@ export const ChamadoAbertoParaDetalhe: React.FC<HelpDeskDetailsProps> = () => {
               />
             ) : (
               <Chip
-                label={chamadoData?.category}
+                label={helpDeskData?.category}
                 size="small"
                 color="default"
               />
@@ -189,7 +186,7 @@ export const ChamadoAbertoParaDetalhe: React.FC<HelpDeskDetailsProps> = () => {
                 color="text.secondary"
                 sx={{ paddingBottom: '40px' }}
               >
-                {chamadoData?.description}
+                {helpDeskData?.description}
               </Typography>
             )}
             <Divider />
