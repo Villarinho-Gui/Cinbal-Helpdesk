@@ -2,20 +2,24 @@
 import React, { useState, useEffect } from 'react'
 import DefaultLayout from '../../layouts/DefaultLayout'
 import { Chamado, HelpDeskDataProps } from '../Chamado'
-import { useNavigate } from 'react-router-dom'
 
 import { LinearProgress, List, ListItem, Typography } from '@mui/material'
 import { BarraFerramentasListagemDeChamados } from '../BarraFerramentasListagemDeChamados'
 
 import api from '../../../service/api/config/configApi'
 
+interface FileProps {
+  id: string
+  url: string
+  callId: string
+}
 interface HelpDeskListProp extends HelpDeskDataProps {
   id: string
   author: string
   title: string
   category: string
   description: string
-  files?: string[]
+  files?: FileProps[]
   createdAt: Date
 }
 
@@ -23,8 +27,6 @@ export const ListagemDeChamados: React.FC = () => {
   const [helpDeskData, setHelpDeskData] = useState<HelpDeskListProp[]>([])
   const [search, setSearch] = useState('')
   const [isLoading, setIsLoading] = useState<boolean>(true)
-
-  const navigate = useNavigate()
 
   useEffect(() => {
     setIsLoading(true)
@@ -70,9 +72,7 @@ export const ListagemDeChamados: React.FC = () => {
           aoMudarTextoDeBusca={(value) => {
             setSearch(value)
           }}
-          mostrarBotaoNovo
           mostrarBotaoFiltro
-          aoClicarEmNovo={() => navigate('/home/abrir-chamado')}
           aoClicarEmFiltrar={() => {}}
         />
         // ...
