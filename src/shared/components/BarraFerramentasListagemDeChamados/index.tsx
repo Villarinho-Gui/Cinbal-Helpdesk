@@ -6,19 +6,15 @@ import {
   Tooltip,
   useTheme,
 } from '@mui/material'
+import InputAdornment from '@mui/material/InputAdornment'
+import SearchIcon from '@mui/icons-material/Search'
 import React from 'react'
 
 import { Environment } from '../../environment/export'
 import { FaFilter } from 'react-icons/fa'
-import { AiFillHome } from 'react-icons/ai'
-
-import { useNavigate } from 'react-router-dom'
-
 interface IBarraFerramentasAbrirChamado {
   textoBusca?: string
   mostrarInputBusca?: boolean
-
-  mostrarBotaoHome?: boolean
   mostrarBotaoFiltro?: boolean
 
   aoMudarTextoDeBusca?: (novoTexto: string) => void
@@ -29,16 +25,12 @@ export const BarraFerramentasListagemDeChamados: React.FC<
   IBarraFerramentasAbrirChamado
 > = ({
   textoBusca = '',
-
-  mostrarBotaoHome = true,
   mostrarInputBusca = false,
   mostrarBotaoFiltro = true,
-
   aoMudarTextoDeBusca,
   aoClicarEmFiltrar,
 }) => {
   const theme = useTheme()
-  const navigate = useNavigate()
 
   return (
     <Box
@@ -56,19 +48,16 @@ export const BarraFerramentasListagemDeChamados: React.FC<
           placeholder={Environment.INPUT_DE_BUSCA}
           value={textoBusca}
           onChange={(e) => aoMudarTextoDeBusca?.(e.target.value)}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <SearchIcon />
+              </InputAdornment>
+            ),
+          }}
         />
       )}
       <Box display="flex" flex={1} justifyContent="end">
-        {mostrarBotaoHome && (
-          <Tooltip title="Página Inicial" placement="top" arrow>
-            <IconButton onClick={() => navigate('/home/dashboard')}>
-              <Icon>
-                <AiFillHome size={20} />
-              </Icon>
-            </IconButton>
-          </Tooltip>
-        )}
-
         {mostrarBotaoFiltro && (
           <Tooltip title="Filtrar" placement="top" arrow>
             <IconButton onClick={aoClicarEmFiltrar}>
