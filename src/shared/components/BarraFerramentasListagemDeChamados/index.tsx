@@ -9,7 +9,6 @@ import {
 import React from 'react'
 
 import { Environment } from '../../environment/export'
-import { BsPlus } from 'react-icons/bs'
 import { FaFilter } from 'react-icons/fa'
 import { AiFillHome } from 'react-icons/ai'
 
@@ -20,11 +19,9 @@ interface IBarraFerramentasAbrirChamado {
   mostrarInputBusca?: boolean
 
   mostrarBotaoHome?: boolean
-  mostrarBotaoNovo?: boolean
   mostrarBotaoFiltro?: boolean
 
   aoMudarTextoDeBusca?: (novoTexto: string) => void
-  aoClicarEmNovo: () => void
   aoClicarEmFiltrar: () => void
 }
 
@@ -35,11 +32,9 @@ export const BarraFerramentasListagemDeChamados: React.FC<
 
   mostrarBotaoHome = true,
   mostrarInputBusca = false,
-  mostrarBotaoNovo = true,
   mostrarBotaoFiltro = true,
 
   aoMudarTextoDeBusca,
-  aoClicarEmNovo,
   aoClicarEmFiltrar,
 }) => {
   const theme = useTheme()
@@ -73,15 +68,7 @@ export const BarraFerramentasListagemDeChamados: React.FC<
             </IconButton>
           </Tooltip>
         )}
-        {mostrarBotaoNovo && (
-          <Tooltip title="Abrir Chamado" placement="top" arrow>
-            <IconButton onClick={aoClicarEmNovo}>
-              <Icon>
-                <BsPlus size={25} />
-              </Icon>
-            </IconButton>
-          </Tooltip>
-        )}
+
         {mostrarBotaoFiltro && (
           <Tooltip title="Filtrar" placement="top" arrow>
             <IconButton onClick={aoClicarEmFiltrar}>

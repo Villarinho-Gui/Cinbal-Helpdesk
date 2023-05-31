@@ -6,6 +6,7 @@ import {
   Typography,
   useMediaQuery,
   useTheme,
+  Button,
 } from '@mui/material'
 import React, { ReactNode } from 'react'
 
@@ -17,6 +18,7 @@ import { CgLogOut } from 'react-icons/cg'
 import { useDrawerContext } from '../../contexts/DrawerContext'
 
 import { BsMoonFill } from 'react-icons/bs'
+import { AiOutlinePlus } from 'react-icons/ai'
 import { useAppThemeContext } from '../../contexts/ThemeContext'
 
 import { useNavigate } from 'react-router-dom'
@@ -28,6 +30,7 @@ interface IDefaultLayoutProps {
   mostrarBotaoLogout?: boolean
   mostrarBotaoPerfil?: boolean
   mostrarBotaoTema?: boolean
+  mostrarBotaoOpenHelpDesk?: boolean
   mostrarTituloPagina?: boolean
 }
 
@@ -38,6 +41,7 @@ const DefaultLayout: React.FC<IDefaultLayoutProps> = ({
   mostrarBotaoLogout,
   mostrarBotaoPerfil,
   mostrarBotaoTema,
+  mostrarBotaoOpenHelpDesk,
 
   mostrarTituloPagina = true,
 }) => {
@@ -121,6 +125,19 @@ const DefaultLayout: React.FC<IDefaultLayoutProps> = ({
       <Box flex={1} overflow="auto">
         {children}{' '}
       </Box>
+      {mostrarBotaoOpenHelpDesk && (
+        <Box display={'flex'} justifyContent={'end'} padding={'20px'}>
+          <Button
+            variant="contained"
+            color="info"
+            sx={{ position: '-webkit-sticky', right: '0px' }}
+            endIcon={<AiOutlinePlus />}
+            onClick={() => navigate('/home/abrir-chamado')}
+          >
+            Abrir novo chamado
+          </Button>
+        </Box>
+      )}
     </Box>
   )
 }
