@@ -18,7 +18,7 @@ import { CgLogOut } from 'react-icons/cg'
 import { useDrawerContext } from '../../contexts/DrawerContext'
 
 import { BsMoonFill } from 'react-icons/bs'
-import { AiOutlinePlus } from 'react-icons/ai'
+import { AiFillHome, AiOutlinePlus } from 'react-icons/ai'
 import { useAppThemeContext } from '../../contexts/ThemeContext'
 
 import { useNavigate } from 'react-router-dom'
@@ -30,6 +30,7 @@ interface IDefaultLayoutProps {
   mostrarBotaoLogout?: boolean
   mostrarBotaoPerfil?: boolean
   mostrarBotaoTema?: boolean
+  mostrarBotaoHome?: boolean
   mostrarBotaoOpenHelpDesk?: boolean
   mostrarTituloPagina?: boolean
 }
@@ -41,6 +42,7 @@ const DefaultLayout: React.FC<IDefaultLayoutProps> = ({
   mostrarBotaoLogout,
   mostrarBotaoPerfil,
   mostrarBotaoTema,
+  mostrarBotaoHome,
   mostrarBotaoOpenHelpDesk,
 
   mostrarTituloPagina = true,
@@ -95,6 +97,16 @@ const DefaultLayout: React.FC<IDefaultLayoutProps> = ({
               <Tooltip title="Sair" placement="bottom" arrow>
                 <IconButton onClick={() => navigate('/login')}>
                   <CgLogOut size={20} />
+                </IconButton>
+              </Tooltip>
+            )}
+
+            {mostrarBotaoHome && (
+              <Tooltip title="Página Inicial" placement="bottom" arrow>
+                <IconButton onClick={() => navigate('/home/dashboard')}>
+                  <Icon>
+                    <AiFillHome size={20} />
+                  </Icon>
                 </IconButton>
               </Tooltip>
             )}
