@@ -94,7 +94,11 @@ export class HelpDeskController {
     const prisma = new PrismaClient()
 
     try {
-      const allCallHelpDesk = await prisma.call.findMany()
+      const allCallHelpDesk = await prisma.call.findMany({
+        orderBy: {
+          createdAt: 'desc',
+        },
+      })
       return res.status(HttpStatusCode.Accepted).json({
         allCallHelpDesk,
         error: false,
