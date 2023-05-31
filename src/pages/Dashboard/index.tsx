@@ -2,7 +2,6 @@
 import React from 'react'
 import DefaultLayout from '../../shared/layouts/DefaultLayout'
 import { Box, Button, Card, CardContent, Chip, Grid, Typography, useTheme } from '@mui/material'
-import BarraFerramentasDetalhesChamado from '../../shared/components/BarraFerramentasDetalhesChamado'
 import { BsGraphUpArrow } from 'react-icons/bs'
 // import { ChamadosService } from '../../shared/services/api/Chamados/ChamadosServices'
 
@@ -33,7 +32,7 @@ const Dashboard: React.FC = () => {
       mostrarBotaoLogout
       mostrarBotaoPerfil 
       mostrarBotaoOpenHelpDesk
-      barraDeFerramentas={<BarraFerramentasDetalhesChamado />}
+      barraDeFerramentas={''}
     >
       <Box         
           padding={2}
