@@ -19,6 +19,11 @@ import api from '../../../service/api/config/configApi'
 import { format, formatDistanceToNow } from 'date-fns'
 import ptBR from 'date-fns/locale/pt-BR'
 
+interface FileProps {
+  id: string
+  url: string
+  callId: string
+}
 export interface HelpDeskDataProps {
   id: string
   author?: string
@@ -26,7 +31,7 @@ export interface HelpDeskDataProps {
   category?: string
   description: string
   maxLines: number
-  files?: string[]
+  files?: FileProps[]
   createdAt: Date
 }
 export const Chamado: React.FC<HelpDeskDataProps> = ({
