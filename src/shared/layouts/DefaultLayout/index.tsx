@@ -19,7 +19,7 @@ import { useDrawerContext } from '../../contexts/DrawerContext'
 
 import { BsMoonFill } from 'react-icons/bs'
 import { AiFillHome, AiOutlinePlus } from 'react-icons/ai'
-import { MdEmojiPeople } from 'react-icons/md'
+import { MdEmojiPeople, MdClose } from 'react-icons/md'
 
 import { useAppThemeContext } from '../../contexts/ThemeContext'
 
@@ -55,7 +55,7 @@ const DefaultLayout: React.FC<IDefaultLayoutProps> = ({
   const smDown = useMediaQuery(theme.breakpoints.down('sm'))
   const mdDown = useMediaQuery(theme.breakpoints.down('md'))
 
-  const { toggleDrawerOpen } = useDrawerContext()
+  const { toggleDrawerOpen, isDrawerOpen } = useDrawerContext()
   const { toggleTheme, themeName } = useAppThemeContext()
 
   const navigate = useNavigate()
@@ -71,9 +71,15 @@ const DefaultLayout: React.FC<IDefaultLayoutProps> = ({
       >
         {smDown && (
           <IconButton onClick={toggleDrawerOpen}>
-            <Icon>
-              <GiHamburgerMenu />
-            </Icon>
+            {isDrawerOpen ? (
+              <Icon>
+                <MdClose />
+              </Icon>
+            ) : (
+              <Icon>
+                <GiHamburgerMenu />
+              </Icon>
+            )}
           </IconButton>
         )}
 
