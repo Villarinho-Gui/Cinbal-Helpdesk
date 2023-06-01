@@ -19,6 +19,8 @@ import { useDrawerContext } from '../../contexts/DrawerContext'
 
 import { BsMoonFill } from 'react-icons/bs'
 import { AiFillHome, AiOutlinePlus } from 'react-icons/ai'
+import { MdEmojiPeople } from 'react-icons/md'
+
 import { useAppThemeContext } from '../../contexts/ThemeContext'
 
 import { useNavigate } from 'react-router-dom'
@@ -32,6 +34,7 @@ interface IDefaultLayoutProps {
   mostrarBotaoTema?: boolean
   mostrarBotaoHome?: boolean
   mostrarBotaoOpenHelpDesk?: boolean
+  mostrarBotaoAssumirChamado?: boolean
   mostrarTituloPagina?: boolean
 }
 
@@ -44,6 +47,7 @@ const DefaultLayout: React.FC<IDefaultLayoutProps> = ({
   mostrarBotaoTema,
   mostrarBotaoHome,
   mostrarBotaoOpenHelpDesk,
+  mostrarBotaoAssumirChamado,
 
   mostrarTituloPagina = true,
 }) => {
@@ -143,12 +147,25 @@ const DefaultLayout: React.FC<IDefaultLayoutProps> = ({
         <Box display={'flex'} justifyContent={'end'} padding={'20px'}>
           <Button
             variant="contained"
-            color="info"
+            color="primary"
             sx={{ position: '-webkit-sticky', right: '0px' }}
             endIcon={<AiOutlinePlus />}
             onClick={() => navigate('/home/abrir-chamado')}
           >
             Abrir novo chamado
+          </Button>
+        </Box>
+      )}
+      {mostrarBotaoAssumirChamado && (
+        <Box display={'flex'} justifyContent={'end'} padding={'20px'}>
+          <Button
+            variant="contained"
+            color="primary"
+            sx={{ position: '-webkit-sticky', right: '0px' }}
+            endIcon={<MdEmojiPeople />}
+            onClick={() => {}}
+          >
+            Assumir Chamado
           </Button>
         </Box>
       )}

@@ -94,6 +94,7 @@ export const ChamadoAbertoParaDetalhe: React.FC<HelpDeskDetailsProps> = () => {
       mostrarBotaoLogout
       mostrarBotaoPerfil
       mostrarBotaoHome
+      mostrarBotaoAssumirChamado
       tituloPagina={id === 'novo' ? '' : helpDeskData?.title}
       barraDeFerramentas={''}
     >
