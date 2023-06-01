@@ -9,10 +9,15 @@ import {
   Typography,
   Icon,
   Chip,
+  Avatar,
+  Tooltip,
+  Badge,
 } from '@mui/material'
+import Zoom from '@mui/material/Zoom'
 import React, { useState, useEffect } from 'react'
 
 import { FiPaperclip } from 'react-icons/fi'
+import { RiTimer2Line } from 'react-icons/ri'
 import { useNavigate } from 'react-router-dom'
 
 import api from '../../../service/api/config/configApi'
@@ -157,19 +162,30 @@ export const Chamado: React.FC<HelpDeskDataProps> = ({
             alignItems={'center'}
             justifyContent={'space-between'}
           >
-            {attachedFiles && attachedFiles.length > 0 ? (
-              <Icon>
-                <FiPaperclip size={15} color="#49B3E8" />
-              </Icon>
-            ) : (
-              ''
-            )}
+            <Badge badgeContent={attachedFiles.length} color="primary">
+              {attachedFiles && attachedFiles.length > 0 ? (
+                <Icon>
+                  <FiPaperclip size={15} color="#49B3E8" />
+                </Icon>
+              ) : (
+                ''
+              )}
+            </Badge>
 
-            <Chip
-              label={id}
-              size="small"
-              sx={{ width: '12ch', position: 'absolute', right: '10px' }}
-            />
+            <Box
+              display={'flex'}
+              flex={1}
+              justifyContent={'end'}
+              gap={2}
+              position={'relative'}
+            >
+              <Chip label={id} size="small" sx={{ width: '12ch' }} />
+              <Tooltip title="Em aguardo" TransitionComponent={Zoom} arrow>
+                <Icon>
+                  <RiTimer2Line color="#d3d3d3" />
+                </Icon>
+              </Tooltip>
+            </Box>
           </Box>
         </CardContent>
       </Card>
