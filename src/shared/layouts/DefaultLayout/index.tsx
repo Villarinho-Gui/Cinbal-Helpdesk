@@ -148,6 +148,23 @@ const DefaultLayout: React.FC<IDefaultLayoutProps> = ({
       {barraDeFerramentas && <Box>{barraDeFerramentas}</Box>}
       <Box flex={1} overflow="auto">
         {children}{' '}
+        {mostrarBotaoAssumirChamado && (
+          <Box
+            display={'flex'}
+            justifyContent={'start'}
+            paddingY={'20px'}
+            marginX={'8px'}
+          >
+            <Button
+              variant="contained"
+              color="primary"
+              endIcon={<MdEmojiPeople />}
+              onClick={() => {}}
+            >
+              Assumir Chamado
+            </Button>
+          </Box>
+        )}
       </Box>
       {mostrarBotaoOpenHelpDesk && (
         <Box display={'flex'} justifyContent={'end'} padding={'20px'}>
@@ -159,19 +176,6 @@ const DefaultLayout: React.FC<IDefaultLayoutProps> = ({
             onClick={() => navigate('/home/abrir-chamado')}
           >
             Abrir novo chamado
-          </Button>
-        </Box>
-      )}
-      {mostrarBotaoAssumirChamado && (
-        <Box display={'flex'} justifyContent={'start'} padding={'20px'}>
-          <Button
-            variant="contained"
-            color="primary"
-            sx={{ position: '-webkit-sticky', right: '0px' }}
-            endIcon={<MdEmojiPeople />}
-            onClick={() => {}}
-          >
-            Assumir Chamado
           </Button>
         </Box>
       )}
