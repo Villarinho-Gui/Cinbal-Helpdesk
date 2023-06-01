@@ -8,7 +8,6 @@ import ptBR from 'date-fns/locale/pt-BR'
 
 import {
   Box,
-  CardContent,
   Chip,
   Divider,
   Skeleton,
@@ -16,7 +15,6 @@ import {
   Card,
   Icon,
   IconButton,
-  CardActions,
   Grid,
 } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
@@ -91,190 +89,193 @@ export const ChamadoAbertoParaDetalhe: React.FC<HelpDeskDetailsProps> = () => {
   }
 
   return (
-    <>
-      <DefaultLayout
-        mostrarBotaoTema={true}
-        mostrarBotaoLogout
-        mostrarBotaoPerfil
-        mostrarBotaoHome
-        tituloPagina={id === 'novo' ? '' : helpDeskData?.title}
-        barraDeFerramentas={''}
+    <DefaultLayout
+      mostrarBotaoTema={true}
+      mostrarBotaoLogout
+      mostrarBotaoPerfil
+      mostrarBotaoHome
+      tituloPagina={id === 'novo' ? '' : helpDeskData?.title}
+      barraDeFerramentas={''}
+    >
+      <Box
+        padding={5}
+        borderRadius={1}
+        margin={1}
+        width="auto"
+        border="1px solid"
+        height="57vh"
+        borderColor={theme.palette.divider}
       >
-        <Box
-          padding={5}
-          borderRadius={1}
-          margin={1}
-          width="auto"
-          border="1px solid"
-          height="57vh"
-          borderColor={theme.palette.divider}
-        >
-          <Box display="flex" justifyContent="space-between" paddingBottom={2}>
-            <Box>
-              {isLoading ? (
-                <Skeleton
-                  variant="text"
-                  sx={{ fontSize: '1.5rem' }}
-                  width="200px"
-                />
-              ) : (
-                <Typography variant="h5" sx={{ fontSize: '1rem' }}>
-                  {helpDeskData?.author}
-                </Typography>
-              )}
-
-              {isLoading ? (
-                <Skeleton
-                  variant="text"
-                  sx={{ fontSize: '1.5rem' }}
-                  width="50px"
-                />
-              ) : (
-                <Typography
-                  variant="body2"
-                  color="text.secondary"
-                  sx={{ fontSize: '0.8rem' }}
-                >
-                  {/* {chamadoData?.setor} */}
-                </Typography>
-              )}
-            </Box>
-            <time
-              title={
-                createdAtFormatted
-                  ? publishedDateFormatted(createdAtFormatted)
-                  : ''
-              }
-              dateTime={
-                createdAtFormatted ? createdAtFormatted.toISOString() : ''
-              }
-            >
-              {isLoading ? (
-                <Skeleton
-                  variant="text"
-                  sx={{ fontSize: '1.5rem' }}
-                  width="90px"
-                />
-              ) : createdAtFormatted ? (
-                <Typography
-                  variant="body2"
-                  sx={{ fontSize: '0.8rem' }}
-                  color="text.secondary"
-                >
-                  {publishedDateRelativeToNow(createdAtFormatted)}
-                </Typography>
-              ) : null}
-            </time>
-          </Box>
-          <Divider />
-
-          <Grid
-            container
-            spacing={2}
-            display={'flex'}
-            flex={1}
-            justifyContent={'space-between'}
-            paddingY={'20px'}
-          >
-            <Grid item xs={12} lg={2}>
-              {isLoading ? (
-                <Skeleton
-                  variant="text"
-                  sx={{ fontSize: '1.5rem' }}
-                  width="90px"
-                />
-              ) : (
-                <Chip
-                  label={helpDeskData?.category}
-                  size="small"
-                  color="default"
-                />
-              )}
-            </Grid>
-
-            <Grid
-              item
-              xl={4}
-              xs={12}
-              sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}
-            >
-              <Typography variant="body2">Id:</Typography>
-              {isLoading ? (
-                <Skeleton
-                  variant="text"
-                  sx={{ fontSize: '1.5rem' }}
-                  width="90px"
-                />
-              ) : (
-                <Chip label={helpDeskData?.id} size="small" color="default" />
-              )}
-            </Grid>
-          </Grid>
-
+        <Box display="flex" justifyContent="space-between" paddingBottom={2}>
           <Box>
             {isLoading ? (
               <Skeleton
-                variant="rounded"
+                variant="text"
                 sx={{ fontSize: '1.5rem' }}
-                width="100%"
-                height="100px"
+                width="200px"
+              />
+            ) : (
+              <Typography variant="h5" sx={{ fontSize: '1rem' }}>
+                {helpDeskData?.author}
+              </Typography>
+            )}
+
+            {isLoading ? (
+              <Skeleton
+                variant="text"
+                sx={{ fontSize: '1.5rem' }}
+                width="50px"
               />
             ) : (
               <Typography
                 variant="body2"
                 color="text.secondary"
-                sx={{ paddingBottom: '40px' }}
+                sx={{ fontSize: '0.8rem' }}
               >
-                {helpDeskData?.description}
+                {/* {chamadoData?.setor} */}
               </Typography>
             )}
-            <Divider />
-            <Box display="flex" gap="10px"></Box>
           </Box>
-
-          {helpDeskData?.files && helpDeskData?.files.length > 0 && (
-            <Grid container spacing={2} maxWidth={'100%'} paddingY={'20px'}>
-              {attachedFiles.map((file: FileProps) => (
-                <Grid item xl={2} lg={6} md={6} sm={12} xs={12} key={file.id}>
-                  <Card
-                    sx={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      height: '60px',
-                      justifyContent: 'space-between',
-                    }}
-                    variant="outlined"
-                  >
-                    <Box display={'flex'} alignItems={'center'} gap={'2px'}>
-                      {file.url.includes('.png') ? (
-                        <Icon sx={{ margin: '5px' }}>
-                          <MdImage size={25} color="#49b3e8" />
-                        </Icon>
-                      ) : (
-                        ''
-                      )}
-                      <Box
-                        display={'flex'}
-                        width={'200px'}
-                        justifyContent={'center'}
-                        flexDirection={'column'}
-                      >
-                        <Typography fontSize={'14px'} width={'30ch'} noWrap>
-                          {file.url}
-                        </Typography>
-                      </Box>
-                    </Box>
-
-                    <IconButton>
-                      <MdDownload />
-                    </IconButton>
-                  </Card>
-                </Grid>
-              ))}
-            </Grid>
-          )}
+          <time
+            title={
+              createdAtFormatted
+                ? publishedDateFormatted(createdAtFormatted)
+                : ''
+            }
+            dateTime={
+              createdAtFormatted ? createdAtFormatted.toISOString() : ''
+            }
+          >
+            {isLoading ? (
+              <Skeleton
+                variant="text"
+                sx={{ fontSize: '1.5rem' }}
+                width="90px"
+              />
+            ) : createdAtFormatted ? (
+              <Typography
+                variant="body2"
+                sx={{ fontSize: '0.8rem' }}
+                color="text.secondary"
+              >
+                {publishedDateRelativeToNow(createdAtFormatted)}
+              </Typography>
+            ) : null}
+          </time>
         </Box>
-      </DefaultLayout>
-    </>
+        <Divider />
+
+        <Grid
+          container
+          spacing={2}
+          display={'flex'}
+          flex={1}
+          justifyContent={'space-between'}
+          paddingY={'20px'}
+        >
+          <Grid item xs={12} lg={2}>
+            {isLoading ? (
+              <Skeleton
+                variant="text"
+                sx={{ fontSize: '1.5rem' }}
+                width="90px"
+              />
+            ) : (
+              <Chip
+                label={helpDeskData?.category}
+                size="small"
+                color="default"
+              />
+            )}
+          </Grid>
+
+          <Grid
+            item
+            xl={4}
+            xs={12}
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '10px',
+              justifyContent: 'end',
+            }}
+          >
+            <Typography variant="body2">Id:</Typography>
+            {isLoading ? (
+              <Skeleton
+                variant="text"
+                sx={{ fontSize: '1.5rem' }}
+                width="90px"
+              />
+            ) : (
+              <Chip label={helpDeskData?.id} size="small" color="default" />
+            )}
+          </Grid>
+        </Grid>
+
+        <Box>
+          {isLoading ? (
+            <Skeleton
+              variant="rounded"
+              sx={{ fontSize: '1.5rem' }}
+              width="100%"
+              height="100px"
+            />
+          ) : (
+            <Typography
+              variant="body2"
+              color="text.secondary"
+              sx={{ paddingBottom: '40px' }}
+            >
+              {helpDeskData?.description}
+            </Typography>
+          )}
+          <Divider />
+          <Box display="flex" gap="10px"></Box>
+        </Box>
+
+        {helpDeskData?.files && helpDeskData?.files.length > 0 && (
+          <Grid container spacing={2} maxWidth={'100%'} paddingY={'20px'}>
+            {attachedFiles.map((file: FileProps) => (
+              <Grid item xl={2} lg={6} md={6} sm={12} xs={12} key={file.id}>
+                <Card
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    height: '60px',
+                    justifyContent: 'space-between',
+                  }}
+                  variant="outlined"
+                >
+                  <Box display={'flex'} alignItems={'center'} gap={'2px'}>
+                    {file.url.includes('.png') ? (
+                      <Icon sx={{ margin: '5px' }}>
+                        <MdImage size={25} color="#49b3e8" />
+                      </Icon>
+                    ) : (
+                      ''
+                    )}
+                    <Box
+                      display={'flex'}
+                      width={'200px'}
+                      justifyContent={'center'}
+                      flexDirection={'column'}
+                    >
+                      <Typography fontSize={'14px'} width={'30ch'} noWrap>
+                        {file.url}
+                      </Typography>
+                    </Box>
+                  </Box>
+
+                  <IconButton>
+                    <MdDownload />
+                  </IconButton>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
+        )}
+      </Box>
+    </DefaultLayout>
   )
 }
