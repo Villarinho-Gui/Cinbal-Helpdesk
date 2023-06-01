@@ -17,13 +17,16 @@ import {
   useTheme,
   Snackbar,
   Alert,
+  Select,
+  MenuItem,
+  SelectChangeEvent,
 } from '@mui/material'
 
 interface User {
   name: string
   email: string
   password: string
-  extension: string
+  extension: number
   position: string
   sector: string
   branch: string
@@ -51,7 +54,7 @@ const createUserFormSchema = z.object({
     .string()
     .nonempty('Esse campo é obrigatório!')
     .min(6, 'A senha precisa ter pelo menos 6 caracteres!'),
-  extension: z.string().nonempty('Esse campo é obrigatório!'),
+  extension: z.number().max(4, 'Esse campo deve ter no máximo 4 números!'),
   position: z.string().nonempty('Esse campo é obrigatório!'),
   sector: z.string().nonempty('Esse campo é obrigatório!'),
   branch: z.string().nonempty('Esse campo é obrigatório!'),
@@ -85,7 +88,6 @@ export const CadastroUsuario: React.FC = () => {
       name: '',
       email: '',
       password: '',
-      extension: '',
       position: '',
       sector: '',
       branch: '',
@@ -99,7 +101,7 @@ export const CadastroUsuario: React.FC = () => {
     formData.append('name', name)
     formData.append('email', email)
     formData.append('password', password)
-    formData.append('extension', extension)
+    formData.append('extension', extension.toString())
     formData.append('position', position)
     formData.append('sector', sector)
     formData.append('branch', branch)
@@ -282,26 +284,37 @@ export const CadastroUsuario: React.FC = () => {
               />
             </Grid>
             <Grid item lg={6} xs={12}>
-              <TextField
+              <Select
+                label="Filial"
                 {...register('branch')}
                 name="branch"
                 type="text"
                 placeholder="Filial"
                 value={branch}
-                onChange={(e) => setBranch(e.target.value)}
-                error={!!errors.branch}
-                helperText={
-                  <Typography variant="body2" color="error">
-                    {errors.branch && <span>{errors.branch?.message}</span>}
-                  </Typography>
+                onChange={(e: SelectChangeEvent) =>
+                  setBranch(e.target.value as string)
                 }
+                error={!!errors.branch}
                 fullWidth
                 size="small"
-              />
+              >
+                <MenuItem value={'vr'}>Volta Redonda</MenuItem>
+                <MenuItem value={'sp'}>Guarulhos</MenuItem>
+                <MenuItem value={'pn'}>Pinheiral</MenuItem>
+              </Select>
             </Grid>
           </Grid>
-          <Grid container item lg={6} sm={12} xs={12} spacing={2}>
-            <Grid item lg={6} md={12} sm={12} xs={12}>
+          <Grid
+            container
+            item
+            xl={12}
+            lg={12}
+            md={12}
+            sm={12}
+            xs={12}
+            spacing={2}
+          >
+            <Grid item xl={6} lg={6} md={12} sm={12} xs={12}>
               <Button
                 type="submit"
                 variant="contained"
@@ -332,11 +345,11 @@ export const CadastroUsuario: React.FC = () => {
                 anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
               >
                 <Alert severity="success" onClose={handleClose}>
-                  Usuário ou senha incorretos
+                  Usuário cadastrado com sucesso!
                 </Alert>
               </Snackbar>
             </Grid>
-            <Grid item lg={6} md={12} sm={12} xs={12}>
+            <Grid item xl={6} lg={6} md={12} sm={12} xs={12}>
               <Button
                 type="submit"
                 variant="outlined"
