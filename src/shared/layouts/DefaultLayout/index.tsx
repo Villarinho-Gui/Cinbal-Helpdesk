@@ -157,7 +157,7 @@ const DefaultLayout: React.FC<IDefaultLayoutProps> = ({
         </Box>
       )}
       {mostrarBotaoAssumirChamado && (
-        <Box display={'flex'} justifyContent={'end'} padding={'20px'}>
+        <Box display={'flex'} justifyContent={'start'} padding={'20px'}>
           <Button
             variant="contained"
             color="primary"
