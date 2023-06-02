@@ -72,8 +72,6 @@ export const ListagemDeChamados: React.FC = () => {
           aoMudarTextoDeBusca={(value) => {
             setSearch(value)
           }}
-          mostrarBotaoFiltro
-          aoClicarEmFiltrar={() => {}}
         />
         // ...
       }
