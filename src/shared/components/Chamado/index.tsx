@@ -180,7 +180,7 @@ export const Chamado: React.FC<HelpDeskDataProps> = ({
               position={'relative'}
             >
               <Chip label={id} size="small" sx={{ width: '12ch' }} />
-              <Tooltip title="Em aguardo" TransitionComponent={Zoom} arrow>
+              <Tooltip title="Aberto" TransitionComponent={Zoom} arrow>
                 <Icon>
                   <RiTimer2Line color="#d3d3d3" />
                 </Icon>
