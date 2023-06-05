@@ -3,10 +3,18 @@ import React, { useState, useEffect } from 'react'
 import DefaultLayout from '../../layouts/DefaultLayout'
 import { Chamado, HelpDeskDataProps } from '../Chamado'
 
-import { LinearProgress, List, ListItem, Typography } from '@mui/material'
+import {
+  LinearProgress,
+  List,
+  ListItem,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from '@mui/material'
 import { BarraFerramentasListagemDeChamados } from '../BarraFerramentasListagemDeChamados'
 
 import api from '../../../service/api/config/configApi'
+import { useDrawerContext } from '../../contexts/DrawerContext'
 
 interface FileProps {
   id: string
@@ -23,10 +31,16 @@ interface HelpDeskListProp extends HelpDeskDataProps {
   createdAt: Date
 }
 
-export const ListagemDeChamados: React.FC = () => {
+export const ListagemDeChamados: React.FC<HelpDeskListProp> = () => {
   const [helpDeskData, setHelpDeskData] = useState<HelpDeskListProp[]>([])
   const [search, setSearch] = useState('')
   const [isLoading, setIsLoading] = useState<boolean>(true)
+
+  const theme = useTheme()
+
+  const smDown = useMediaQuery(theme.breakpoints.down('sm'))
+
+  const { toggleDrawerOpen } = useDrawerContext()
 
   useEffect(() => {
     setIsLoading(true)
@@ -95,6 +109,7 @@ export const ListagemDeChamados: React.FC = () => {
                   maxLines={2}
                   createdAt={new Date(UniqueHelpDesk.createdAt)}
                   files={UniqueHelpDesk.files}
+                  onClick={() => {}}
                 />
               </ListItem>
             ))}
@@ -112,6 +127,7 @@ export const ListagemDeChamados: React.FC = () => {
                 description={UniqueHelpDesk.description}
                 maxLines={2}
                 createdAt={new Date(UniqueHelpDesk.createdAt)}
+                onClick={smDown ? toggleDrawerOpen : undefined}
               />
             </ListItem>
           ))}

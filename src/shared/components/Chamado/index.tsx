@@ -1,5 +1,4 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable no-unused-vars */
 import {
   Box,
   Card,
@@ -9,7 +8,6 @@ import {
   Typography,
   Icon,
   Chip,
-  Avatar,
   Tooltip,
   Badge,
 } from '@mui/material'
@@ -38,6 +36,7 @@ export interface HelpDeskDataProps {
   maxLines: number
   files?: FileProps[]
   createdAt: Date
+  onClick?: () => void
 }
 export const Chamado: React.FC<HelpDeskDataProps> = ({
   id,
@@ -45,10 +44,9 @@ export const Chamado: React.FC<HelpDeskDataProps> = ({
   description,
   createdAt,
   title,
+  onClick,
 }) => {
-  const [helpDeskData, setHelpDeskData] = useState<HelpDeskDataProps | null>(
-    null,
-  )
+  const [, setHelpDeskData] = useState<HelpDeskDataProps | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [attachedFiles, setAttachedFiles] = useState<string[]>([])
 
@@ -93,8 +91,13 @@ export const Chamado: React.FC<HelpDeskDataProps> = ({
     })
   }
 
+  const clickHelpDesk = () => {
+    navigate(`chamado/detalhe/${id}`)
+    onClick?.()
+  }
+
   return (
-    <CardActionArea onClick={() => navigate(`chamado/detalhe/${id}`)}>
+    <CardActionArea onClick={clickHelpDesk}>
       <Card
         variant="outlined"
         sx={{
