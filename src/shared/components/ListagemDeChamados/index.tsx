@@ -110,6 +110,7 @@ export const ListagemDeChamados: React.FC<HelpDeskListProp> = () => {
                   createdAt={new Date(UniqueHelpDesk.createdAt)}
                   files={UniqueHelpDesk.files}
                   onClick={smDown ? toggleDrawerOpen : undefined}
+                  to={`chamado/detalhe/${UniqueHelpDesk.id}`}
                 />
               </ListItem>
             ))}
@@ -128,6 +129,7 @@ export const ListagemDeChamados: React.FC<HelpDeskListProp> = () => {
                 maxLines={2}
                 createdAt={new Date(UniqueHelpDesk.createdAt)}
                 onClick={smDown ? toggleDrawerOpen : undefined}
+                to={`chamado/detalhe/${UniqueHelpDesk.id}`}
               />
             </ListItem>
           ))}

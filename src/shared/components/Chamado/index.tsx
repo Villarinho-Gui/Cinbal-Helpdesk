@@ -10,13 +10,14 @@ import {
   Chip,
   Tooltip,
   Badge,
+  ListItemButton,
 } from '@mui/material'
 import Zoom from '@mui/material/Zoom'
 import React, { useState, useEffect } from 'react'
 
 import { FiPaperclip } from 'react-icons/fi'
 import { RiTimer2Line } from 'react-icons/ri'
-import { useNavigate } from 'react-router-dom'
+import { useMatch, useNavigate, useResolvedPath } from 'react-router-dom'
 
 import api from '../../../service/api/config/configApi'
 import { format, formatDistanceToNow } from 'date-fns'
@@ -37,6 +38,7 @@ export interface HelpDeskDataProps {
   files?: FileProps[]
   createdAt: Date
   onClick?: () => void
+  to: string
 }
 export const Chamado: React.FC<HelpDeskDataProps> = ({
   id,
@@ -45,6 +47,7 @@ export const Chamado: React.FC<HelpDeskDataProps> = ({
   createdAt,
   title,
   onClick,
+  to,
 }) => {
   const [, setHelpDeskData] = useState<HelpDeskDataProps | null>(null)
   const [isLoading, setIsLoading] = useState(false)
@@ -92,9 +95,12 @@ export const Chamado: React.FC<HelpDeskDataProps> = ({
   }
 
   const clickHelpDesk = () => {
-    navigate(`chamado/detalhe/${id}`)
+    navigate(to)
     onClick?.()
   }
+
+  const resolvedPath = useResolvedPath(to)
+  const match = useMatch({ path: resolvedPath.pathname, end: false })
 
   return (
     <CardActionArea onClick={clickHelpDesk}>
@@ -107,6 +113,8 @@ export const Chamado: React.FC<HelpDeskDataProps> = ({
           flex: '1',
           marginX: 'auto',
         }}
+        component={ListItemButton}
+        selected={!!match}
       >
         <CardContent sx={{ flex: 1 }}>
           <Box
