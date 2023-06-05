@@ -45,7 +45,6 @@ export const Chamado: React.FC<HelpDeskDataProps> = ({
   description,
   createdAt,
   title,
-  files,
 }) => {
   const [helpDeskData, setHelpDeskData] = useState<HelpDeskDataProps | null>(
     null,
