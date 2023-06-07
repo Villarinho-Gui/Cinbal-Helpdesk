@@ -73,9 +73,11 @@ export const ListagemDeChamados: React.FC<HelpDeskListProp> = () => {
     search.length > 0
       ? helpDeskData.filter((helpDesk) => {
           return (
-            (helpDesk.title && helpDesk.title.includes(search)) ||
-            (helpDesk.description && helpDesk.description.includes(search)) ||
-            (helpDesk.category && helpDesk.category.includes(search))
+            (helpDesk.title && helpDesk.title.includes(search.toLowerCase())) ||
+            (helpDesk.description &&
+              helpDesk.description.includes(search.toLowerCase())) ||
+            (helpDesk.category &&
+              helpDesk.category.includes(search.toLowerCase()))
           )
         })
       : []
