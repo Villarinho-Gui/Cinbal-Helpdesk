@@ -13,9 +13,9 @@ import {
   LinearProgress,
   List,
   ListItem,
-  MenuItem,
-  Select,
-  TextField,
+  // MenuItem,
+  // Select,
+  // TextField,
   Typography,
   useMediaQuery,
   useTheme,
@@ -26,6 +26,7 @@ import { BarraFerramentasListagemDeChamados } from '../BarraFerramentasListagemD
 import api from '../../../service/api/config/configApi'
 import { useDrawerContext } from '../../contexts/DrawerContext'
 import { useHelpDeskContext } from '../../contexts/HelpDeskContext'
+import { format } from 'date-fns'
 
 interface FileProps {
   id: string
@@ -40,13 +41,18 @@ interface HelpDeskListProp extends HelpDeskDataProps {
   description: string
   files?: FileProps[]
   createdAt: Date
+  waiting: number
+  postedAt: string
 }
 
 export const ListagemDeChamados: React.FC<HelpDeskListProp> = () => {
   const [helpDeskData, setHelpDeskData] = useState<HelpDeskListProp[]>([])
+  const [filterHelpDeskData, setFilterHelpDeskData] = useState<
+    HelpDeskListProp[]
+  >([])
   const [openFilterDialog, setOpenFilterDialog] = useState(false)
-  const [category, setCategory] = useState('')
-  const [date, setDate] = useState<Date | null>()
+  // const [category, setCategory] = useState('')
+  const [date, setDate] = useState<Date | null>(null)
 
   const [search, setSearch] = useState('')
   const [isLoading, setIsLoading] = useState<boolean>(true)
@@ -58,19 +64,45 @@ export const ListagemDeChamados: React.FC<HelpDeskListProp> = () => {
   const { toggleDrawerOpen } = useDrawerContext()
   const { isNewHelpDesk } = useHelpDeskContext()
 
+  const filterHelpDesk = () => {
+    const postedDate = date ? format(date, 'yyyyMMdd') : null
+    console.log(date)
+    if (postedDate && helpDeskData) {
+      setFilterHelpDeskData(
+        helpDeskData.filter((helpDesk) => {
+          const helpDeskDate = format(new Date(helpDesk.createdAt), 'yyyyMMdd')
+          console.log(helpDeskDate)
+          return helpDesk.waiting > 0 && helpDeskDate === postedDate
+        }),
+      )
+    } else {
+      setFilterHelpDeskData([])
+    }
+
+    // console.log(postedDate)
+  }
+
   useEffect(() => {
     setIsLoading(true)
 
     api
-      .get('/chamados')
+      .get<HelpDeskDataProps>('/chamados')
       .then((response) => {
         const { data } = response
+        const allHelpDeskData = Object.values(data)[0]
 
         setIsLoading(false)
-        setHelpDeskData(Object.values(data)[0] as HelpDeskListProp[])
+
+        setFilterHelpDeskData(
+          Object.values(data)[0].filter(
+            (current: HelpDeskListProp) => current.waiting > 0,
+          ),
+        )
+        setHelpDeskData(allHelpDeskData)
+        // console.log(allHelpDeskData[0].createdAt)
 
         if (isNewHelpDesk) {
-          setHelpDeskData(Object.values(data)[0] as HelpDeskListProp[])
+          setHelpDeskData(allHelpDeskData)
         }
       })
       .catch((error) => {
@@ -170,6 +202,45 @@ export const ListagemDeChamados: React.FC<HelpDeskListProp> = () => {
         </List>
       )}
 
+      {filterHelpDeskData.length > 0 ? (
+        <List sx={{ overflow: 'auto', padding: '0px' }}>
+          {filterHelpDeskData.map((UniqueHelpDesk) => (
+            <ListItem key={UniqueHelpDesk.id} disablePadding>
+              <Chamado
+                id={UniqueHelpDesk.id}
+                author={UniqueHelpDesk.author}
+                title={UniqueHelpDesk.title}
+                category={UniqueHelpDesk.category}
+                description={UniqueHelpDesk.description}
+                maxLines={2}
+                createdAt={new Date(UniqueHelpDesk.createdAt)}
+                files={UniqueHelpDesk.files}
+                onClick={smDown ? toggleDrawerOpen : undefined}
+                to={`chamado/detalhe/${UniqueHelpDesk.id}`}
+              />
+            </ListItem>
+          ))}
+        </List>
+      ) : (
+        <List sx={{ overflow: 'auto', padding: '0px' }}>
+          {helpDeskData.map((UniqueHelpDesk) => (
+            <ListItem key={UniqueHelpDesk.id} disablePadding>
+              <Chamado
+                id={UniqueHelpDesk.id}
+                author={UniqueHelpDesk.author}
+                title={UniqueHelpDesk.title}
+                category={UniqueHelpDesk.category}
+                description={UniqueHelpDesk.description}
+                maxLines={2}
+                createdAt={new Date(UniqueHelpDesk.createdAt)}
+                onClick={smDown ? toggleDrawerOpen : undefined}
+                to={`chamado/detalhe/${UniqueHelpDesk.id}`}
+              />
+            </ListItem>
+          ))}
+        </List>
+      )}
+
       <Dialog
         open={openFilterDialog}
         onClose={triggerCloseFilterDialog}
@@ -179,7 +250,7 @@ export const ListagemDeChamados: React.FC<HelpDeskListProp> = () => {
         <Divider />
         <DialogContent>
           <Grid container display={'flex'} marginTop={'20px'} gap={2}>
-            <Grid item xs={12} lg={6} md={6} sm={12} xl={7}>
+            {/* <Grid item xs={12} lg={6} md={6} sm={12} xl={7}>
               <Select
                 label="Categoria"
                 placeholder="categoria"
@@ -203,7 +274,7 @@ export const ListagemDeChamados: React.FC<HelpDeskListProp> = () => {
                 <MenuItem value={'portaldocliente'}>Portal do Cliente</MenuItem>
                 <MenuItem value={'outros'}>Outros</MenuItem>
               </Select>
-            </Grid>
+            </Grid> */}
             <Grid item xs={12} lg={5} md={4} sm={12} xl={4}>
               <DatePicker
                 label="Data de postagem"
@@ -212,9 +283,9 @@ export const ListagemDeChamados: React.FC<HelpDeskListProp> = () => {
                 onChange={(newDate) => setDate(newDate)}
               />
             </Grid>
-            <Grid item xs={12} lg={12} md={12} sm={12} xl={12}>
+            {/* <Grid item xs={12} lg={12} md={12} sm={12} xl={12}>
               <TextField label="Autor(a)" variant="outlined" fullWidth />
-            </Grid>
+            </Grid> */}
           </Grid>
         </DialogContent>
         <DialogActions>
@@ -226,7 +297,7 @@ export const ListagemDeChamados: React.FC<HelpDeskListProp> = () => {
             Cancelar
           </Button>
           <Button
-            onClick={() => {}}
+            onClick={filterHelpDesk}
             autoFocus
             variant="contained"
             disableElevation
