@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-key */
 import React, { useState, useEffect } from 'react'
 import DefaultLayout from '../../layouts/DefaultLayout'
 import { Chamado, HelpDeskDataProps } from '../Chamado'
@@ -15,6 +14,7 @@ import { BarraFerramentasListagemDeChamados } from '../BarraFerramentasListagemD
 
 import api from '../../../service/api/config/configApi'
 import { useDrawerContext } from '../../contexts/DrawerContext'
+import { useHelpDeskContext } from '../../contexts/HelpDeskContext'
 
 interface FileProps {
   id: string
@@ -33,6 +33,7 @@ interface HelpDeskListProp extends HelpDeskDataProps {
 
 export const ListagemDeChamados: React.FC<HelpDeskListProp> = () => {
   const [helpDeskData, setHelpDeskData] = useState<HelpDeskListProp[]>([])
+
   const [search, setSearch] = useState('')
   const [isLoading, setIsLoading] = useState<boolean>(true)
 
@@ -41,6 +42,7 @@ export const ListagemDeChamados: React.FC<HelpDeskListProp> = () => {
   const smDown = useMediaQuery(theme.breakpoints.down('sm'))
 
   const { toggleDrawerOpen } = useDrawerContext()
+  const { isNewHelpDesk } = useHelpDeskContext()
 
   useEffect(() => {
     setIsLoading(true)
@@ -52,12 +54,16 @@ export const ListagemDeChamados: React.FC<HelpDeskListProp> = () => {
 
         setIsLoading(false)
         setHelpDeskData(Object.values(data)[0] as HelpDeskListProp[])
+
+        if (isNewHelpDesk) {
+          setHelpDeskData(Object.values(data)[0] as HelpDeskListProp[])
+        }
       })
       .catch((error) => {
         console.log(error)
         alert('Ocorreu um erro ao buscar os chamados')
       })
-  }, [])
+  }, [isNewHelpDesk])
 
   /**
    * Função para verificar se há algo escrito na caixa de pesquisa, e caso tenha, retorne o chamado de acordo com o título ou a descrição pelo mais recente primeiro.
