@@ -1,19 +1,35 @@
-import { Box, TextField, useTheme } from '@mui/material'
+import React from 'react'
+import {
+  Box,
+  Icon,
+  IconButton,
+  TextField,
+  Tooltip,
+  useTheme,
+} from '@mui/material'
 import InputAdornment from '@mui/material/InputAdornment'
 import SearchIcon from '@mui/icons-material/Search'
-import React from 'react'
+import FilterListIcon from '@mui/icons-material/FilterList'
 
 import { Environment } from '../../environment/export'
 interface IBarraFerramentasAbrirChamado {
   textoBusca?: string
   mostrarInputBusca?: boolean
+  mostrarBotaoFiltro?: boolean
 
   aoMudarTextoDeBusca?: (novoTexto: string) => void
+  aoClicarBotaoFiltro?: () => void
 }
 
 export const BarraFerramentasListagemDeChamados: React.FC<
   IBarraFerramentasAbrirChamado
-> = ({ textoBusca = '', mostrarInputBusca = false, aoMudarTextoDeBusca }) => {
+> = ({
+  textoBusca = '',
+  mostrarInputBusca = false,
+  aoMudarTextoDeBusca,
+  mostrarBotaoFiltro,
+  aoClicarBotaoFiltro,
+}) => {
   const theme = useTheme()
 
   return (
@@ -40,6 +56,16 @@ export const BarraFerramentasListagemDeChamados: React.FC<
             ),
           }}
         />
+      )}
+
+      {mostrarBotaoFiltro && (
+        <Tooltip title="Filtrar" placement="top" arrow>
+          <IconButton onClick={aoClicarBotaoFiltro}>
+            <Icon>
+              <FilterListIcon />
+            </Icon>
+          </IconButton>
+        </Tooltip>
       )}
     </Box>
   )
