@@ -11,6 +11,7 @@ import {
   Tooltip,
   Badge,
   ListItemButton,
+  Divider,
 } from '@mui/material'
 import Zoom from '@mui/material/Zoom'
 import React, { useState, useEffect } from 'react'
@@ -43,6 +44,7 @@ export interface HelpDeskDataProps {
 export const Chamado: React.FC<HelpDeskDataProps> = ({
   id,
   author,
+  category,
   description,
   createdAt,
   title,
@@ -175,26 +177,39 @@ export const Chamado: React.FC<HelpDeskDataProps> = ({
             <Badge badgeContent={attachedFiles.length} color="primary">
               {attachedFiles && attachedFiles.length > 0 ? (
                 <Icon>
-                  <FiPaperclip size={15} color="#49B3E8" />
+                  <FiPaperclip size={15} />
                 </Icon>
               ) : (
                 ''
               )}
             </Badge>
 
-            <Box
-              display={'flex'}
-              flex={1}
-              justifyContent={'end'}
-              gap={2}
-              position={'relative'}
-            >
-              <Chip label={id} size="small" sx={{ width: '12ch' }} />
-              <Tooltip title="Aberto" TransitionComponent={Zoom} arrow>
-                <Icon>
-                  <RiTimer2Line color="#d3d3d3" />
-                </Icon>
-              </Tooltip>
+            {attachedFiles && attachedFiles.length > 0 ? (
+              <Divider
+                orientation="vertical"
+                flexItem
+                sx={{ marginX: '15px' }}
+              />
+            ) : (
+              ''
+            )}
+
+            <Box display={'flex'} flex={1} justifyContent={'space-between'}>
+              <Typography color={'#49B3E8'}>{category}</Typography>
+              <Box
+                display={'flex'}
+                flex={1}
+                justifyContent={'end'}
+                gap={2}
+                position={'relative'}
+              >
+                <Chip label={id} size="small" sx={{ width: '12ch' }} />
+                <Tooltip title="Aberto" TransitionComponent={Zoom} arrow>
+                  <Icon>
+                    <RiTimer2Line color="#d3d3d3" />
+                  </Icon>
+                </Tooltip>
+              </Box>
             </Box>
           </Box>
         </CardContent>
