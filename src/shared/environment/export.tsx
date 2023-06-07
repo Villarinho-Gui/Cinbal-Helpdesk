@@ -6,7 +6,7 @@ export const Environment = {
   /**
    *O que irá aparecer por padrão nos componentes de busca
    */
-  INPUT_DE_BUSCA: 'Pesquisar...',
+  INPUT_DE_BUSCA: 'Título, categoria, descrição...',
   /**
    *Quando não encontrar nenhum chamado
    */
