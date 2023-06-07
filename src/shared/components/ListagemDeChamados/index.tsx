@@ -3,13 +3,24 @@ import DefaultLayout from '../../layouts/DefaultLayout'
 import { Chamado, HelpDeskDataProps } from '../Chamado'
 
 import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Divider,
+  Grid,
   LinearProgress,
   List,
   ListItem,
+  MenuItem,
+  Select,
+  TextField,
   Typography,
   useMediaQuery,
   useTheme,
 } from '@mui/material'
+import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import { BarraFerramentasListagemDeChamados } from '../BarraFerramentasListagemDeChamados'
 
 import api from '../../../service/api/config/configApi'
@@ -33,6 +44,9 @@ interface HelpDeskListProp extends HelpDeskDataProps {
 
 export const ListagemDeChamados: React.FC<HelpDeskListProp> = () => {
   const [helpDeskData, setHelpDeskData] = useState<HelpDeskListProp[]>([])
+  const [openFilterDialog, setOpenFilterDialog] = useState(false)
+  const [category, setCategory] = useState('')
+  const [date, setDate] = useState<Date | null>()
 
   const [search, setSearch] = useState('')
   const [isLoading, setIsLoading] = useState<boolean>(true)
@@ -82,6 +96,15 @@ export const ListagemDeChamados: React.FC<HelpDeskListProp> = () => {
         })
       : []
 
+  const triggerOpenFilterDialog = () => {
+    setOpenFilterDialog(true)
+  }
+  const triggerCloseFilterDialog = () => {
+    setOpenFilterDialog(false)
+  }
+
+  // fazer possível useEffect com função de filtro de chamados
+
   return (
     <DefaultLayout
       tituloPagina={''}
@@ -91,10 +114,12 @@ export const ListagemDeChamados: React.FC<HelpDeskListProp> = () => {
         // ...
         <BarraFerramentasListagemDeChamados
           mostrarInputBusca
+          mostrarBotaoFiltro
           textoBusca={search}
           aoMudarTextoDeBusca={(value) => {
             setSearch(value)
           }}
+          aoClicarBotaoFiltro={triggerOpenFilterDialog}
         />
         // ...
       }
@@ -144,6 +169,72 @@ export const ListagemDeChamados: React.FC<HelpDeskListProp> = () => {
           ))}
         </List>
       )}
+
+      <Dialog
+        open={openFilterDialog}
+        onClose={triggerCloseFilterDialog}
+        fullWidth
+      >
+        <DialogTitle>Filtrar chamados</DialogTitle>
+        <Divider />
+        <DialogContent>
+          <Grid container display={'flex'} marginTop={'20px'} gap={2}>
+            <Grid item xs={12} lg={6} md={6} sm={12} xl={7}>
+              <Select
+                label="Categoria"
+                placeholder="categoria"
+                name="categoria"
+                value={category}
+                disabled={isLoading}
+                type="text"
+                onChange={(e) => setCategory(e.target.value)}
+                fullWidth
+              >
+                <MenuItem value={'email'}>Email</MenuItem>
+                <MenuItem value={'ramal'}>Ramal</MenuItem>
+                <MenuItem value={'rede'}>Rede</MenuItem>
+                <MenuItem value={'fluig'}>Fluig</MenuItem>
+                <MenuItem value={'hardware'}>Hardware</MenuItem>
+                <MenuItem value={'software'}>Software</MenuItem>
+                <MenuItem value={'pcfactory'}>PcFactory</MenuItem>
+                <MenuItem value={'preactor'}>Preactor</MenuItem>
+                <MenuItem value={'protheus'}>Protheus</MenuItem>
+                <MenuItem value={'vexon'}>Vexon</MenuItem>
+                <MenuItem value={'portaldocliente'}>Portal do Cliente</MenuItem>
+                <MenuItem value={'outros'}>Outros</MenuItem>
+              </Select>
+            </Grid>
+            <Grid item xs={12} lg={5} md={4} sm={12} xl={4}>
+              <DatePicker
+                label="Data de postagem"
+                sx={{ width: '100%' }}
+                value={date}
+                onChange={(newDate) => setDate(newDate)}
+              />
+            </Grid>
+            <Grid item xs={12} lg={12} md={12} sm={12} xl={12}>
+              <TextField label="Autor(a)" variant="outlined" fullWidth />
+            </Grid>
+          </Grid>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={triggerCloseFilterDialog}
+            variant="outlined"
+            color="error"
+          >
+            Cancelar
+          </Button>
+          <Button
+            onClick={() => {}}
+            autoFocus
+            variant="contained"
+            disableElevation
+          >
+            Filtrar
+          </Button>
+        </DialogActions>
+      </Dialog>
     </DefaultLayout>
   )
 }
