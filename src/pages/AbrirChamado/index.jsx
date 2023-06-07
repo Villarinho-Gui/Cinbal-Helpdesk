@@ -25,6 +25,7 @@ import { AiOutlinePaperClip } from 'react-icons/ai'
 
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
+import { useHelpDeskContext } from '../../shared/contexts/HelpDeskContext'
 
 const createChamadoSchema = yup
   .object()
@@ -48,6 +49,8 @@ export default function AbrirChamado() {
   const [files, setFiles] = useState('')
   const [openSuccessMessage, setOpenSuccessMessage] = useState(false)
   const [openErrorMessage, setOpenErrorMessage] = useState(false)
+
+  const { toggleHelpDesk } = useHelpDeskContext()
 
   const {
     register,
@@ -85,6 +88,7 @@ export default function AbrirChamado() {
     try {
       await api.post('/abrir-chamado', formData, headers).then(() => {
         setOpenSuccessMessage(true)
+        toggleHelpDesk()
       })
     } catch (error) {
       console.log(error)
