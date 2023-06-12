@@ -9,23 +9,21 @@ import {
   DialogContent,
   DialogTitle,
   Divider,
-  Grid,
   LinearProgress,
   List,
   ListItem,
-  // MenuItem,
-  // Select,
-  // TextField,
   Typography,
   useMediaQuery,
   useTheme,
 } from '@mui/material'
-import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import { BarraFerramentasListagemDeChamados } from '../BarraFerramentasListagemDeChamados'
 
 import api from '../../../service/api/config/configApi'
 import { useDrawerContext } from '../../contexts/DrawerContext'
 import { useHelpDeskContext } from '../../contexts/HelpDeskContext'
+import 'react-date-range/dist/styles.css' // main style file
+import 'react-date-range/dist/theme/default.css' // theme css file
+import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import { format } from 'date-fns'
 
 interface FileProps {
@@ -41,8 +39,6 @@ interface HelpDeskListProp extends HelpDeskDataProps {
   description: string
   files?: FileProps[]
   createdAt: Date
-  waiting: number
-  postedAt: string
 }
 
 export const ListagemDeChamados: React.FC<HelpDeskListProp> = () => {
@@ -50,9 +46,9 @@ export const ListagemDeChamados: React.FC<HelpDeskListProp> = () => {
   const [filterHelpDeskData, setFilterHelpDeskData] = useState<
     HelpDeskListProp[]
   >([])
+  const [filterDate, setFilterDate] = useState(false)
   const [openFilterDialog, setOpenFilterDialog] = useState(false)
-  // const [category, setCategory] = useState('')
-  const [date, setDate] = useState<Date | null>(null)
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null)
 
   const [search, setSearch] = useState('')
   const [isLoading, setIsLoading] = useState<boolean>(true)
@@ -63,24 +59,6 @@ export const ListagemDeChamados: React.FC<HelpDeskListProp> = () => {
 
   const { toggleDrawerOpen } = useDrawerContext()
   const { isNewHelpDesk } = useHelpDeskContext()
-
-  const filterHelpDesk = () => {
-    const postedDate = date ? format(date, 'yyyyMMdd') : null
-    console.log(date)
-    if (postedDate && helpDeskData) {
-      setFilterHelpDeskData(
-        helpDeskData.filter((helpDesk) => {
-          const helpDeskDate = format(new Date(helpDesk.createdAt), 'yyyyMMdd')
-          console.log(helpDeskDate)
-          return helpDesk.waiting > 0 && helpDeskDate === postedDate
-        }),
-      )
-    } else {
-      setFilterHelpDeskData([])
-    }
-
-    // console.log(postedDate)
-  }
 
   useEffect(() => {
     setIsLoading(true)
@@ -93,15 +71,14 @@ export const ListagemDeChamados: React.FC<HelpDeskListProp> = () => {
 
         setIsLoading(false)
 
-        setFilterHelpDeskData(
-          Object.values(data)[0].filter(
-            (current: HelpDeskListProp) => current.waiting > 0,
-          ),
-        )
         setHelpDeskData(allHelpDeskData)
-        // console.log(allHelpDeskData[0].createdAt)
+        setFilterHelpDeskData(allHelpDeskData)
 
         if (isNewHelpDesk) {
+          setHelpDeskData(allHelpDeskData)
+        }
+
+        if (!filterDate) {
           setHelpDeskData(allHelpDeskData)
         }
       })
@@ -109,7 +86,22 @@ export const ListagemDeChamados: React.FC<HelpDeskListProp> = () => {
         console.log(error)
         alert('Ocorreu um erro ao buscar os chamados')
       })
-  }, [isNewHelpDesk])
+  }, [filterDate, isNewHelpDesk])
+
+  const handleSelect = (date: any) => {
+    setFilterDate(true)
+    setSelectedDate(date)
+
+    const filtered = filterHelpDeskData.filter(
+      (helpDesk) =>
+        format(new Date(helpDesk.createdAt), 'dd-MM-yyyy') ===
+        format(date!, 'dd-MM-yyyy'),
+    )
+
+    if (filterDate) {
+      setHelpDeskData(filtered)
+    }
+  }
 
   /**
    * Função para verificar se há algo escrito na caixa de pesquisa, e caso tenha, retorne o chamado de acordo com o título ou a descrição pelo mais recente primeiro.
@@ -133,6 +125,7 @@ export const ListagemDeChamados: React.FC<HelpDeskListProp> = () => {
   }
   const triggerCloseFilterDialog = () => {
     setOpenFilterDialog(false)
+    setFilterDate(false)
   }
 
   // fazer possível useEffect com função de filtro de chamados
@@ -202,45 +195,6 @@ export const ListagemDeChamados: React.FC<HelpDeskListProp> = () => {
         </List>
       )}
 
-      {filterHelpDeskData.length > 0 ? (
-        <List sx={{ overflow: 'auto', padding: '0px' }}>
-          {filterHelpDeskData.map((UniqueHelpDesk) => (
-            <ListItem key={UniqueHelpDesk.id} disablePadding>
-              <Chamado
-                id={UniqueHelpDesk.id}
-                author={UniqueHelpDesk.author}
-                title={UniqueHelpDesk.title}
-                category={UniqueHelpDesk.category}
-                description={UniqueHelpDesk.description}
-                maxLines={2}
-                createdAt={new Date(UniqueHelpDesk.createdAt)}
-                files={UniqueHelpDesk.files}
-                onClick={smDown ? toggleDrawerOpen : undefined}
-                to={`chamado/detalhe/${UniqueHelpDesk.id}`}
-              />
-            </ListItem>
-          ))}
-        </List>
-      ) : (
-        <List sx={{ overflow: 'auto', padding: '0px' }}>
-          {helpDeskData.map((UniqueHelpDesk) => (
-            <ListItem key={UniqueHelpDesk.id} disablePadding>
-              <Chamado
-                id={UniqueHelpDesk.id}
-                author={UniqueHelpDesk.author}
-                title={UniqueHelpDesk.title}
-                category={UniqueHelpDesk.category}
-                description={UniqueHelpDesk.description}
-                maxLines={2}
-                createdAt={new Date(UniqueHelpDesk.createdAt)}
-                onClick={smDown ? toggleDrawerOpen : undefined}
-                to={`chamado/detalhe/${UniqueHelpDesk.id}`}
-              />
-            </ListItem>
-          ))}
-        </List>
-      )}
-
       <Dialog
         open={openFilterDialog}
         onClose={triggerCloseFilterDialog}
@@ -249,44 +203,7 @@ export const ListagemDeChamados: React.FC<HelpDeskListProp> = () => {
         <DialogTitle>Filtrar chamados</DialogTitle>
         <Divider />
         <DialogContent>
-          <Grid container display={'flex'} marginTop={'20px'} gap={2}>
-            {/* <Grid item xs={12} lg={6} md={6} sm={12} xl={7}>
-              <Select
-                label="Categoria"
-                placeholder="categoria"
-                name="categoria"
-                value={category}
-                disabled={isLoading}
-                type="text"
-                onChange={(e) => setCategory(e.target.value)}
-                fullWidth
-              >
-                <MenuItem value={'email'}>Email</MenuItem>
-                <MenuItem value={'ramal'}>Ramal</MenuItem>
-                <MenuItem value={'rede'}>Rede</MenuItem>
-                <MenuItem value={'fluig'}>Fluig</MenuItem>
-                <MenuItem value={'hardware'}>Hardware</MenuItem>
-                <MenuItem value={'software'}>Software</MenuItem>
-                <MenuItem value={'pcfactory'}>PcFactory</MenuItem>
-                <MenuItem value={'preactor'}>Preactor</MenuItem>
-                <MenuItem value={'protheus'}>Protheus</MenuItem>
-                <MenuItem value={'vexon'}>Vexon</MenuItem>
-                <MenuItem value={'portaldocliente'}>Portal do Cliente</MenuItem>
-                <MenuItem value={'outros'}>Outros</MenuItem>
-              </Select>
-            </Grid> */}
-            <Grid item xs={12} lg={5} md={4} sm={12} xl={4}>
-              <DatePicker
-                label="Data de postagem"
-                sx={{ width: '100%' }}
-                value={date}
-                onChange={(newDate) => setDate(newDate)}
-              />
-            </Grid>
-            {/* <Grid item xs={12} lg={12} md={12} sm={12} xl={12}>
-              <TextField label="Autor(a)" variant="outlined" fullWidth />
-            </Grid> */}
-          </Grid>
+          <DatePicker value={selectedDate} onChange={handleSelect} />
         </DialogContent>
         <DialogActions>
           <Button
@@ -297,7 +214,7 @@ export const ListagemDeChamados: React.FC<HelpDeskListProp> = () => {
             Cancelar
           </Button>
           <Button
-            onClick={filterHelpDesk}
+            onClick={() => {}}
             autoFocus
             variant="contained"
             disableElevation

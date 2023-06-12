@@ -9,7 +9,7 @@ import {
 } from '@mui/material'
 import InputAdornment from '@mui/material/InputAdornment'
 import SearchIcon from '@mui/icons-material/Search'
-import FilterListIcon from '@mui/icons-material/FilterList'
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday'
 
 import { Environment } from '../../environment/export'
 interface IBarraFerramentasAbrirChamado {
@@ -62,7 +62,7 @@ export const BarraFerramentasListagemDeChamados: React.FC<
         <Tooltip title="Filtrar" placement="top" arrow>
           <IconButton onClick={aoClicarBotaoFiltro}>
             <Icon>
-              <FilterListIcon />
+              <CalendarTodayIcon />
             </Icon>
           </IconButton>
         </Tooltip>
