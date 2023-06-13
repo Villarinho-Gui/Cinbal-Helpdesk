@@ -12,13 +12,16 @@ import SearchIcon from '@mui/icons-material/Search'
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday'
 
 import { Environment } from '../../environment/export'
+import { BsFillCalendar2XFill } from 'react-icons/bs'
 interface IBarraFerramentasAbrirChamado {
   textoBusca?: string
   mostrarInputBusca?: boolean
   mostrarBotaoFiltro?: boolean
+  mostrarBotaoLimparFiltro?: boolean
 
   aoMudarTextoDeBusca?: (novoTexto: string) => void
   aoClicarBotaoFiltro?: () => void
+  aoClicarBotaoLimparFiltro?: () => void
 }
 
 export const BarraFerramentasListagemDeChamados: React.FC<
@@ -26,9 +29,10 @@ export const BarraFerramentasListagemDeChamados: React.FC<
 > = ({
   textoBusca = '',
   mostrarInputBusca = false,
+  mostrarBotaoLimparFiltro,
   aoMudarTextoDeBusca,
-  mostrarBotaoFiltro,
   aoClicarBotaoFiltro,
+  aoClicarBotaoLimparFiltro,
 }) => {
   const theme = useTheme()
 
@@ -58,8 +62,16 @@ export const BarraFerramentasListagemDeChamados: React.FC<
         />
       )}
 
-      {mostrarBotaoFiltro && (
-        <Tooltip title="Filtrar" placement="top" arrow>
+      {mostrarBotaoLimparFiltro ? (
+        <Tooltip title="Remover Filtro" placement="top" arrow>
+          <IconButton onClick={aoClicarBotaoLimparFiltro}>
+            <Icon>
+              <BsFillCalendar2XFill />
+            </Icon>
+          </IconButton>
+        </Tooltip>
+      ) : (
+        <Tooltip title="Filtro" placement="top" arrow>
           <IconButton onClick={aoClicarBotaoFiltro}>
             <Icon>
               <CalendarTodayIcon />
