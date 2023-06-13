@@ -43,18 +43,16 @@ interface HelpDeskListProp extends HelpDeskDataProps {
 
 export const ListagemDeChamados: React.FC<HelpDeskListProp> = () => {
   const [helpDeskData, setHelpDeskData] = useState<HelpDeskListProp[]>([])
-  const [filterHelpDeskData, setFilterHelpDeskData] = useState<
+  const [filteredHelpDeskData, setFilteredHelpDeskData] = useState<
     HelpDeskListProp[]
   >([])
-  const [filterDate, setFilterDate] = useState(false)
   const [openFilterDialog, setOpenFilterDialog] = useState(false)
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null)
-
-  const [search, setSearch] = useState('')
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined)
+  const [searchTextField, setSearchTextField] = useState('')
   const [isLoading, setIsLoading] = useState<boolean>(true)
+  const [showRemoveFilter, setShowRemoveFilter] = useState(false)
 
   const theme = useTheme()
-
   const smDown = useMediaQuery(theme.breakpoints.down('sm'))
 
   const { toggleDrawerOpen } = useDrawerContext()
@@ -72,13 +70,9 @@ export const ListagemDeChamados: React.FC<HelpDeskListProp> = () => {
         setIsLoading(false)
 
         setHelpDeskData(allHelpDeskData)
-        setFilterHelpDeskData(allHelpDeskData)
+        setFilteredHelpDeskData(allHelpDeskData)
 
         if (isNewHelpDesk) {
-          setHelpDeskData(allHelpDeskData)
-        }
-
-        if (!filterDate) {
           setHelpDeskData(allHelpDeskData)
         }
       })
@@ -86,49 +80,47 @@ export const ListagemDeChamados: React.FC<HelpDeskListProp> = () => {
         console.log(error)
         alert('Ocorreu um erro ao buscar os chamados')
       })
-  }, [filterDate, isNewHelpDesk])
+  }, [isNewHelpDesk])
 
-  const handleSelect = (date: any) => {
-    setFilterDate(true)
-    setSelectedDate(date)
-
-    const filtered = filterHelpDeskData.filter(
-      (helpDesk) =>
-        format(new Date(helpDesk.createdAt), 'dd-MM-yyyy') ===
-        format(date!, 'dd-MM-yyyy'),
-    )
-
-    if (filterDate) {
-      setHelpDeskData(filtered)
-    }
-  }
-
-  /**
-   * Função para verificar se há algo escrito na caixa de pesquisa, e caso tenha, retorne o chamado de acordo com o título ou a descrição pelo mais recente primeiro.
-   */
-
-  const filteredHelpDesks =
-    search.length > 0
+  const filteredBySearchTextField =
+    searchTextField.length > 0
       ? helpDeskData.filter((helpDesk) => {
           return (
-            (helpDesk.title && helpDesk.title.includes(search.toLowerCase())) ||
+            (helpDesk.title &&
+              helpDesk.title.includes(searchTextField.toLowerCase())) ||
             (helpDesk.description &&
-              helpDesk.description.includes(search.toLowerCase())) ||
+              helpDesk.description.includes(searchTextField.toLowerCase())) ||
             (helpDesk.category &&
-              helpDesk.category.includes(search.toLowerCase()))
+              helpDesk.category.includes(searchTextField.toLowerCase()))
           )
         })
       : []
+
+  const triggerSelectDate = (date: any) => {
+    const filterByDate = filteredHelpDeskData.filter(
+      (helpDesk) =>
+        format(new Date(helpDesk.createdAt), 'dd-MM-yyyy') ===
+        format(date, 'dd-MM-yyyy'),
+    )
+    setSelectedDate(date)
+
+    if (filterByDate) {
+      setShowRemoveFilter(true)
+    }
+    setHelpDeskData(filterByDate)
+  }
 
   const triggerOpenFilterDialog = () => {
     setOpenFilterDialog(true)
   }
   const triggerCloseFilterDialog = () => {
     setOpenFilterDialog(false)
-    setFilterDate(false)
   }
 
-  // fazer possível useEffect com função de filtro de chamados
+  const removeFilter = () => {
+    setHelpDeskData(filteredHelpDeskData)
+    setShowRemoveFilter(false)
+  }
 
   return (
     <DefaultLayout
@@ -140,24 +132,26 @@ export const ListagemDeChamados: React.FC<HelpDeskListProp> = () => {
         <BarraFerramentasListagemDeChamados
           mostrarInputBusca
           mostrarBotaoFiltro
-          textoBusca={search}
+          mostrarBotaoLimparFiltro={showRemoveFilter}
+          textoBusca={searchTextField}
           aoMudarTextoDeBusca={(value) => {
-            setSearch(value)
+            setSearchTextField(value)
           }}
           aoClicarBotaoFiltro={triggerOpenFilterDialog}
+          aoClicarBotaoLimparFiltro={removeFilter}
         />
         // ...
       }
     >
       {isLoading && <LinearProgress variant="indeterminate" />}
-      {search.length > 0 ? (
-        filteredHelpDesks.length === 0 ? (
+      {searchTextField.length > 0 ? (
+        filteredBySearchTextField.length === 0 ? (
           <Typography variant="body2" sx={{ marginLeft: '10px' }}>
             Nenhum chamado correspondente
           </Typography>
         ) : (
           <List sx={{ overflow: 'auto', padding: '0px' }}>
-            {filteredHelpDesks.map((UniqueHelpDesk) => (
+            {filteredBySearchTextField.map((UniqueHelpDesk) => (
               <ListItem key={UniqueHelpDesk.id} disablePadding>
                 <Chamado
                   id={UniqueHelpDesk.id}
@@ -200,26 +194,18 @@ export const ListagemDeChamados: React.FC<HelpDeskListProp> = () => {
         onClose={triggerCloseFilterDialog}
         fullWidth
       >
-        <DialogTitle>Filtrar chamados</DialogTitle>
+        <DialogTitle>Filtrar chamados por data</DialogTitle>
         <Divider />
         <DialogContent>
-          <DatePicker value={selectedDate} onChange={handleSelect} />
+          <DatePicker value={selectedDate} onChange={triggerSelectDate} />
         </DialogContent>
         <DialogActions>
           <Button
             onClick={triggerCloseFilterDialog}
-            variant="outlined"
-            color="error"
-          >
-            Cancelar
-          </Button>
-          <Button
-            onClick={() => {}}
-            autoFocus
             variant="contained"
-            disableElevation
+            color="primary"
           >
-            Filtrar
+            Aplicar Filtro
           </Button>
         </DialogActions>
       </Dialog>
