@@ -120,6 +120,7 @@ export const ListagemDeChamados: React.FC<HelpDeskListProp> = () => {
   const removeFilter = () => {
     setHelpDeskData(filteredHelpDeskData)
     setShowRemoveFilter(false)
+    setSelectedDate(undefined)
   }
 
   return (
