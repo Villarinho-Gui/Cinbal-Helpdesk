@@ -43,14 +43,18 @@ interface HelpDeskListProp extends HelpDeskDataProps {
 
 export const ListagemDeChamados: React.FC<HelpDeskListProp> = () => {
   const [helpDeskData, setHelpDeskData] = useState<HelpDeskListProp[]>([])
-  const [filteredHelpDeskData, setFilteredHelpDeskData] = useState<
+  const [filteredHelpDeskDataByDate, setFilteredHelpDeskDataByDate] = useState<
     HelpDeskListProp[]
   >([])
   const [openFilterDialog, setOpenFilterDialog] = useState(false)
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined)
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date())
   const [searchTextField, setSearchTextField] = useState('')
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [showRemoveFilter, setShowRemoveFilter] = useState(false)
+  const [
+    showMessageIfNotExistHelpDeskFilteredByDate,
+    setShowMessageIfNotExistHelpDeskFilteredByDate,
+  ] = useState(false)
 
   const theme = useTheme()
   const smDown = useMediaQuery(theme.breakpoints.down('sm'))
@@ -70,7 +74,7 @@ export const ListagemDeChamados: React.FC<HelpDeskListProp> = () => {
         setIsLoading(false)
 
         setHelpDeskData(allHelpDeskData)
-        setFilteredHelpDeskData(allHelpDeskData)
+        setFilteredHelpDeskDataByDate(allHelpDeskData)
 
         if (isNewHelpDesk) {
           setHelpDeskData(allHelpDeskData)
@@ -97,7 +101,7 @@ export const ListagemDeChamados: React.FC<HelpDeskListProp> = () => {
       : []
 
   const triggerSelectDate = (date: any) => {
-    const filterByDate = filteredHelpDeskData.filter(
+    const filterByDate = filteredHelpDeskDataByDate.filter(
       (helpDesk) =>
         format(new Date(helpDesk.createdAt), 'dd-MM-yyyy') ===
         format(date, 'dd-MM-yyyy'),
@@ -108,6 +112,10 @@ export const ListagemDeChamados: React.FC<HelpDeskListProp> = () => {
       setShowRemoveFilter(true)
     }
     setHelpDeskData(filterByDate)
+
+    if (filterByDate.length === 0) {
+      setShowMessageIfNotExistHelpDeskFilteredByDate(true)
+    }
   }
 
   const triggerOpenFilterDialog = () => {
@@ -118,7 +126,7 @@ export const ListagemDeChamados: React.FC<HelpDeskListProp> = () => {
   }
 
   const removeFilter = () => {
-    setHelpDeskData(filteredHelpDeskData)
+    setHelpDeskData(filteredHelpDeskDataByDate)
     setShowRemoveFilter(false)
     setSelectedDate(undefined)
   }
@@ -147,6 +155,10 @@ export const ListagemDeChamados: React.FC<HelpDeskListProp> = () => {
       {isLoading && <LinearProgress variant="indeterminate" />}
       {searchTextField.length > 0 ? (
         filteredBySearchTextField.length === 0 ? (
+          <Typography variant="body2" sx={{ marginLeft: '10px' }}>
+            Nenhum chamado correspondente
+          </Typography>
+        ) : showMessageIfNotExistHelpDeskFilteredByDate ? (
           <Typography variant="body2" sx={{ marginLeft: '10px' }}>
             Nenhum chamado correspondente
           </Typography>
@@ -190,11 +202,7 @@ export const ListagemDeChamados: React.FC<HelpDeskListProp> = () => {
         </List>
       )}
 
-      <Dialog
-        open={openFilterDialog}
-        onClose={triggerCloseFilterDialog}
-        fullWidth
-      >
+      <Dialog open={openFilterDialog} onClose={triggerCloseFilterDialog}>
         <DialogTitle>Filtrar chamados por data</DialogTitle>
         <Divider />
         <DialogContent>
@@ -205,6 +213,7 @@ export const ListagemDeChamados: React.FC<HelpDeskListProp> = () => {
             onClick={triggerCloseFilterDialog}
             variant="contained"
             color="primary"
+            sx={{ width: '90%', marginX: 'auto' }}
           >
             Aplicar Filtro
           </Button>
