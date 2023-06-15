@@ -71,7 +71,7 @@ export const BarraFerramentasListagemDeChamados: React.FC<
           </IconButton>
         </Tooltip>
       ) : (
-        <Tooltip title="Filtro" placement="top" arrow>
+        <Tooltip title="Filtrar por data" placement="top" arrow>
           <IconButton onClick={aoClicarBotaoFiltro}>
             <Icon>
               <CalendarTodayIcon />

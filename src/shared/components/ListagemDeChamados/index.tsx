@@ -111,6 +111,7 @@ export const ListagemDeChamados: React.FC<HelpDeskListProp> = () => {
     if (filterByDate) {
       setShowRemoveFilter(true)
       setHelpDeskData(filterByDate)
+      setShowMessageIfNotExistHelpDeskFilteredByDate(false)
     }
 
     if (filterByDate.length <= 0) {
@@ -220,7 +221,7 @@ export const ListagemDeChamados: React.FC<HelpDeskListProp> = () => {
             color="primary"
             sx={{ width: '90%', marginX: 'auto' }}
           >
-            Aplicar Filtro
+            Ok
           </Button>
         </DialogActions>
       </Dialog>
