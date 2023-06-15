@@ -88,7 +88,7 @@ export const ListagemDeChamados: React.FC<HelpDeskListProp> = () => {
 
   const filteredBySearchTextField =
     searchTextField.length > 0
-      ? helpDeskData.filter((helpDesk) => {
+      ? helpDeskData!.filter((helpDesk) => {
           return (
             (helpDesk.title &&
               helpDesk.title.includes(searchTextField.toLowerCase())) ||
@@ -110,10 +110,10 @@ export const ListagemDeChamados: React.FC<HelpDeskListProp> = () => {
 
     if (filterByDate) {
       setShowRemoveFilter(true)
+      setHelpDeskData(filterByDate)
     }
-    setHelpDeskData(filterByDate)
 
-    if (filterByDate.length === 0) {
+    if (filterByDate.length <= 0) {
       setShowMessageIfNotExistHelpDeskFilteredByDate(true)
     }
   }
@@ -129,6 +129,7 @@ export const ListagemDeChamados: React.FC<HelpDeskListProp> = () => {
     setHelpDeskData(filteredHelpDeskDataByDate)
     setShowRemoveFilter(false)
     setSelectedDate(undefined)
+    setShowMessageIfNotExistHelpDeskFilteredByDate(false)
   }
 
   return (
@@ -155,10 +156,6 @@ export const ListagemDeChamados: React.FC<HelpDeskListProp> = () => {
       {isLoading && <LinearProgress variant="indeterminate" />}
       {searchTextField.length > 0 ? (
         filteredBySearchTextField.length === 0 ? (
-          <Typography variant="body2" sx={{ marginLeft: '10px' }}>
-            Nenhum chamado correspondente
-          </Typography>
-        ) : showMessageIfNotExistHelpDeskFilteredByDate ? (
           <Typography variant="body2" sx={{ marginLeft: '10px' }}>
             Nenhum chamado correspondente
           </Typography>
@@ -200,6 +197,14 @@ export const ListagemDeChamados: React.FC<HelpDeskListProp> = () => {
             </ListItem>
           ))}
         </List>
+      )}
+
+      {showMessageIfNotExistHelpDeskFilteredByDate ? (
+        <Typography variant="body2" sx={{ marginLeft: '10px' }}>
+          Nenhum chamado nesta data
+        </Typography>
+      ) : (
+        ''
       )}
 
       <Dialog open={openFilterDialog} onClose={triggerCloseFilterDialog}>
