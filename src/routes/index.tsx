@@ -6,7 +6,7 @@ import { CadastroUsuario } from '../pages/LoginLayout/CadastroUsuario'
 import { LoginLayout } from '../pages/LoginLayout'
 import { MenuLateral } from '../shared/components/MenuLateral'
 import { Login } from '../pages/LoginLayout/Login'
-import AbrirChamado from '../pages/AbrirChamado'
+import { AbrirChamado } from '../pages/AbrirChamado'
 import { ChamadoAbertoParaDetalhe } from '../shared/components/ChamadoAbertoParaDetalhe'
 import DownloadPage from '../pages/DownloadPage'
 
