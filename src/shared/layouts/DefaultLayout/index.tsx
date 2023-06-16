@@ -18,7 +18,9 @@ import { CgLogOut } from 'react-icons/cg'
 import { useDrawerContext } from '../../contexts/DrawerContext'
 
 import { BsMoonFill } from 'react-icons/bs'
-import { AiOutlinePlus } from 'react-icons/ai'
+import { AiFillHome, AiOutlinePlus } from 'react-icons/ai'
+import { MdEmojiPeople, MdClose } from 'react-icons/md'
+
 import { useAppThemeContext } from '../../contexts/ThemeContext'
 
 import { useNavigate } from 'react-router-dom'
@@ -30,7 +32,9 @@ interface IDefaultLayoutProps {
   mostrarBotaoLogout?: boolean
   mostrarBotaoPerfil?: boolean
   mostrarBotaoTema?: boolean
+  mostrarBotaoHome?: boolean
   mostrarBotaoOpenHelpDesk?: boolean
+  mostrarBotaoAssumirChamado?: boolean
   mostrarTituloPagina?: boolean
 }
 
@@ -41,7 +45,9 @@ const DefaultLayout: React.FC<IDefaultLayoutProps> = ({
   mostrarBotaoLogout,
   mostrarBotaoPerfil,
   mostrarBotaoTema,
+  mostrarBotaoHome,
   mostrarBotaoOpenHelpDesk,
+  mostrarBotaoAssumirChamado,
 
   mostrarTituloPagina = true,
 }) => {
@@ -49,7 +55,7 @@ const DefaultLayout: React.FC<IDefaultLayoutProps> = ({
   const smDown = useMediaQuery(theme.breakpoints.down('sm'))
   const mdDown = useMediaQuery(theme.breakpoints.down('md'))
 
-  const { toggleDrawerOpen } = useDrawerContext()
+  const { toggleDrawerOpen, isDrawerOpen } = useDrawerContext()
   const { toggleTheme, themeName } = useAppThemeContext()
 
   const navigate = useNavigate()
@@ -65,9 +71,15 @@ const DefaultLayout: React.FC<IDefaultLayoutProps> = ({
       >
         {smDown && (
           <IconButton onClick={toggleDrawerOpen}>
-            <Icon>
-              <GiHamburgerMenu />
-            </Icon>
+            {isDrawerOpen ? (
+              <Icon>
+                <MdClose />
+              </Icon>
+            ) : (
+              <Icon>
+                <GiHamburgerMenu />
+              </Icon>
+            )}
           </IconButton>
         )}
 
@@ -99,6 +111,16 @@ const DefaultLayout: React.FC<IDefaultLayoutProps> = ({
               </Tooltip>
             )}
 
+            {mostrarBotaoHome && (
+              <Tooltip title="Página Inicial" placement="bottom" arrow>
+                <IconButton onClick={() => navigate('/home/dashboard')}>
+                  <Icon>
+                    <AiFillHome size={20} />
+                  </Icon>
+                </IconButton>
+              </Tooltip>
+            )}
+
             {mostrarBotaoPerfil && (
               <Tooltip title="Perfil" placement="bottom" arrow>
                 <IconButton>
@@ -110,13 +132,15 @@ const DefaultLayout: React.FC<IDefaultLayoutProps> = ({
             )}
 
             {mostrarBotaoTema && (
-              <IconButton onClick={toggleTheme}>
-                {themeName === 'dark' ? (
-                  <HiSun size={20} />
-                ) : (
-                  <BsMoonFill size={20} />
-                )}
-              </IconButton>
+              <Tooltip title="Alterar Tema" placement="bottom" arrow>
+                <IconButton onClick={toggleTheme}>
+                  {themeName === 'dark' ? (
+                    <HiSun size={20} />
+                  ) : (
+                    <BsMoonFill size={20} />
+                  )}
+                </IconButton>
+              </Tooltip>
             )}
           </Box>
         </Box>
@@ -124,12 +148,29 @@ const DefaultLayout: React.FC<IDefaultLayoutProps> = ({
       {barraDeFerramentas && <Box>{barraDeFerramentas}</Box>}
       <Box flex={1} overflow="auto">
         {children}{' '}
+        {mostrarBotaoAssumirChamado && (
+          <Box
+            display={'flex'}
+            justifyContent={'start'}
+            paddingY={'20px'}
+            marginX={'8px'}
+          >
+            <Button
+              variant="contained"
+              color="primary"
+              endIcon={<MdEmojiPeople />}
+              onClick={() => {}}
+            >
+              Assumir Chamado
+            </Button>
+          </Box>
+        )}
       </Box>
       {mostrarBotaoOpenHelpDesk && (
         <Box display={'flex'} justifyContent={'end'} padding={'20px'}>
           <Button
             variant="contained"
-            color="info"
+            color="primary"
             sx={{ position: '-webkit-sticky', right: '0px' }}
             endIcon={<AiOutlinePlus />}
             onClick={() => navigate('/home/abrir-chamado')}

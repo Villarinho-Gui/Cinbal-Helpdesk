@@ -29,7 +29,7 @@ export const MenuLateral: React.FC = () => {
         sx={{ overflow: 'hidden' }}
       >
         <Box
-          width={theme.spacing(52)}
+          width={theme.spacing(50)}
           height="94vh"
           display="flex"
           flexDirection="column"
@@ -41,7 +41,10 @@ export const MenuLateral: React.FC = () => {
             width="max-content"
           >
             {themeName === 'light' ? (
-              <Link component="button" onClick={() => navigate('/home')}>
+              <Link
+                component="button"
+                onClick={() => navigate('/home/dashboard')}
+              >
                 <img
                   src={logoLightMode}
                   alt="Cinbal Help Desk Logo"
@@ -50,7 +53,10 @@ export const MenuLateral: React.FC = () => {
                 />
               </Link>
             ) : (
-              <Link component="button" onClick={() => navigate('/home')}>
+              <Link
+                component="button"
+                onClick={() => navigate('/home/dashboard')}
+              >
                 <img src={logoDarkMode} height={57} width={130} />
               </Link>
             )}
@@ -59,7 +65,7 @@ export const MenuLateral: React.FC = () => {
         </Box>
       </Drawer>
 
-      <Box height="100vh" marginLeft={smDown ? 0 : theme.spacing(55)}>
+      <Box height="100vh" marginLeft={smDown ? 0 : theme.spacing(50)}>
         <Outlet />
       </Box>
     </>

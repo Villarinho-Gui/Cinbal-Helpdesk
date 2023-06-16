@@ -1,5 +1,5 @@
 /* eslint-disable no-undef */
-import { createContext, useCallback, useContext, useState } from 'react'
+import React, { createContext, useCallback, useContext, useState } from 'react'
 
 interface IChamadoAberto {
   title: string

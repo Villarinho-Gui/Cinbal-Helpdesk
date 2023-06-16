@@ -25,6 +25,7 @@ import { AiOutlinePaperClip } from 'react-icons/ai'
 
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
+import { useHelpDeskContext } from '../../shared/contexts/HelpDeskContext'
 
 const createChamadoSchema = yup
   .object()
@@ -40,12 +41,16 @@ export default function AbrirChamado() {
   const [newUploadImage, setNewUploadImage] = useState([])
 
   const [isLoading, setIsLoading] = useState(false)
+  const theme = useTheme()
 
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [category, setCategory] = useState('')
   const [files, setFiles] = useState('')
   const [openSuccessMessage, setOpenSuccessMessage] = useState(false)
+  const [openErrorMessage, setOpenErrorMessage] = useState(false)
+
+  const { toggleHelpDesk } = useHelpDeskContext()
 
   const {
     register,
@@ -83,20 +88,30 @@ export default function AbrirChamado() {
     try {
       await api.post('/abrir-chamado', formData, headers).then(() => {
         setOpenSuccessMessage(true)
+        toggleHelpDesk()
       })
     } catch (error) {
       console.log(error)
+      setOpenErrorMessage(true)
     }
 
     setIsLoading(false)
   }
 
-  const handleClose = (event, reason) => {
+  const triggerCloseSuccessMessage = (event, reason) => {
     if (reason === 'clickaway') {
       return
     }
 
     setOpenSuccessMessage(false)
+  }
+
+  const triggerCloseErrorMessage = (event, reason) => {
+    if (reason === 'clickaway') {
+      return
+    }
+
+    setOpenErrorMessage(false)
   }
 
   function triggerNewImageChange(event) {
@@ -118,14 +133,13 @@ export default function AbrirChamado() {
     setFiles(newListImageWithoutDeletedOne)
   }
 
-  const theme = useTheme()
-
   return (
     <DefaultLayout
       tituloPagina="Abrir Chamado"
       mostrarBotaoLogout
       mostrarBotaoPerfil
       mostrarBotaoTema
+      mostrarBotaoHome
     >
       <Box
         borderRadius={1}
@@ -335,11 +349,24 @@ export default function AbrirChamado() {
                 <Snackbar
                   open={openSuccessMessage}
                   autoHideDuration={6000}
-                  onClose={handleClose}
+                  onClose={triggerCloseSuccessMessage}
                   anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
                 >
-                  <Alert severity="success" onClose={handleClose}>
+                  <Alert
+                    severity="success"
+                    onClose={triggerCloseSuccessMessage}
+                  >
                     Chamado aberto com sucesso!
+                  </Alert>
+                </Snackbar>
+                <Snackbar
+                  open={openErrorMessage}
+                  autoHideDuration={6000}
+                  onClose={triggerCloseErrorMessage}
+                  anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+                >
+                  <Alert severity="error" onClose={triggerCloseErrorMessage}>
+                    Falha ao abrir o chamado
                   </Alert>
                 </Snackbar>
               </Grid>

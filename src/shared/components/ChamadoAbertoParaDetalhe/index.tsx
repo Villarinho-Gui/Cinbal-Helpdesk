@@ -1,25 +1,44 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import DefaultLayout from '../../layouts/DefaultLayout'
-import BarraFerramentasDetalhesChamado from '../../../shared/components/BarraFerramentasDetalhesChamado'
 import { format, formatDistanceToNow } from 'date-fns'
 import ptBR from 'date-fns/locale/pt-BR'
 
-import { Box, Button, Chip, Divider, Skeleton, Typography } from '@mui/material'
+import {
+  Box,
+  Chip,
+  Divider,
+  Skeleton,
+  Typography,
+  Card,
+  Icon,
+  IconButton,
+  Grid,
+} from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 import api from '../../../service/api/config/configApi'
-import { BsFillImageFill } from 'react-icons/bs'
+import { MdImage, MdDownload } from 'react-icons/md'
+import { HelpDeskDataProps } from '../Chamado'
 
-interface HelpDeskDetailsProps {
+interface FileProps {
+  id: string
+  filename: string
+  type: string
+  size: number
+  url: string
+  callId: string
+}
+interface HelpDeskDetailsProps extends HelpDeskDataProps {
+  id: string
   author: string
   title: string
   category: string
   description: string
   maxLines: number
   createdAt: Date
-  files: string
+  files?: FileProps[]
 }
 
 export const ChamadoAbertoParaDetalhe: React.FC<HelpDeskDetailsProps> = () => {
@@ -29,9 +48,8 @@ export const ChamadoAbertoParaDetalhe: React.FC<HelpDeskDetailsProps> = () => {
   )
 
   const [createdAtFormatted, setCreatedAtFormatted] = useState<Date>()
-  // const [arquivosAnexados, setArquivosAnexados] = useState<string[]>([])
+  const [attachedFiles, setAttachedFiles] = useState<FileProps[]>([])
 
-  const navigate = useNavigate()
   const theme = useTheme()
   const { id } = useParams()
 
@@ -40,16 +58,12 @@ export const ChamadoAbertoParaDetalhe: React.FC<HelpDeskDetailsProps> = () => {
     try {
       const response = await api.get<HelpDeskDetailsProps>(`/chamado/${id}`)
       const { data } = response
-      /**
-       * Extrai os nomes dos arquivos anexados
-       */
-      // const nomesArquivos = data.files ? [data.files] : []
 
       const formattedCreatedAt = new Date(Object.values(data)[0].createdAt)
 
       setHelpDeskData(Object.values(data)[0])
       setCreatedAtFormatted(formattedCreatedAt)
-      // setArquivosAnexados(nomesArquivos)
+      setAttachedFiles(Object.values(data)[0].files)
       setIsLoading(false)
     } catch (error) {
       console.error('Erro ao obter os dados do chamado', error)
@@ -75,88 +89,92 @@ export const ChamadoAbertoParaDetalhe: React.FC<HelpDeskDetailsProps> = () => {
   }
 
   return (
-    <>
-      <DefaultLayout
-        mostrarBotaoTema={true}
-        mostrarBotaoLogout
-        mostrarBotaoPerfil
-        tituloPagina={id === 'novo' ? '' : helpDeskData?.title}
-        barraDeFerramentas={
-          <BarraFerramentasDetalhesChamado
-            aoClicarEmVoltar={() => navigate('/home/dashboard')}
-            mostrarBotaoAssumirChamado={true}
-          />
-        }
+    <DefaultLayout
+      mostrarBotaoTema={true}
+      mostrarBotaoLogout
+      mostrarBotaoPerfil
+      mostrarBotaoHome
+      mostrarBotaoAssumirChamado
+      tituloPagina={id === 'novo' ? '' : helpDeskData?.title}
+      barraDeFerramentas={''}
+    >
+      <Box
+        padding={5}
+        borderRadius={1}
+        margin={1}
+        width="auto"
+        border="1px solid"
+        height="57vh"
+        borderColor={theme.palette.divider}
       >
-        <Box
-          padding={5}
-          borderRadius={1}
-          margin={1}
-          width="auto"
-          border="1px solid"
-          height="57vh"
-          borderColor={theme.palette.divider}
-        >
-          <Box display="flex" justifyContent="space-between" paddingBottom={2}>
-            <Box>
-              {isLoading ? (
-                <Skeleton
-                  variant="text"
-                  sx={{ fontSize: '1.5rem' }}
-                  width="200px"
-                />
-              ) : (
-                <Typography variant="h5" sx={{ fontSize: '1rem' }}>
-                  {helpDeskData?.author}
-                </Typography>
-              )}
+        <Box display="flex" justifyContent="space-between" paddingBottom={2}>
+          <Box>
+            {isLoading ? (
+              <Skeleton
+                variant="text"
+                sx={{ fontSize: '1.5rem' }}
+                width="200px"
+              />
+            ) : (
+              <Typography variant="h5" sx={{ fontSize: '1rem' }}>
+                {helpDeskData?.author}
+              </Typography>
+            )}
 
-              {isLoading ? (
-                <Skeleton
-                  variant="text"
-                  sx={{ fontSize: '1.5rem' }}
-                  width="50px"
-                />
-              ) : (
-                <Typography
-                  variant="body2"
-                  color="text.secondary"
-                  sx={{ fontSize: '0.8rem' }}
-                >
-                  {/* {chamadoData?.setor} */}
-                </Typography>
-              )}
-            </Box>
-            <time
-              title={
-                createdAtFormatted
-                  ? publishedDateFormatted(createdAtFormatted)
-                  : ''
-              }
-              dateTime={
-                createdAtFormatted ? createdAtFormatted.toISOString() : ''
-              }
-            >
-              {isLoading ? (
-                <Skeleton
-                  variant="text"
-                  sx={{ fontSize: '1.5rem' }}
-                  width="90px"
-                />
-              ) : createdAtFormatted ? (
-                <Typography
-                  variant="body2"
-                  sx={{ fontSize: '0.8rem' }}
-                  color="text.secondary"
-                >
-                  {publishedDateRelativeToNow(createdAtFormatted)}
-                </Typography>
-              ) : null}
-            </time>
+            {isLoading ? (
+              <Skeleton
+                variant="text"
+                sx={{ fontSize: '1.5rem' }}
+                width="50px"
+              />
+            ) : (
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                sx={{ fontSize: '0.8rem' }}
+              >
+                {/* {chamadoData?.setor} */}
+              </Typography>
+            )}
           </Box>
-          <Divider />
+          <time
+            title={
+              createdAtFormatted
+                ? publishedDateFormatted(createdAtFormatted)
+                : ''
+            }
+            dateTime={
+              createdAtFormatted ? createdAtFormatted.toISOString() : ''
+            }
+          >
+            {isLoading ? (
+              <Skeleton
+                variant="text"
+                sx={{ fontSize: '1.5rem' }}
+                width="90px"
+              />
+            ) : createdAtFormatted ? (
+              <Typography
+                variant="body2"
+                sx={{ fontSize: '0.8rem' }}
+                color="text.secondary"
+              >
+                {publishedDateRelativeToNow(createdAtFormatted)}
+              </Typography>
+            ) : null}
+          </time>
+        </Box>
+        <Divider />
 
-          <Box paddingY={2} marginLeft={0}>
+        <Grid
+          container
+          spacing={2}
+          display={'flex'}
+          flex={1}
+          justifyContent={'space-between'}
+          paddingY={'20px'}
+        >
+          <Grid item xs={12} lg={2}>
             {isLoading ? (
               <Skeleton
                 variant="text"
@@ -170,51 +188,95 @@ export const ChamadoAbertoParaDetalhe: React.FC<HelpDeskDetailsProps> = () => {
                 color="default"
               />
             )}
-          </Box>
+          </Grid>
 
-          <Box>
+          <Grid
+            item
+            xl={4}
+            xs={12}
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '10px',
+              justifyContent: 'end',
+            }}
+          >
+            <Typography variant="body2">Id:</Typography>
             {isLoading ? (
               <Skeleton
-                variant="rounded"
+                variant="text"
                 sx={{ fontSize: '1.5rem' }}
-                width="100%"
-                height="100px"
+                width="90px"
               />
             ) : (
-              <Typography
-                variant="body2"
-                color="text.secondary"
-                sx={{ paddingBottom: '40px' }}
-              >
-                {helpDeskData?.description}
-              </Typography>
+              <Chip label={helpDeskData?.id} size="small" color="default" />
             )}
-            <Divider />
-            <Box display="flex" gap="10px"></Box>
-          </Box>
+          </Grid>
+        </Grid>
 
-          {/* {chamadoData?.image && chamadoData?.image.length > 0 && (
-            <Box display="flex" width="100%" gap={2}>
-              {chamadoData?.image?.map((imagem: string, index: number) => (
-                <Button
-                  key={index}
-                  variant="outlined"
-                  endIcon={<BsFillImageFill />}
+        <Box>
+          {isLoading ? (
+            <Skeleton
+              variant="rounded"
+              sx={{ fontSize: '1.5rem' }}
+              width="100%"
+              height="100px"
+            />
+          ) : (
+            <Typography
+              variant="body2"
+              color="text.secondary"
+              sx={{ paddingBottom: '40px' }}
+            >
+              {helpDeskData?.description}
+            </Typography>
+          )}
+          <Divider />
+          <Box display="flex" gap="10px"></Box>
+        </Box>
+
+        {helpDeskData?.files && helpDeskData?.files.length > 0 && (
+          <Grid container spacing={2} maxWidth={'100%'} paddingY={'20px'}>
+            {attachedFiles.map((file: FileProps) => (
+              <Grid item xl={2} lg={6} md={6} sm={12} xs={12} key={file.id}>
+                <Card
                   sx={{
                     display: 'flex',
                     alignItems: 'center',
-                    marginY: '20px',
+                    height: '60px',
+                    justifyContent: 'space-between',
                   }}
-                  onClick={() => navigate(`/download/${imagem}`)}
-                  disableElevation
+                  variant="outlined"
                 >
-                  Imagem anexada
-                </Button>
-              ))}
-            </Box>
-          )} */}
-        </Box>
-      </DefaultLayout>
-    </>
+                  <Box display={'flex'} alignItems={'center'} gap={'2px'}>
+                    {file.url.includes('.png') ? (
+                      <Icon sx={{ margin: '5px' }}>
+                        <MdImage size={25} color="#49b3e8" />
+                      </Icon>
+                    ) : (
+                      ''
+                    )}
+                    <Box
+                      display={'flex'}
+                      width={'200px'}
+                      justifyContent={'center'}
+                      flexDirection={'column'}
+                    >
+                      <Typography fontSize={'14px'} width={'30ch'} noWrap>
+                        {file.url}
+                      </Typography>
+                    </Box>
+                  </Box>
+
+                  <IconButton>
+                    <MdDownload />
+                  </IconButton>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
+        )}
+      </Box>
+    </DefaultLayout>
   )
 }

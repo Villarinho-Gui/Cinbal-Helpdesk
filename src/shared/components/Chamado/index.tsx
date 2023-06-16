@@ -1,5 +1,4 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable no-unused-vars */
 import {
   Box,
   Card,
@@ -7,16 +6,29 @@ import {
   CardContent,
   Skeleton,
   Typography,
+  Icon,
+  Chip,
+  Tooltip,
+  Badge,
+  ListItemButton,
+  Divider,
 } from '@mui/material'
+import Zoom from '@mui/material/Zoom'
 import React, { useState, useEffect } from 'react'
 
-import { MdImage } from 'react-icons/md'
-import { useNavigate } from 'react-router-dom'
+import { FiPaperclip } from 'react-icons/fi'
+import { RiTimer2Line } from 'react-icons/ri'
+import { useMatch, useNavigate, useResolvedPath } from 'react-router-dom'
 
 import api from '../../../service/api/config/configApi'
-import { format, formatDistanceToNow, parseISO } from 'date-fns'
+import { format, formatDistanceToNow } from 'date-fns'
 import ptBR from 'date-fns/locale/pt-BR'
 
+interface FileProps {
+  id: string
+  url: string
+  callId: string
+}
 export interface HelpDeskDataProps {
   id: string
   author?: string
@@ -24,18 +36,24 @@ export interface HelpDeskDataProps {
   category?: string
   description: string
   maxLines: number
-  files?: string[]
+  files?: FileProps[]
   createdAt: Date
+  onClick?: () => void
+  to: string
 }
 export const Chamado: React.FC<HelpDeskDataProps> = ({
   id,
   author,
+  category,
   description,
   createdAt,
   title,
+  onClick,
+  to,
 }) => {
-  const [_, setHelpDeskData] = useState<HelpDeskDataProps | null>(null)
+  const [, setHelpDeskData] = useState<HelpDeskDataProps | null>(null)
   const [isLoading, setIsLoading] = useState(false)
+  const [attachedFiles, setAttachedFiles] = useState<string[]>([])
 
   const navigate = useNavigate()
 
@@ -53,6 +71,7 @@ export const Chamado: React.FC<HelpDeskDataProps> = ({
       const response = await api.get<HelpDeskDataProps>(`/chamado/${id}`)
       const { data } = response
       setHelpDeskData(data)
+      setAttachedFiles(Object.values(data)[0].files)
       setIsLoading(false)
     } catch (error) {
       console.error('Erro ao obter os dados do chamado', error)
@@ -77,8 +96,16 @@ export const Chamado: React.FC<HelpDeskDataProps> = ({
     })
   }
 
+  const clickHelpDesk = () => {
+    navigate(to)
+    onClick?.()
+  }
+
+  const resolvedPath = useResolvedPath(to)
+  const match = useMatch({ path: resolvedPath.pathname, end: false })
+
   return (
-    <CardActionArea onClick={() => navigate(`chamado/detalhe/${id}`)}>
+    <CardActionArea onClick={clickHelpDesk}>
       <Card
         variant="outlined"
         sx={{
@@ -88,6 +115,8 @@ export const Chamado: React.FC<HelpDeskDataProps> = ({
           flex: '1',
           marginX: 'auto',
         }}
+        component={ListItemButton}
+        selected={!!match}
       >
         <CardContent sx={{ flex: 1 }}>
           <Box
@@ -140,14 +169,49 @@ export const Chamado: React.FC<HelpDeskDataProps> = ({
           >
             {description}
           </Typography>
-          {/* <Box>
-            {Array.isArray(chamadoData?.files) &&
-              chamadoData?.files?.length > 0 && (
-                <Avatar sx={{ width: '25px', height: '25px', marginY: '10px' }}>
-                  <MdImage size={15} color="info" />
-                </Avatar>
+          <Box
+            display={'flex'}
+            alignItems={'center'}
+            justifyContent={'space-between'}
+          >
+            <Badge badgeContent={attachedFiles.length} color="primary">
+              {attachedFiles && attachedFiles.length > 0 ? (
+                <Icon>
+                  <FiPaperclip size={15} />
+                </Icon>
+              ) : (
+                ''
               )}
-          </Box> */}
+            </Badge>
+
+            {attachedFiles && attachedFiles.length > 0 ? (
+              <Divider
+                orientation="vertical"
+                flexItem
+                sx={{ marginX: '15px' }}
+              />
+            ) : (
+              ''
+            )}
+
+            <Box display={'flex'} flex={1} justifyContent={'space-between'}>
+              <Typography color={'#49B3E8'}>{category}</Typography>
+              <Box
+                display={'flex'}
+                flex={1}
+                justifyContent={'end'}
+                gap={2}
+                position={'relative'}
+              >
+                <Chip label={id} size="small" sx={{ width: '12ch' }} />
+                <Tooltip title="Aberto" TransitionComponent={Zoom} arrow>
+                  <Icon>
+                    <RiTimer2Line color="#d3d3d3" />
+                  </Icon>
+                </Tooltip>
+              </Box>
+            </Box>
+          </Box>
         </CardContent>
       </Card>
     </CardActionArea>
