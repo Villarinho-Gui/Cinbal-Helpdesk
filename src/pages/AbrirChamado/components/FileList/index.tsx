@@ -11,6 +11,7 @@ import {
   DialogContent,
   DialogContentText,
 } from '@mui/material'
+import { useHelpDeskContext } from '../../../../shared/contexts/HelpDeskContext'
 
 interface FileProps {
   file: File
@@ -19,6 +20,7 @@ interface FileProps {
 
 export const FileList: React.FC<FileProps> = ({ file, onDeleteFile }) => {
   const [openDialogAlert, setOpenDialogAlert] = useState(false)
+  const { isLoading } = useHelpDeskContext()
 
   function triggerDeleteImage() {
     onDeleteFile(file)
@@ -79,7 +81,11 @@ export const FileList: React.FC<FileProps> = ({ file, onDeleteFile }) => {
           </Box>
         </Box>
       </Box>
-      <Button color="error" onClick={triggerOpenDialogAlert}>
+      <Button
+        color="error"
+        onClick={triggerOpenDialogAlert}
+        disabled={isLoading}
+      >
         <MdDelete size={25} />
       </Button>
       <Dialog open={openDialogAlert} onClose={triggerCloseDialogAlert}>

@@ -42,11 +42,7 @@ const createHelpDeskSchema = yup
   })
   .required()
 
-export const AbrirChamado: React.FC<OpenHelpDesk> = ({
-  title,
-  category,
-  description,
-}) => {
+export const AbrirChamado: React.FC<OpenHelpDesk> = () => {
   const [textFieldTitle, setTextFieldTitle] = useState('')
   const [textFieldDescription, setTextFieldDescription] = useState('')
   const [selectFieldCategory, setSelectFieldCategory] = useState<
@@ -69,10 +65,8 @@ export const AbrirChamado: React.FC<OpenHelpDesk> = ({
 
   const [openSuccessMessage, setOpenSuccessMessage] = useState(false)
   const [openErrorMessage, setOpenErrorMessage] = useState(false)
-
-  const [isLoading, setIsLoading] = useState(false)
   const theme = useTheme()
-  const { toggleHelpDesk } = useHelpDeskContext()
+  const { toggleHelpDesk, toggleLoading, isLoading } = useHelpDeskContext()
 
   const {
     register,
@@ -89,7 +83,7 @@ export const AbrirChamado: React.FC<OpenHelpDesk> = ({
   })
 
   const PostHelpDesk: SubmitHandler<OpenHelpDesk> = async () => {
-    setIsLoading(true)
+    toggleLoading()
 
     const formData = new FormData()
 
@@ -120,8 +114,7 @@ export const AbrirChamado: React.FC<OpenHelpDesk> = ({
       setOpenErrorMessage(true)
     }
 
-    setIsLoading(false)
-    console.log('Chamou')
+    toggleLoading()
   }
 
   const triggerCloseSuccessMessage = (
@@ -161,7 +154,7 @@ export const AbrirChamado: React.FC<OpenHelpDesk> = ({
     // console.log(selectedAttachedFileName)
   }
 
-  function deleteImage(attachedFileToDelete: any) {
+  function deleteFile(attachedFileToDelete: any) {
     const newListImageWithoutDeletedOne = attachedFiles!.filter((file) => {
       return file !== attachedFileToDelete
     })
@@ -315,7 +308,7 @@ export const AbrirChamado: React.FC<OpenHelpDesk> = ({
                       <FileList
                         file={file}
                         key={uniqueId(String(file.lastModified))}
-                        onDeleteFile={deleteImage}
+                        onDeleteFile={deleteFile}
                       />
                     )
                   })}
@@ -341,6 +334,7 @@ export const AbrirChamado: React.FC<OpenHelpDesk> = ({
                     component="label"
                     color="primary"
                     onChange={triggerSelectNewFile}
+                    disabled={isLoading}
                   >
                     <input
                       {...register('files')}
@@ -358,11 +352,7 @@ export const AbrirChamado: React.FC<OpenHelpDesk> = ({
                         triggerNewImageChange(e)
                       }}
                     />
-                    {isLoading ? (
-                      <AiOutlinePaperClip size={25} color="#d3d3d3" />
-                    ) : (
-                      <AiOutlinePaperClip size={25} />
-                    )}
+                    <AiOutlinePaperClip size={25} />
                   </IconButton>
                 </Tooltip>
               </Grid>
