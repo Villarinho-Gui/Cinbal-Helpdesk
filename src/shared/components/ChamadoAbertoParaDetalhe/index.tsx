@@ -18,12 +18,19 @@ import {
   Grid,
   Paper,
   Button,
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
 } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 import api from '../../../service/api/config/configApi'
-import { MdImage, MdDownload, MdOutlineEmojiPeople } from 'react-icons/md'
+import {
+  MdImage,
+  MdDownload,
+  MdOutlineEmojiPeople,
+  MdExpandMore,
+} from 'react-icons/md'
 import { HelpDeskDataProps } from '../Chamado'
-import BarraFerramentasDetalhesChamado from '../BarraFerramentasDetalhesChamado'
 
 interface FileProps {
   id: string
@@ -302,6 +309,19 @@ export const ChamadoAbertoParaDetalhe: React.FC<HelpDeskDetailsProps> = () => {
             ))}
           </Grid>
         )}
+
+        <Accordion variant="outlined" elevation={0} sx={{ maxWidth: '1000px' }}>
+          <AccordionSummary
+            expandIcon={<MdExpandMore />}
+            aria-controls="panel1a-content"
+            id="panel1a-header"
+          >
+            <Typography>Iniciar interação com o(a) solicitante</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Typography>Componente de interação aqui</Typography>
+          </AccordionDetails>
+        </Accordion>
       </Box>
     </DefaultLayout>
   )
