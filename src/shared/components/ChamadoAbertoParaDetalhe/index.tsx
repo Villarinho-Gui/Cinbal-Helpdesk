@@ -16,11 +16,14 @@ import {
   Icon,
   IconButton,
   Grid,
+  Paper,
+  Button,
 } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 import api from '../../../service/api/config/configApi'
-import { MdImage, MdDownload } from 'react-icons/md'
+import { MdImage, MdDownload, MdOutlineEmojiPeople } from 'react-icons/md'
 import { HelpDeskDataProps } from '../Chamado'
+import BarraFerramentasDetalhesChamado from '../BarraFerramentasDetalhesChamado'
 
 interface FileProps {
   id: string
@@ -94,8 +97,7 @@ export const ChamadoAbertoParaDetalhe: React.FC<HelpDeskDetailsProps> = () => {
       mostrarBotaoLogout
       mostrarBotaoPerfil
       mostrarBotaoHome
-      mostrarBotaoAssumirChamado
-      tituloPagina={id === 'novo' ? '' : helpDeskData?.title}
+      tituloPagina={''}
       barraDeFerramentas={''}
     >
       <Box
@@ -107,6 +109,30 @@ export const ChamadoAbertoParaDetalhe: React.FC<HelpDeskDetailsProps> = () => {
         height="57vh"
         borderColor={theme.palette.divider}
       >
+        <Box
+          component={Paper}
+          height={45}
+          display={'flex'}
+          alignItems={'center'}
+          justifyContent={'space-between'}
+          marginBottom={5}
+          elevation={0}
+        >
+          <Typography variant="h6" margin={2}>
+            {helpDeskData?.title}
+          </Typography>
+          <Button
+            variant="contained"
+            size="small"
+            endIcon={<MdOutlineEmojiPeople />}
+            disableElevation
+            sx={{
+              marginRight: '15px',
+            }}
+          >
+            Assumir Chamado
+          </Button>
+        </Box>
         <Box display="flex" justifyContent="space-between" paddingBottom={2}>
           <Box>
             {isLoading ? (
