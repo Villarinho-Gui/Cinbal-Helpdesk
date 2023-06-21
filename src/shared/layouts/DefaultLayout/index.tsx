@@ -19,7 +19,7 @@ import { useDrawerContext } from '../../contexts/DrawerContext'
 
 import { BsMoonFill } from 'react-icons/bs'
 import { AiFillHome, AiOutlinePlus } from 'react-icons/ai'
-import { MdEmojiPeople, MdClose } from 'react-icons/md'
+import { MdClose } from 'react-icons/md'
 
 import { useAppThemeContext } from '../../contexts/ThemeContext'
 
@@ -34,7 +34,6 @@ interface IDefaultLayoutProps {
   mostrarBotaoTema?: boolean
   mostrarBotaoHome?: boolean
   mostrarBotaoOpenHelpDesk?: boolean
-  mostrarBotaoAssumirChamado?: boolean
   mostrarTituloPagina?: boolean
 }
 
@@ -47,7 +46,6 @@ const DefaultLayout: React.FC<IDefaultLayoutProps> = ({
   mostrarBotaoTema,
   mostrarBotaoHome,
   mostrarBotaoOpenHelpDesk,
-  mostrarBotaoAssumirChamado,
 
   mostrarTituloPagina = true,
 }) => {
@@ -148,23 +146,6 @@ const DefaultLayout: React.FC<IDefaultLayoutProps> = ({
       {barraDeFerramentas && <Box>{barraDeFerramentas}</Box>}
       <Box flex={1} overflow="auto">
         {children}{' '}
-        {mostrarBotaoAssumirChamado && (
-          <Box
-            display={'flex'}
-            justifyContent={'start'}
-            paddingY={'20px'}
-            marginX={'8px'}
-          >
-            <Button
-              variant="contained"
-              color="primary"
-              endIcon={<MdEmojiPeople />}
-              onClick={() => {}}
-            >
-              Assumir Chamado
-            </Button>
-          </Box>
-        )}
       </Box>
       {mostrarBotaoOpenHelpDesk && (
         <Box display={'flex'} justifyContent={'end'} padding={'20px'}>
