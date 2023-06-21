@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { ReactNode, useState } from 'react'
 import { MdDelete } from 'react-icons/md'
 import {
   Button,
@@ -12,7 +12,7 @@ import {
   DialogContentText,
 } from '@mui/material'
 import { useHelpDeskContext } from '../../../../shared/contexts/HelpDeskContext'
-
+import { filesize } from 'filesize'
 interface FileProps {
   file: File
   onDeleteFile: (attachedFileToDelete: any) => void
@@ -48,35 +48,27 @@ export const FileList: React.FC<FileProps> = ({ file, onDeleteFile }) => {
       variant="outlined"
     >
       <Box display={'flex'} alignItems={'center'} gap={'1rem'}>
-        {file ? (
-          <img src={URL.createObjectURL(file)} alt="" height={40} width={40} />
-        ) : (
-          <img src={''} alt="" />
-        )}
+        <img
+          src={URL.createObjectURL(file)}
+          alt=""
+          height={40}
+          width={40}
+          style={{ borderRadius: '5px' }}
+        />
         <Box
           display={'flex'}
           width={'200px'}
           justifyContent={'center'}
           flexDirection={'column'}
         >
-          <Box
-            maxWidth={'30ch'}
-            whiteSpace={'nowrap'}
-            textOverflow={'ellipsis'}
-            overflow={'hidden'}
-          >
+          <Box maxWidth={'25ch'} whiteSpace={'nowrap'} overflow={'hidden'}>
             <Typography variant="h6" sx={{ fontSize: '16px' }}>
               {file.name}
             </Typography>
           </Box>
-          <Box
-            fontSize={'0.75rem'}
-            marginTop={'4px'}
-            maxWidth={'30ch'}
-            width={'70%'}
-          >
+          <Box fontSize={'0.75rem'} marginTop={'4px'} width={'70%'}>
             <Typography variant="body2" fontSize={'12px'} color="#999">
-              {file.size}
+              {filesize(file.size) as ReactNode}
             </Typography>
           </Box>
         </Box>
