@@ -61,8 +61,13 @@ export const FileList: React.FC<FileProps> = ({ file, onDeleteFile }) => {
           justifyContent={'center'}
           flexDirection={'column'}
         >
-          <Box maxWidth={'25ch'} whiteSpace={'nowrap'} overflow={'hidden'}>
-            <Typography variant="h6" sx={{ fontSize: '16px' }}>
+          <Box>
+            <Typography
+              variant="h6"
+              sx={{ fontSize: '16px' }}
+              width={'20ch'}
+              noWrap
+            >
               {file.name}
             </Typography>
           </Box>
