@@ -19,6 +19,7 @@ import { SubmitHandler } from 'react-hook-form'
 interface LoginData {
   email: string
   password: string
+  access_token?: string
 }
 
 export const Login: React.FC = () => {
@@ -39,10 +40,13 @@ export const Login: React.FC = () => {
     event?.preventDefault()
 
     try {
-      const response = await api.post('/login', {
+      const response = await api.post<LoginData>('/auth/login', {
         email: data.email,
         password: data.password,
       })
+
+      const token = response.data.access_token
+      localStorage.setItem('access_token', token!)
 
       return response.data
     } catch (error) {
