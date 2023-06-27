@@ -85,6 +85,7 @@ export const AbrirChamado: React.FC<OpenHelpDesk> = () => {
 
   const PostHelpDesk: SubmitHandler<OpenHelpDesk> = async () => {
     toggleLoading()
+    const token = localStorage.getItem('access_token')
 
     const formData = new FormData()
 
@@ -100,16 +101,15 @@ export const AbrirChamado: React.FC<OpenHelpDesk> = () => {
     const headers = {
       headers: {
         'Content-Type': 'multipart/form-data',
+        Authorization: `Bearer ${token}`,
       },
     }
 
     try {
-      await api
-        .post<OpenHelpDesk>('/abrir-chamado', formData, headers)
-        .then(() => {
-          setOpenSuccessMessage(true)
-          toggleHelpDesk()
-        })
+      await api.post<OpenHelpDesk>('/helpdesk', formData, headers).then(() => {
+        setOpenSuccessMessage(true)
+        toggleHelpDesk()
+      })
     } catch (error) {
       console.log(error)
       setOpenErrorMessage(true)
