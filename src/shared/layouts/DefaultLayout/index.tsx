@@ -37,6 +37,10 @@ interface IDefaultLayoutProps {
   mostrarTituloPagina?: boolean
 }
 
+const logoutUser = () => {
+  return localStorage.removeItem('access_token')
+}
+
 const DefaultLayout: React.FC<IDefaultLayoutProps> = ({
   children,
   tituloPagina,
@@ -103,7 +107,7 @@ const DefaultLayout: React.FC<IDefaultLayoutProps> = ({
           <Box display="flex" gap={1} alignItems="center">
             {mostrarBotaoLogout && (
               <Tooltip title="Sair" placement="bottom" arrow>
-                <IconButton onClick={() => navigate('/login')}>
+                <IconButton onClick={logoutUser}>
                   <CgLogOut size={20} />
                 </IconButton>
               </Tooltip>
