@@ -29,20 +29,26 @@ import {
   MdDownload,
   MdOutlineEmojiPeople,
   MdExpandMore,
+  MdPictureAsPdf,
 } from 'react-icons/md'
-import { HelpDeskDataProps } from '../Chamado'
 
 interface FileProps {
   id: string
   filename: string
-  type: string
-  size: number
-  url: string
-  callId: string
+  mimetype:
+    | 'image/jpeg'
+    | 'image/gif'
+    | 'image/png'
+    | 'image/bmp'
+    | 'application/pdf'
 }
-interface HelpDeskDetailsProps extends HelpDeskDataProps {
+
+interface HelpDeskDetailsProps {
   id: string
-  author: string
+  user: {
+    name: string
+    sector: string
+  }
   title: string
   category: string
   description: string
@@ -51,29 +57,31 @@ interface HelpDeskDetailsProps extends HelpDeskDataProps {
   files?: FileProps[]
 }
 
-export const ChamadoAbertoParaDetalhe: React.FC<HelpDeskDetailsProps> = () => {
+export const ChamadoAbertoParaDetalhe: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [helpDeskData, setHelpDeskData] = useState<HelpDeskDetailsProps | null>(
     null,
   )
 
-  const [createdAtFormatted, setCreatedAtFormatted] = useState<Date>()
   const [attachedFiles, setAttachedFiles] = useState<FileProps[]>([])
 
   const theme = useTheme()
   const { id } = useParams()
+  const token = localStorage.getItem('access_token')
 
   const fetchChamado = async () => {
     setIsLoading(true)
     try {
-      const response = await api.get<HelpDeskDetailsProps>(`/chamado/${id}`)
+      const response = await api.get<HelpDeskDetailsProps>(`/helpdesk/${id}`, {
+        headers: {
+          Authorization: `bearer ${token}`,
+        },
+      })
       const { data } = response
 
-      const formattedCreatedAt = new Date(Object.values(data)[0].createdAt)
-
-      setHelpDeskData(Object.values(data)[0])
-      setCreatedAtFormatted(formattedCreatedAt)
-      setAttachedFiles(Object.values(data)[0].files)
+      setHelpDeskData(data)
+      console.log(data)
+      setAttachedFiles(data.files!)
       setIsLoading(false)
     } catch (error) {
       console.error('Erro ao obter os dados do chamado', error)
@@ -85,14 +93,18 @@ export const ChamadoAbertoParaDetalhe: React.FC<HelpDeskDetailsProps> = () => {
     fetchChamado()
   }, [id])
 
-  const publishedDateFormatted = (data: Date) => {
-    return format(data, "d 'de' LLLL 'às' HH:mm'h'", {
-      locale: ptBR,
-    })
+  const publishedDateFormatted = () => {
+    return format(
+      new Date(helpDeskData!.createdAt),
+      "d 'de' LLLL 'às' HH:mm'h'",
+      {
+        locale: ptBR,
+      },
+    )
   }
 
-  const publishedDateRelativeToNow = (data: Date) => {
-    return formatDistanceToNow(data, {
+  const publishedDateRelativeToNow = () => {
+    return formatDistanceToNow(new Date(helpDeskData!.createdAt), {
       locale: ptBR,
       addSuffix: true,
     })
@@ -150,7 +162,7 @@ export const ChamadoAbertoParaDetalhe: React.FC<HelpDeskDetailsProps> = () => {
               />
             ) : (
               <Typography variant="h5" sx={{ fontSize: '1rem' }}>
-                {helpDeskData?.author}
+                {helpDeskData?.user.name}
               </Typography>
             )}
 
@@ -166,19 +178,13 @@ export const ChamadoAbertoParaDetalhe: React.FC<HelpDeskDetailsProps> = () => {
                 color="text.secondary"
                 sx={{ fontSize: '0.8rem' }}
               >
-                {/* {chamadoData?.setor} */}
+                {helpDeskData?.user.sector}
               </Typography>
             )}
           </Box>
           <time
-            title={
-              createdAtFormatted
-                ? publishedDateFormatted(createdAtFormatted)
-                : ''
-            }
-            dateTime={
-              createdAtFormatted ? createdAtFormatted.toISOString() : ''
-            }
+            title={helpDeskData?.createdAt ? publishedDateFormatted() : ''}
+            dateTime={String(helpDeskData?.createdAt) ?? ''}
           >
             {isLoading ? (
               <Skeleton
@@ -186,13 +192,13 @@ export const ChamadoAbertoParaDetalhe: React.FC<HelpDeskDetailsProps> = () => {
                 sx={{ fontSize: '1.5rem' }}
                 width="90px"
               />
-            ) : createdAtFormatted ? (
+            ) : helpDeskData?.createdAt ? (
               <Typography
                 variant="body2"
                 sx={{ fontSize: '0.8rem' }}
                 color="text.secondary"
               >
-                {publishedDateRelativeToNow(createdAtFormatted)}
+                {publishedDateRelativeToNow()}
               </Typography>
             ) : null}
           </time>
@@ -282,13 +288,22 @@ export const ChamadoAbertoParaDetalhe: React.FC<HelpDeskDetailsProps> = () => {
                   variant="outlined"
                 >
                   <Box display={'flex'} alignItems={'center'} gap={'2px'}>
-                    {file.url.includes('.png') ? (
-                      <Icon sx={{ margin: '5px' }}>
-                        <MdImage size={25} color="#49b3e8" />
-                      </Icon>
-                    ) : (
-                      ''
-                    )}
+                    <Box margin={2}>
+                      {file.mimetype === 'application/pdf' ? (
+                        <Icon>
+                          <MdPictureAsPdf />
+                        </Icon>
+                      ) : file.mimetype === 'image/png' ||
+                        file.mimetype === 'image/jpeg' ||
+                        file.mimetype === 'image/gif' ||
+                        file.mimetype === 'image/bmp' ? (
+                        <Icon>
+                          <MdImage />
+                        </Icon>
+                      ) : (
+                        ''
+                      )}
+                    </Box>
                     <Box
                       display={'flex'}
                       width={'200px'}
@@ -296,7 +311,7 @@ export const ChamadoAbertoParaDetalhe: React.FC<HelpDeskDetailsProps> = () => {
                       flexDirection={'column'}
                     >
                       <Typography fontSize={'14px'} width={'30ch'} noWrap>
-                        {file.url}
+                        {file.filename}
                       </Typography>
                     </Box>
                   </Box>
