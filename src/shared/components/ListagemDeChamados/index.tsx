@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import DefaultLayout from '../../layouts/DefaultLayout'
-import { Chamado, HelpDeskDataProps } from '../Chamado'
+import { Chamado } from '../Chamado'
 
 import {
   Button,
@@ -25,19 +25,15 @@ import 'react-date-range/dist/styles.css' // main style file
 import 'react-date-range/dist/theme/default.css' // theme css file
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import { format } from 'date-fns'
-
-interface FileProps {
+interface HelpDeskListProp {
   id: string
-  url: string
-  callId: string
-}
-interface HelpDeskListProp extends HelpDeskDataProps {
-  id: string
-  author: string
+  user: {
+    name: string
+  }
   title: string
   category: string
   description: string
-  files?: FileProps[]
+  files?: File[]
   createdAt: Date
 }
 
@@ -61,30 +57,31 @@ export const ListagemDeChamados: React.FC<HelpDeskListProp> = () => {
 
   const { toggleDrawerOpen } = useDrawerContext()
   const { isNewHelpDesk } = useHelpDeskContext()
+  const token = localStorage.getItem('access_token')
 
   useEffect(() => {
     setIsLoading(true)
-
     api
-      .get<HelpDeskDataProps>('/chamados')
+      .get<HelpDeskListProp[]>('/helpdesk', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((response) => {
         const { data } = response
-        const allHelpDeskData = Object.values(data)[0]
-
         setIsLoading(false)
 
-        setHelpDeskData(allHelpDeskData)
-        setFilteredHelpDeskDataByDate(allHelpDeskData)
-
+        setHelpDeskData(data)
+        setFilteredHelpDeskDataByDate(data)
         if (isNewHelpDesk) {
-          setHelpDeskData(allHelpDeskData)
+          setHelpDeskData(data)
         }
       })
       .catch((error) => {
-        console.log(error)
+        console.error(error)
         alert('Ocorreu um erro ao buscar os chamados')
       })
-  }, [isNewHelpDesk])
+  }, [isNewHelpDesk, token])
 
   const filteredBySearchTextField =
     searchTextField.length > 0
@@ -166,7 +163,7 @@ export const ListagemDeChamados: React.FC<HelpDeskListProp> = () => {
               <ListItem key={UniqueHelpDesk.id} disablePadding>
                 <Chamado
                   id={UniqueHelpDesk.id}
-                  author={UniqueHelpDesk.author}
+                  author={UniqueHelpDesk.user.name}
                   title={UniqueHelpDesk.title}
                   category={UniqueHelpDesk.category}
                   description={UniqueHelpDesk.description}
@@ -186,7 +183,7 @@ export const ListagemDeChamados: React.FC<HelpDeskListProp> = () => {
             <ListItem key={UniqueHelpDesk.id} disablePadding>
               <Chamado
                 id={UniqueHelpDesk.id}
-                author={UniqueHelpDesk.author}
+                author={UniqueHelpDesk.user.name}
                 title={UniqueHelpDesk.title}
                 category={UniqueHelpDesk.category}
                 description={UniqueHelpDesk.description}
