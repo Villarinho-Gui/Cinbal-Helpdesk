@@ -31,6 +31,7 @@ import {
   MdExpandMore,
   MdPictureAsPdf,
 } from 'react-icons/md'
+import Chat from './components/Chat'
 
 interface FileProps {
   id: string
@@ -125,7 +126,7 @@ export const ChamadoAbertoParaDetalhe: React.FC = () => {
         margin={1}
         width="auto"
         border="1px solid"
-        height="57vh"
+        height={'max'}
         borderColor={theme.palette.divider}
       >
         <Box
@@ -334,7 +335,7 @@ export const ChamadoAbertoParaDetalhe: React.FC = () => {
             <Typography>Iniciar interação com o(a) solicitante</Typography>
           </AccordionSummary>
           <AccordionDetails>
-            <Typography>Componente de interação aqui</Typography>
+            <Chat />
           </AccordionDetails>
         </Accordion>
       </Box>
