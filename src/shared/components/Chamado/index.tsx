@@ -24,19 +24,15 @@ import api from '../../../service/api/config/configApi'
 import { format, formatDistanceToNow } from 'date-fns'
 import ptBR from 'date-fns/locale/pt-BR'
 
-interface FileProps {
-  id: string
-  url: string
-  callId: string
-}
 export interface HelpDeskDataProps {
   id: string
-  author?: string
+  author: string
   title: string
   category?: string
   description: string
   maxLines: number
-  files?: FileProps[]
+  files?: File[]
+  count_files?: number
   createdAt: Date
   onClick?: () => void
   to: string
@@ -51,9 +47,8 @@ export const Chamado: React.FC<HelpDeskDataProps> = ({
   onClick,
   to,
 }) => {
-  const [, setHelpDeskData] = useState<HelpDeskDataProps | null>(null)
   const [isLoading, setIsLoading] = useState(false)
-  const [attachedFiles, setAttachedFiles] = useState<string[]>([])
+  const [attachedFiles, setAttachedFiles] = useState<File[]>([])
 
   const navigate = useNavigate()
 
@@ -65,13 +60,18 @@ export const Chamado: React.FC<HelpDeskDataProps> = ({
     overflow: 'hidden',
   }
 
+  const token = localStorage.getItem('access_token')
+
   const fetchChamado = async () => {
     setIsLoading(true)
     try {
-      const response = await api.get<HelpDeskDataProps>(`/chamado/${id}`)
+      const response = await api.get<HelpDeskDataProps>(`/helpdesk/${id}`, {
+        headers: {
+          Authorization: `bearer ${token}`,
+        },
+      })
       const { data } = response
-      setHelpDeskData(data)
-      setAttachedFiles(Object.values(data)[0].files)
+      setAttachedFiles(data.files!)
       setIsLoading(false)
     } catch (error) {
       console.error('Erro ao obter os dados do chamado', error)
@@ -110,7 +110,7 @@ export const Chamado: React.FC<HelpDeskDataProps> = ({
         variant="outlined"
         sx={{
           width: '99%',
-          height: '150px',
+          height: '155px',
           display: 'flex',
           flex: '1',
           marginX: 'auto',
@@ -126,7 +126,7 @@ export const Chamado: React.FC<HelpDeskDataProps> = ({
           >
             <Typography
               variant="h5"
-              sx={{ fontSize: '14px' }}
+              sx={{ fontSize: '14px', marginBottom: '10px' }}
               color="text.secondary"
             >
               {author}
@@ -166,6 +166,8 @@ export const Chamado: React.FC<HelpDeskDataProps> = ({
             variant="body2"
             color="text.secondary"
             sx={descriptionStyle}
+            width={'20ch'}
+            noWrap
           >
             {description}
           </Typography>
