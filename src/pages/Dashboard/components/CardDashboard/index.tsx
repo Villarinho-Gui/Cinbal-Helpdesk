@@ -31,20 +31,27 @@ export const CardDashboard: React.FC = () => {
   const [helpDeskData, setHelpDeskData] = useState<HelpDeskDashboardProps[]>([])
   const theme = useTheme()
 
+  const token = localStorage.getItem('access_token')
+
   useEffect(() => {
     setIsLoadingChamados(true)
 
-    api.get('/chamados').then((response) => {
-      const { data } = response
-
-      setIsLoadingChamados(false)
-      if (response instanceof Error) {
-        alert(response.message)
-      } else {
-        setHelpDeskData(Object.values(data)[0] as HelpDeskDashboardProps[])
-      }
-    })
-  }, [])
+    api
+      .get('/helpdesk', {
+        headers: {
+          Authorization: `bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        const { data } = response
+        setIsLoadingChamados(false)
+        if (response instanceof Error) {
+          alert(response.message)
+        } else {
+          setHelpDeskData(data as HelpDeskDashboardProps[])
+        }
+      })
+  }, [token])
 
   return (
     <Card
