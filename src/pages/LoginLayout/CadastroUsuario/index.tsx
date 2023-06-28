@@ -26,7 +26,7 @@ interface User {
   name: string
   email: string
   password: string
-  extension: number
+  extension: string
   position: string
   sector: string
   branch: string
@@ -54,7 +54,7 @@ const createUserFormSchema = z.object({
     .string()
     .nonempty('Esse campo é obrigatório!')
     .min(6, 'A senha precisa ter pelo menos 6 caracteres!'),
-  extension: z.number().max(4, 'Esse campo deve ter no máximo 4 números!'),
+  extension: z.string().max(4, 'Esse campo deve ter no máximo 4 números!'),
   position: z.string().nonempty('Esse campo é obrigatório!'),
   sector: z.string().nonempty('Esse campo é obrigatório!'),
   branch: z.string().nonempty('Esse campo é obrigatório!'),
@@ -91,6 +91,7 @@ export const CadastroUsuario: React.FC = () => {
       position: '',
       sector: '',
       branch: '',
+      extension: '',
     },
   })
 
@@ -101,7 +102,7 @@ export const CadastroUsuario: React.FC = () => {
     formData.append('name', name)
     formData.append('email', email)
     formData.append('password', password)
-    formData.append('extension', extension.toString())
+    formData.append('extension', extension)
     formData.append('position', position)
     formData.append('sector', sector)
     formData.append('branch', branch)
@@ -112,7 +113,7 @@ export const CadastroUsuario: React.FC = () => {
       },
     }
     try {
-      await api.post<User>('/cadastro', formData, headers).then(() => {
+      await api.post<User>('/auth/register', formData, headers).then(() => {
         setOpenSuccessMessage(true)
         navigate('/login')
       })
@@ -170,6 +171,7 @@ export const CadastroUsuario: React.FC = () => {
               }
               autoComplete="username"
               fullWidth
+              disabled={isLoading}
               size="small"
             />
           </Grid>
@@ -188,6 +190,7 @@ export const CadastroUsuario: React.FC = () => {
               type="email"
               placeholder="E-mail"
               fullWidth
+              disabled={isLoading}
               size="small"
             />
           </Grid>
@@ -207,6 +210,7 @@ export const CadastroUsuario: React.FC = () => {
               placeholder="Senha"
               autoComplete="current-password"
               fullWidth
+              disabled={isLoading}
               size="small"
             />
           </Grid>
@@ -232,6 +236,7 @@ export const CadastroUsuario: React.FC = () => {
               type="text"
               placeholder="Função"
               fullWidth
+              disabled={isLoading}
               size="small"
             />
           </Grid>
@@ -250,6 +255,7 @@ export const CadastroUsuario: React.FC = () => {
               type="text"
               placeholder="Setor"
               fullWidth
+              disabled={isLoading}
               size="small"
             />
           </Grid>
@@ -279,6 +285,7 @@ export const CadastroUsuario: React.FC = () => {
                 type="tel"
                 placeholder="Ramal"
                 fullWidth
+                disabled={isLoading}
                 inputMode="numeric"
                 size="small"
               />
@@ -296,6 +303,7 @@ export const CadastroUsuario: React.FC = () => {
                 }
                 error={!!errors.branch}
                 fullWidth
+                disabled={isLoading}
                 size="small"
               >
                 <MenuItem value={'vr'}>Volta Redonda</MenuItem>
