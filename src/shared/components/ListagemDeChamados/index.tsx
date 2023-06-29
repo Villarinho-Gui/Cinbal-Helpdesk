@@ -37,7 +37,7 @@ interface HelpDeskListProp {
   createdAt: Date
 }
 
-export const ListagemDeChamados: React.FC<HelpDeskListProp> = () => {
+export const ListagemDeChamados: React.FC = () => {
   const [helpDeskData, setHelpDeskData] = useState<HelpDeskListProp[]>([])
   const [filteredHelpDeskDataByDate, setFilteredHelpDeskDataByDate] = useState<
     HelpDeskListProp[]
