@@ -341,7 +341,7 @@ export const AbrirChamado: React.FC<OpenHelpDesk> = () => {
                       {...register('files')}
                       id="file-input"
                       hidden
-                      accept="image/*"
+                      // accept="image/*"
                       type="file"
                       multiple
                       disabled={isLoading}
