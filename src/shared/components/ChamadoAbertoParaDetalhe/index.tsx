@@ -29,9 +29,9 @@ import {
   MdDownload,
   MdOutlineEmojiPeople,
   MdExpandMore,
-  MdPictureAsPdf,
 } from 'react-icons/md'
-import Chat from './components/Chat'
+import { Chat } from './components/Chat'
+import { AiFillFile } from 'react-icons/ai'
 
 interface FileProps {
   id: string
@@ -292,7 +292,7 @@ export const ChamadoAbertoParaDetalhe: React.FC = () => {
                     <Box margin={2}>
                       {file.mimetype === 'application/pdf' ? (
                         <Icon>
-                          <MdPictureAsPdf />
+                          <AiFillFile size={25} />
                         </Icon>
                       ) : file.mimetype === 'image/png' ||
                         file.mimetype === 'image/jpeg' ||
