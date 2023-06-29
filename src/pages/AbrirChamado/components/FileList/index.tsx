@@ -13,6 +13,7 @@ import {
 } from '@mui/material'
 import { useHelpDeskContext } from '../../../../shared/contexts/HelpDeskContext'
 import { filesize } from 'filesize'
+import { AiFillFile } from 'react-icons/ai'
 interface FileProps {
   file: File
   onDeleteFile: (attachedFileToDelete: any) => void
@@ -48,13 +49,20 @@ export const FileList: React.FC<FileProps> = ({ file, onDeleteFile }) => {
       variant="outlined"
     >
       <Box display={'flex'} alignItems={'center'} gap={'1rem'}>
-        <img
-          src={URL.createObjectURL(file)}
-          alt=""
-          height={40}
-          width={40}
-          style={{ borderRadius: '5px' }}
-        />
+        {file.name.includes('.jpeg') ||
+        file.name.includes('.jpg') ||
+        file.name.includes('.gif') ||
+        file.name.includes('.png') ? (
+          <img
+            src={URL.createObjectURL(file)}
+            alt=""
+            height={40}
+            width={40}
+            style={{ borderRadius: '5px' }}
+          />
+        ) : (
+          <AiFillFile size={25} color="#FFBC2F" />
+        )}
         <Box
           display={'flex'}
           width={'200px'}
