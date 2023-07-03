@@ -50,14 +50,6 @@ export const Chamado: React.FC<HelpDeskDataProps> = ({
 
   const navigate = useNavigate()
 
-  const descriptionStyle = {
-    height: '35px',
-    display: '-webkit-box',
-    WebkitLineClamp: 2,
-    WebkitBoxOrient: 'vertical',
-    overflow: 'hidden',
-  }
-
   const token = localStorage.getItem('access_token')
 
   const fetchChamado = async () => {
@@ -152,7 +144,7 @@ export const Chamado: React.FC<HelpDeskDataProps> = ({
           <Typography
             variant="body2"
             color="text.secondary"
-            sx={descriptionStyle}
+            sx={{ height: '35px' }}
             width={'20ch'}
             noWrap
           >
