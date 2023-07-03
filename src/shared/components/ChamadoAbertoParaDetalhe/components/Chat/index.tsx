@@ -1,33 +1,82 @@
-import React, { useState } from 'react'
-import { Box, useTheme } from '@mui/material'
+import React, { useEffect, useState } from 'react'
+import { Box, List, ListItem, useTheme } from '@mui/material'
 import { MessageTextField } from './components/MessageTextField'
 import { MessageComponent } from './components/MessageComponent'
+import api from '../../../../../service/api/config/configApi'
+import { useParams } from 'react-router-dom'
+import { useHelpDeskContext } from '../../../../contexts/HelpDeskContext'
 
-// interface SendMessageListProps {
-//   user: {
-//     name: string
-//   }
-//   createdAt: Date
-//   content: string
-//   files?: File[]
-// }
+interface MessageListProps {
+  id: string
+  user: {
+    name: string
+  }
+  message: string
+  createdAt: Date
+}
 
 export const Chat: React.FC = () => {
-  // const [sendMessage, setSendMessage] = useState('')
-  // const [textFieldText, setTextFieldText] = useState('')
-  const theme = useTheme()
+  const [messageData, setMessageData] = useState<MessageListProps[]>([])
 
-  // Função de envio
+  const theme = useTheme()
+  const { isNewMessage } = useHelpDeskContext()
+
+  const { id } = useParams()
+
+  const token = localStorage.getItem('access_token')
+
+  useEffect(() => {
+    api
+      .get<MessageListProps[]>(`/coment/${id}`, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        const { data } = response
+        setMessageData(data)
+        if (isNewMessage) {
+          setMessageData(data)
+        }
+      })
+      .catch((error) => {
+        console.error(error)
+      })
+  }, [id, token, isNewMessage])
 
   return (
     <>
       <Box
         bgcolor={theme.palette.background.default}
         display={'flex'}
-        justifyContent={'end'}
+        flexDirection={'column'}
         height={250}
       >
-        <MessageComponent />
+        <List
+          sx={{
+            overflow: 'auto',
+          }}
+        >
+          {messageData &&
+            messageData.map((messageHelpDesk: MessageListProps) => {
+              return (
+                <ListItem
+                  key={messageHelpDesk.id}
+                  disablePadding
+                  sx={{ justifyContent: 'flex-end' }}
+                >
+                  <MessageComponent
+                    key={messageHelpDesk.id}
+                    id={messageHelpDesk.id}
+                    author={''}
+                    createdAt={messageHelpDesk.createdAt}
+                    message={messageHelpDesk.message}
+                  />
+                </ListItem>
+              )
+            })}
+        </List>
       </Box>
       <MessageTextField />
     </>
