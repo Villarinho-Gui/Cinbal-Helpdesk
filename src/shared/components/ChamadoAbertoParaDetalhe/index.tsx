@@ -81,7 +81,6 @@ export const ChamadoAbertoParaDetalhe: React.FC = () => {
       const { data } = response
 
       setHelpDeskData(data)
-      console.log(data)
       setAttachedFiles(data.files!)
       setIsLoading(false)
     } catch (error) {
