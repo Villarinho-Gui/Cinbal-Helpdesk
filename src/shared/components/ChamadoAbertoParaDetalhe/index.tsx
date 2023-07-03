@@ -325,18 +325,16 @@ export const ChamadoAbertoParaDetalhe: React.FC = () => {
           </Grid>
         )}
 
-        <Accordion variant="outlined" elevation={0} sx={{ maxWidth: '1000px' }}>
-          <AccordionSummary
-            expandIcon={<MdExpandMore />}
-            aria-controls="panel1a-content"
-            id="panel1a-header"
-          >
-            <Typography>Iniciar interação com o(a) solicitante</Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            <Chat />
-          </AccordionDetails>
-        </Accordion>
+        <Box
+          maxWidth={'1024px'}
+          marginY={'10px'}
+          border="1px solid"
+          borderColor={theme.palette.divider}
+          borderRadius={'8px'}
+          padding={'10px'}
+        >
+          <Chat />
+        </Box>
       </Box>
     </DefaultLayout>
   )
