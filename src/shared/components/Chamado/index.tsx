@@ -4,7 +4,6 @@ import {
   Card,
   CardActionArea,
   CardContent,
-  Skeleton,
   Typography,
   Icon,
   Chip,
@@ -47,7 +46,6 @@ export const Chamado: React.FC<HelpDeskDataProps> = ({
   onClick,
   to,
 }) => {
-  const [isLoading, setIsLoading] = useState(false)
   const [attachedFiles, setAttachedFiles] = useState<File[]>([])
 
   const navigate = useNavigate()
@@ -63,7 +61,6 @@ export const Chamado: React.FC<HelpDeskDataProps> = ({
   const token = localStorage.getItem('access_token')
 
   const fetchChamado = async () => {
-    setIsLoading(true)
     try {
       const response = await api.get<HelpDeskDataProps>(`/helpdesk/${id}`, {
         headers: {
@@ -72,10 +69,8 @@ export const Chamado: React.FC<HelpDeskDataProps> = ({
       })
       const { data } = response
       setAttachedFiles(data.files!)
-      setIsLoading(false)
     } catch (error) {
       console.error('Erro ao obter os dados do chamado', error)
-      setIsLoading(false)
     }
   }
 
@@ -135,26 +130,18 @@ export const Chamado: React.FC<HelpDeskDataProps> = ({
               title={createdAt ? publishedDateFormatted() : ''}
               dateTime={createdAt ? createdAt.toISOString() : ''}
             >
-              {isLoading ? (
-                <Skeleton
-                  variant="text"
-                  sx={{ fontSize: '1.5rem' }}
-                  width="90px"
-                />
-              ) : createdAt ? (
-                <Typography
-                  variant="body2"
-                  sx={{ fontSize: '0.8rem' }}
-                  color="text.secondary"
-                >
-                  {publishedDateRelativeToNow()}
-                </Typography>
-              ) : null}
+              <Typography
+                variant="body2"
+                sx={{ fontSize: '0.8rem' }}
+                color="text.secondary"
+              >
+                {publishedDateRelativeToNow()}
+              </Typography>
             </time>
           </Box>
           <Typography
             variant="h6"
-            color="text.primary"
+            color="text.secondary"
             sx={{
               fontSize: 14,
             }}
