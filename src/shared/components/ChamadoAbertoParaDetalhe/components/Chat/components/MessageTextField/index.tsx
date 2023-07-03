@@ -41,6 +41,7 @@ export const MessageTextField: React.FC = () => {
         .post<SendMessageProps>(`/coment/${id}`, formData, headers)
         .then(() => {
           toggleMessage()
+          setTextFieldMessage('')
         })
     } catch (error) {
       console.error(error)
