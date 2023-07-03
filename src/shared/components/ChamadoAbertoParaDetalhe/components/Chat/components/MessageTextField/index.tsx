@@ -1,5 +1,12 @@
 import React, { useState } from 'react'
-import { Icon, IconButton, TextField, Tooltip, useTheme } from '@mui/material'
+import {
+  CircularProgress,
+  Icon,
+  IconButton,
+  TextField,
+  Tooltip,
+  useTheme,
+} from '@mui/material'
 import { AiOutlinePaperClip } from 'react-icons/ai'
 import { IoMdSend } from 'react-icons/io'
 // import { FileList } from '../../../../../../../pages/AbrirChamado/components/FileList'
@@ -21,8 +28,10 @@ export const MessageTextField: React.FC = () => {
   const theme = useTheme()
   const { toggleMessage } = useHelpDeskContext()
   const { handleSubmit, register } = useForm()
+  const [isLoading, setIsLoading] = useState(false)
 
   const PostMessage = async () => {
+    setIsLoading(true)
     const token = localStorage.getItem('access_token')
 
     const formData = new FormData()
@@ -42,6 +51,7 @@ export const MessageTextField: React.FC = () => {
         .then(() => {
           toggleMessage()
           setTextFieldMessage('')
+          setIsLoading(false)
         })
     } catch (error) {
       console.error(error)
@@ -75,6 +85,7 @@ export const MessageTextField: React.FC = () => {
           sx={{
             bgcolor: [theme.palette.background.default],
           }}
+          disabled={isLoading}
         />
         <Tooltip title="Anexar arquivo" placement="top" arrow>
           <IconButton className="upload" component="label" color="primary">
@@ -88,9 +99,14 @@ export const MessageTextField: React.FC = () => {
             <AiOutlinePaperClip size={25} />
           </IconButton>
         </Tooltip>
-        <IconButton type="submit">
+
+        <IconButton type="submit" disabled={isLoading}>
           <Icon>
-            <IoMdSend size={20} />
+            {isLoading ? (
+              <CircularProgress size={25} />
+            ) : (
+              <IoMdSend size={20} />
+            )}
           </Icon>
         </IconButton>
       </form>
