@@ -55,7 +55,10 @@ export const Chat: React.FC = () => {
       >
         <List
           sx={{
+            display: 'flex',
+            flexDirection: 'column',
             overflow: 'auto',
+            // justifyContent: 'flex-end',
           }}
         >
           {messageData &&
@@ -64,7 +67,7 @@ export const Chat: React.FC = () => {
                 <ListItem
                   key={messageHelpDesk.id}
                   disablePadding
-                  sx={{ justifyContent: 'flex-end' }}
+                  sx={{ justifyContent: 'end' }}
                 >
                   <MessageComponent
                     key={messageHelpDesk.id}
