@@ -118,7 +118,7 @@ export const CadastroUsuario: React.FC = () => {
         navigate('/login')
       })
     } catch (error) {
-      console.log(error)
+      console.error(error)
     }
     setIsLoading(true)
   }
