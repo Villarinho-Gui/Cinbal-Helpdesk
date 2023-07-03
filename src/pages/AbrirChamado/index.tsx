@@ -143,7 +143,6 @@ export const AbrirChamado: React.FC<OpenHelpDesk> = () => {
   function triggerNewImageChange(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.currentTarget.files![0]
     setNewUploadFile(file)
-    console.log(attachedFiles)
   }
 
   function triggerSelectNewFile() {
@@ -152,7 +151,6 @@ export const AbrirChamado: React.FC<OpenHelpDesk> = () => {
     }
 
     setNewUploadFile(undefined)
-    // console.log(selectedAttachedFileName)
   }
 
   function deleteFile(attachedFileToDelete: any) {
