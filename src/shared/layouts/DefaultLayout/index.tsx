@@ -37,10 +37,6 @@ interface IDefaultLayoutProps {
   mostrarTituloPagina?: boolean
 }
 
-const logoutUser = () => {
-  return localStorage.removeItem('access_token')
-}
-
 const DefaultLayout: React.FC<IDefaultLayoutProps> = ({
   children,
   tituloPagina,
@@ -61,6 +57,11 @@ const DefaultLayout: React.FC<IDefaultLayoutProps> = ({
   const { toggleTheme, themeName } = useAppThemeContext()
 
   const navigate = useNavigate()
+
+  const logoutUser = () => {
+    localStorage.removeItem('access_token')
+    navigate('/login')
+  }
 
   return (
     <Box height="98%" display="flex" flexDirection="column" gap={1}>
