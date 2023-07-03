@@ -1,10 +1,30 @@
-import { Box, CardContent, Typography, useTheme } from '@mui/material'
 import React from 'react'
+import { Box, CardContent, Typography, useTheme } from '@mui/material'
+import { format } from 'date-fns'
+import { ptBR } from 'date-fns/locale'
 
 // import { Container } from './styles';
 
-export const MessageComponent: React.FC = () => {
+interface MessageProps {
+  id: string
+  author: string
+  createdAt: Date
+  message: string
+}
+
+export const MessageComponent: React.FC<MessageProps> = ({
+  author,
+  createdAt,
+  message,
+}) => {
   const theme = useTheme()
+
+  const publishedDateFormatted = () => {
+    return format(new Date(createdAt), "HH:mm'h'", {
+      locale: ptBR,
+    })
+  }
+
   return (
     <>
       <Box
@@ -15,8 +35,8 @@ export const MessageComponent: React.FC = () => {
           width: 'max',
           height: 'max',
           display: 'flex',
-          margin: '10px',
-          alignSelf: 'end',
+          marginX: '10px',
+          marginY: '5px',
           borderRadius: '8px',
         }}
       >
@@ -27,22 +47,22 @@ export const MessageComponent: React.FC = () => {
               sx={{ fontSize: '14px', marginBottom: '10px' }}
               color={'#fff'}
             >
-              Guilherme Villarinho
+              {author}
             </Typography>
             <Typography
               variant="h2"
               sx={{ fontSize: '14px', marginBottom: '10px' }}
               color={'#fff'}
             >
-              10:52
+              <time title={createdAt ? publishedDateFormatted() : ''}>
+                {' '}
+                {publishedDateFormatted()}
+              </time>
             </Typography>
           </Box>
           <Box maxWidth={'max'}>
             <Typography variant="body2" textAlign={'left'} color={'#fff'}>
-              It is a long established fact that a reader will be distracted by
-              the readable content of a page when looking at its layout. The
-              point of using Lorem Ipsum is that it has a more-or-less normal
-              distribution of letters, as opposed to using
+              {message}
             </Typography>
           </Box>
         </CardContent>
