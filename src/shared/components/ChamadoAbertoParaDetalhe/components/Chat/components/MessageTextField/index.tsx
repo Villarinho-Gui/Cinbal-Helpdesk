@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import {
+  Box,
   CircularProgress,
   Icon,
   IconButton,
@@ -59,7 +60,7 @@ export const MessageTextField: React.FC = () => {
   }
 
   return (
-    <>
+    <Box display={'flex'} alignItems={'flex-start'} justifyContent={'center'}>
       {/* <FileList
         file={undefined}
         onDeleteFile={function (attachedFileToDelete: any): void {
@@ -67,6 +68,7 @@ export const MessageTextField: React.FC = () => {
         }}
       /> */}
       <form
+        id="messageTextField"
         method="POST"
         onSubmit={handleSubmit(PostMessage)}
         style={{ width: '100%', display: 'flex', marginTop: '10px' }}
@@ -87,6 +89,8 @@ export const MessageTextField: React.FC = () => {
           }}
           disabled={isLoading}
         />
+      </form>
+      <Box display={'flex'} marginTop={1}>
         <Tooltip title="Anexar arquivo" placement="top" arrow>
           <IconButton className="upload" component="label" color="primary">
             <input
@@ -95,12 +99,12 @@ export const MessageTextField: React.FC = () => {
               accept="image/*"
               type="file"
               multiple
+              form="messageTextField"
             />
             <AiOutlinePaperClip size={25} />
           </IconButton>
         </Tooltip>
-
-        <IconButton type="submit" disabled={isLoading}>
+        <IconButton type="submit" disabled={isLoading} onClick={PostMessage}>
           <Icon>
             {isLoading ? (
               <CircularProgress size={25} />
@@ -109,7 +113,7 @@ export const MessageTextField: React.FC = () => {
             )}
           </Icon>
         </IconButton>
-      </form>
-    </>
+      </Box>
+    </Box>
   )
 }
