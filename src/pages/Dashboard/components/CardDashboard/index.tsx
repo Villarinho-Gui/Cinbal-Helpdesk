@@ -37,7 +37,7 @@ export const CardDashboard: React.FC = () => {
     setIsLoadingChamados(true)
 
     api
-      .get('/helpdesk', {
+      .get<HelpDeskDashboardProps[]>('/helpdesk', {
         headers: {
           Authorization: `bearer ${token}`,
         },
@@ -48,7 +48,7 @@ export const CardDashboard: React.FC = () => {
         if (response instanceof Error) {
           alert(response.message)
         } else {
-          setHelpDeskData(data as HelpDeskDashboardProps[])
+          setHelpDeskData(data)
         }
       })
   }, [token])
