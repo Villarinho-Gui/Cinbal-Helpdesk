@@ -90,7 +90,7 @@ export const MessageTextField: React.FC = () => {
           disabled={isLoading}
         />
       </form>
-      <Box display={'flex'} marginTop={1}>
+      <Box display={'flex'} marginTop={1} marginX={1}>
         <Tooltip title="Anexar arquivo" placement="top" arrow>
           <IconButton className="upload" component="label" color="primary">
             <input
