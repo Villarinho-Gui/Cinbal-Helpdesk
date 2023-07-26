@@ -7,8 +7,11 @@ import {
   useMediaQuery,
   useTheme,
   Button,
+  Card,
+  CardContent,
+  Menu,
 } from '@mui/material'
-import React, { ReactNode } from 'react'
+import React, { ReactNode, memo, useCallback } from 'react'
 
 import { GiHamburgerMenu } from 'react-icons/gi'
 import { IoMdPerson } from 'react-icons/io'
@@ -24,6 +27,7 @@ import { MdClose } from 'react-icons/md'
 import { useAppThemeContext } from '../../contexts/ThemeContext'
 
 import { useNavigate } from 'react-router-dom'
+import { useUserHelpDeskContext } from '../../contexts/userContext'
 interface IDefaultLayoutProps {
   children: React.ReactNode
   tituloPagina: string | undefined
@@ -57,10 +61,24 @@ const DefaultLayout: React.FC<IDefaultLayoutProps> = ({
   const { toggleTheme, themeName } = useAppThemeContext()
 
   const navigate = useNavigate()
+  const { user } = useUserHelpDeskContext()
+
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
+  const open = Boolean(anchorEl)
 
   const logoutUser = () => {
     localStorage.removeItem('access_token')
     navigate('/login')
+  }
+
+  const handleClick = useCallback(
+    (event: React.MouseEvent<HTMLButtonElement>) => {
+      setAnchorEl(event.currentTarget)
+    },
+    [],
+  )
+  const handleClose = () => {
+    setAnchorEl(null)
   }
 
   return (
@@ -125,13 +143,86 @@ const DefaultLayout: React.FC<IDefaultLayoutProps> = ({
             )}
 
             {mostrarBotaoPerfil && (
-              <Tooltip title="Perfil" placement="bottom" arrow>
-                <IconButton>
-                  <Icon>
-                    <IoMdPerson size={20} />
-                  </Icon>
-                </IconButton>
-              </Tooltip>
+              <>
+                <Tooltip title="Perfil" placement="bottom" arrow>
+                  <IconButton onClick={handleClick}>
+                    <Icon>
+                      <IoMdPerson size={20} />
+                    </Icon>
+                  </IconButton>
+                </Tooltip>
+                <Menu
+                  id="basic-menu"
+                  anchorEl={anchorEl}
+                  open={open}
+                  onClose={handleClose}
+                  MenuListProps={{
+                    'aria-labelledby': 'basic-button',
+                  }}
+                >
+                  <Card
+                    component={Box}
+                    elevation={0}
+                    border={'none'}
+                    color="#6F6F6F"
+                    sx={{
+                      width: '99%',
+                      height: 'max',
+                      display: 'flex',
+                      flex: '1',
+                      marginX: 'auto',
+                    }}
+                  >
+                    <CardContent>
+                      <Typography variant="h6" fontSize={15}>
+                        Usuário:
+                      </Typography>
+                      <Typography
+                        sx={{ fontSize: '0.8rem' }}
+                        color="text.secondary"
+                      >
+                        {user?.name}
+                      </Typography>
+                      <Typography variant="h6" fontSize={15}>
+                        Email:
+                      </Typography>
+                      <Typography
+                        sx={{ fontSize: '0.8rem' }}
+                        color="text.secondary"
+                      >
+                        {user?.email}
+                      </Typography>
+                      <Typography variant="h6" fontSize={15}>
+                        Setor:
+                      </Typography>
+                      <Typography
+                        sx={{ fontSize: '0.8rem' }}
+                        color="text.secondary"
+                      >
+                        {user?.sector}
+                      </Typography>
+                      <Typography variant="h6" fontSize={15}>
+                        Função:
+                      </Typography>
+                      <Typography
+                        sx={{ fontSize: '0.8rem' }}
+                        color="text.secondary"
+                      >
+                        {user?.position}
+                      </Typography>
+                      <Typography variant="h6" fontSize={15}>
+                        Ramal:
+                      </Typography>
+                      <Typography
+                        sx={{ fontSize: '0.8rem' }}
+                        color="text.secondary"
+                      >
+                        {user?.extension}
+                      </Typography>
+                    </CardContent>
+                  </Card>
+                </Menu>
+              </>
             )}
 
             {mostrarBotaoTema && (
@@ -169,4 +260,4 @@ const DefaultLayout: React.FC<IDefaultLayoutProps> = ({
   )
 }
 
-export default DefaultLayout
+export default memo(DefaultLayout)
