@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import React, { useState } from 'react'
 
 import { SubmitHandler, useForm } from 'react-hook-form'
@@ -16,11 +17,13 @@ import {
   Divider,
   useTheme,
   Snackbar,
-  Alert,
   Select,
   MenuItem,
   SelectChangeEvent,
+  SnackbarContent,
+  Alert,
 } from '@mui/material'
+import { MdOutlineErrorOutline } from 'react-icons/md'
 
 interface User {
   name: string
@@ -74,9 +77,12 @@ export const CadastroUsuario: React.FC = () => {
   const [branch, setBranch] = useState('')
 
   const [openSuccessMessage, setOpenSuccessMessage] = useState(false)
+  const [openErrorMessage, setOpenErrorMessage] = useState(false)
 
   const navigate = useNavigate()
   const theme = useTheme()
+
+  const [responseApi, setResponseApi] = useState<string>('')
 
   const {
     register,
@@ -113,14 +119,24 @@ export const CadastroUsuario: React.FC = () => {
       },
     }
     try {
+      setIsLoading(true)
       await api.post<User>('/auth/register', formData, headers).then(() => {
         setOpenSuccessMessage(true)
+        setIsLoading(false)
         navigate('/login')
       })
-    } catch (error) {
+    } catch (error: any) {
       console.error(error)
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        setResponseApi(error.response.data.message)
+      }
+      setIsLoading(false)
+      setOpenErrorMessage(true)
     }
-    setIsLoading(true)
   }
 
   const handleClose = (
@@ -132,6 +148,7 @@ export const CadastroUsuario: React.FC = () => {
     }
 
     setOpenSuccessMessage(false)
+    setOpenErrorMessage(false)
   }
 
   return (
@@ -352,9 +369,7 @@ export const CadastroUsuario: React.FC = () => {
                 onClose={handleClose}
                 anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
               >
-                <Alert severity="success" onClose={handleClose}>
-                  Usuário cadastrado com sucesso!
-                </Alert>
+                <SnackbarContent message={'Usuário cadastrado com sucesso!'} />
               </Snackbar>
             </Grid>
             <Grid item xl={6} lg={6} md={12} sm={12} xs={12}>
@@ -366,6 +381,21 @@ export const CadastroUsuario: React.FC = () => {
               >
                 Voltar
               </Button>
+              <Snackbar
+                open={openErrorMessage}
+                autoHideDuration={6000}
+                onClose={handleClose}
+                anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+              >
+                <Alert
+                  variant="filled"
+                  color="error"
+                  onClose={handleClose}
+                  icon={<MdOutlineErrorOutline />}
+                >
+                  {responseApi}
+                </Alert>
+              </Snackbar>
             </Grid>
           </Grid>
         </Grid>
