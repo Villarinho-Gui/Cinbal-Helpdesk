@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, memo } from 'react'
 import DefaultLayout from '../../layouts/DefaultLayout'
-import { Chamado } from '../Chamado'
 
 import {
   Button,
@@ -16,7 +15,7 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material'
-import { BarraFerramentasListagemDeChamados } from '../BarraFerramentasListagemDeChamados'
+import BarraFerramentasListagemDeChamados from '../BarraFerramentasListagemDeChamados'
 
 import api from '../../../service/api/config/configApi'
 import { useDrawerContext } from '../../contexts/DrawerContext'
@@ -25,19 +24,22 @@ import 'react-date-range/dist/styles.css' // main style file
 import 'react-date-range/dist/theme/default.css' // theme css file
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import { format } from 'date-fns'
+import Chamado from '../Chamado'
 interface HelpDeskListProp {
   id: string
   user: {
     name: string
   }
+  accountable: string
   title: string
   category: string
   description: string
   files?: File[]
+  countFiles: number
   createdAt: Date
 }
 
-export const ListagemDeChamados: React.FC = () => {
+const ListagemDeChamados: React.FC = () => {
   const [helpDeskData, setHelpDeskData] = useState<HelpDeskListProp[]>([])
   const [filteredHelpDeskDataByDate, setFilteredHelpDeskDataByDate] = useState<
     HelpDeskListProp[]
@@ -158,18 +160,25 @@ export const ListagemDeChamados: React.FC = () => {
             Nenhum chamado correspondente
           </Typography>
         ) : (
-          <List sx={{ overflow: 'auto', padding: '0px' }}>
+          <List
+            sx={{
+              overflow: 'auto',
+              padding: '0px',
+            }}
+          >
             {filteredBySearchTextField.map((UniqueHelpDesk) => (
               <ListItem key={UniqueHelpDesk.id} disablePadding>
                 <Chamado
                   id={UniqueHelpDesk.id}
                   author={UniqueHelpDesk.user.name}
+                  accountable={UniqueHelpDesk.accountable}
                   title={UniqueHelpDesk.title}
                   category={UniqueHelpDesk.category}
                   description={UniqueHelpDesk.description}
                   maxLines={2}
                   createdAt={new Date(UniqueHelpDesk.createdAt)}
                   files={UniqueHelpDesk.files}
+                  countFiles={UniqueHelpDesk.countFiles}
                   onClick={smDown ? toggleDrawerOpen : undefined}
                   to={`chamado/detalhe/${UniqueHelpDesk.id}`}
                 />
@@ -184,11 +193,13 @@ export const ListagemDeChamados: React.FC = () => {
               <Chamado
                 id={UniqueHelpDesk.id}
                 author={UniqueHelpDesk.user.name}
+                accountable={UniqueHelpDesk.accountable}
                 title={UniqueHelpDesk.title}
                 category={UniqueHelpDesk.category}
                 description={UniqueHelpDesk.description}
                 maxLines={2}
                 createdAt={new Date(UniqueHelpDesk.createdAt)}
+                countFiles={UniqueHelpDesk.countFiles}
                 onClick={smDown ? toggleDrawerOpen : undefined}
                 to={`chamado/detalhe/${UniqueHelpDesk.id}`}
               />
@@ -225,3 +236,5 @@ export const ListagemDeChamados: React.FC = () => {
     </DefaultLayout>
   )
 }
+
+export default memo(ListagemDeChamados)
