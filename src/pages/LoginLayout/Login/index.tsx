@@ -15,7 +15,6 @@ import {
 
 // import logo from '../../../media/images/logo2-full.png'
 import { SubmitHandler } from 'react-hook-form'
-
 interface LoginData {
   email: string
   password: string
@@ -44,11 +43,9 @@ export const Login: React.FC = () => {
         email: data.email,
         password: data.password,
       })
-
       const token = response.data.access_token
       localStorage.setItem('access_token', token!)
-
-      return response.data
+      return token
     } catch (error) {
       console.error(error)
       return null
@@ -71,7 +68,6 @@ export const Login: React.FC = () => {
       password: userPassword,
     })
     setIsLoading(false)
-
     if (!userData) {
       setUserError('Usuário ou senha incorretos ')
       setPasswordError('Usuário ou senha incorretos ')
