@@ -1,17 +1,17 @@
 /* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable import/no-duplicates */
-import React from 'react'
+import React, { memo } from 'react'
 
 import { Box, Drawer, Link, useMediaQuery, useTheme } from '@mui/material'
 import { useDrawerContext } from '../../contexts/DrawerContext'
-import { ListagemDeChamados } from '../ListagemDeChamados'
+import ListagemDeChamados from '../ListagemDeChamados'
 import { useAppThemeContext } from '../../contexts/ThemeContext'
 import logoDarkMode from '../../../media/images/logo-full.png'
 import logoLightMode from '../../../media/images/logo2-full.png'
 import { useNavigate } from 'react-router-dom'
 import { Outlet } from 'react-router-dom'
 
-export const MenuLateral: React.FC = () => {
+const MenuLateral: React.FC = () => {
   const theme = useTheme()
   const smDown = useMediaQuery(theme.breakpoints.down('sm'))
 
@@ -71,3 +71,5 @@ export const MenuLateral: React.FC = () => {
     </>
   )
 }
+
+export default memo(MenuLateral)
