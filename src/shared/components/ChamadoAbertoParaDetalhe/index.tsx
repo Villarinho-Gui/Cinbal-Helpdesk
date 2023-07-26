@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
-import React, { useEffect, useState } from 'react'
+import React, { memo, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import DefaultLayout from '../../layouts/DefaultLayout'
 import { format, formatDistanceToNow } from 'date-fns'
@@ -18,20 +18,13 @@ import {
   Grid,
   Paper,
   Button,
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
 } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 import api from '../../../service/api/config/configApi'
-import {
-  MdImage,
-  MdDownload,
-  MdOutlineEmojiPeople,
-  MdExpandMore,
-} from 'react-icons/md'
+import { MdImage, MdDownload, MdOutlineEmojiPeople } from 'react-icons/md'
 import { Chat } from './components/Chat'
 import { AiFillFile } from 'react-icons/ai'
+import { useUserHelpDeskContext } from '../../contexts/userContext'
 
 interface FileProps {
   id: string
@@ -49,6 +42,7 @@ interface HelpDeskDetailsProps {
   user: {
     name: string
     sector: string
+    role: string
   }
   title: string
   category: string
@@ -56,19 +50,21 @@ interface HelpDeskDetailsProps {
   maxLines: number
   createdAt: Date
   files?: FileProps[]
+  accountable?: string
 }
 
-export const ChamadoAbertoParaDetalhe: React.FC = () => {
+const ChamadoAbertoParaDetalhe: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [helpDeskData, setHelpDeskData] = useState<HelpDeskDetailsProps | null>(
     null,
   )
-
   const [attachedFiles, setAttachedFiles] = useState<FileProps[]>([])
 
   const theme = useTheme()
   const { id } = useParams()
   const token = localStorage.getItem('access_token')
+
+  const { isAdmin, accountable, setAccountable } = useUserHelpDeskContext()
 
   const fetchChamado = async () => {
     setIsLoading(true)
@@ -92,6 +88,27 @@ export const ChamadoAbertoParaDetalhe: React.FC = () => {
   useEffect(() => {
     fetchChamado()
   }, [id])
+
+  const takeOverHelpDesk = async () => {
+    const formData = new FormData()
+    formData.append('accountable', accountable!)
+    console.log(formData.get(helpDeskData?.user.name!))
+
+    const headers = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `bearer ${token}`,
+      },
+    }
+    try {
+      await api.patch(`/helpdesk/${id}`, formData, headers).then((response) => {
+        setAccountable(helpDeskData?.accountable!)
+        console.log(accountable)
+      })
+    } catch (error) {
+      console.error(error)
+    }
+  }
 
   const publishedDateFormatted = () => {
     return format(
@@ -140,17 +157,32 @@ export const ChamadoAbertoParaDetalhe: React.FC = () => {
           <Typography variant="h6" margin={2}>
             {helpDeskData?.title}
           </Typography>
-          <Button
-            variant="contained"
-            size="small"
-            endIcon={<MdOutlineEmojiPeople />}
-            disableElevation
-            sx={{
-              marginRight: '15px',
-            }}
-          >
-            Assumir Chamado
-          </Button>
+          {isAdmin === 'admin' ? (
+            <Button
+              variant={helpDeskData?.accountable ? 'text' : 'contained'}
+              size="small"
+              endIcon={<MdOutlineEmojiPeople />}
+              color={helpDeskData?.accountable ? 'success' : 'info'}
+              disableElevation
+              disabled={!!helpDeskData?.accountable}
+              sx={{
+                marginRight: '15px',
+              }}
+              onClick={takeOverHelpDesk}
+            >
+              {helpDeskData?.accountable
+                ? `${helpDeskData.accountable} assumiu este chamado`
+                : 'Assumir Chamado'}
+            </Button>
+          ) : (
+            <Typography
+              variant="body2"
+              color="text.secondary"
+              sx={{ fontSize: '0.9rem', marginRight: '10px' }}
+            >
+              {helpDeskData?.accountable} assumiu este chamado.
+            </Typography>
+          )}
         </Box>
         <Box display="flex" justifyContent="space-between" paddingBottom={2}>
           <Box>
@@ -339,3 +371,5 @@ export const ChamadoAbertoParaDetalhe: React.FC = () => {
     </DefaultLayout>
   )
 }
+
+export default memo(ChamadoAbertoParaDetalhe)
