@@ -1,6 +1,7 @@
-import React, { useState } from 'react'
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable no-unused-expressions */
+import React, { useCallback, useState } from 'react'
 import api from '../../service/api/config/configApi'
-import { FileList } from './components/FileList'
 import { uniqueId } from 'lodash'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import * as yup from 'yup'
@@ -25,6 +26,7 @@ import {
 import DefaultLayout from '../../shared/layouts/DefaultLayout'
 import { AiOutlinePaperClip } from 'react-icons/ai'
 import { useHelpDeskContext } from '../../shared/contexts/HelpDeskContext'
+import FileList from './components/FileList'
 
 interface OpenHelpDesk {
   title: string
@@ -42,7 +44,7 @@ const createHelpDeskSchema = yup
   })
   .required()
 
-export const AbrirChamado: React.FC<OpenHelpDesk> = () => {
+export const AbrirChamado: React.FC = () => {
   const [textFieldTitle, setTextFieldTitle] = useState('')
   const [textFieldDescription, setTextFieldDescription] = useState('')
   const [selectFieldCategory, setSelectFieldCategory] = useState<
@@ -92,6 +94,7 @@ export const AbrirChamado: React.FC<OpenHelpDesk> = () => {
     formData.append('title', textFieldTitle)
     formData.append('category', selectFieldCategory)
     formData.append('description', textFieldDescription)
+
     for (let quantity = 0; quantity < attachedFiles!.length; quantity++) {
       const quantityDisplayed = quantity
       const attachedFilesToSend = attachedFiles![quantityDisplayed]
@@ -107,11 +110,13 @@ export const AbrirChamado: React.FC<OpenHelpDesk> = () => {
 
     try {
       await api.post<OpenHelpDesk>('/helpdesk', formData, headers).then(() => {
+        setTextFieldTitle('')
+        setTextFieldDescription('')
         setOpenSuccessMessage(true)
         toggleHelpDesk()
       })
     } catch (error) {
-      console.log(error)
+      console.error(error)
       setOpenErrorMessage(true)
     }
 
@@ -125,7 +130,6 @@ export const AbrirChamado: React.FC<OpenHelpDesk> = () => {
     if (reason === 'clickaway') {
       return
     }
-
     setOpenSuccessMessage(false)
   }
 
@@ -136,7 +140,6 @@ export const AbrirChamado: React.FC<OpenHelpDesk> = () => {
     if (reason === 'clickaway') {
       return
     }
-
     setOpenErrorMessage(false)
   }
 
@@ -153,13 +156,13 @@ export const AbrirChamado: React.FC<OpenHelpDesk> = () => {
     setNewUploadFile(undefined)
   }
 
-  function deleteFile(attachedFileToDelete: any) {
+  const deleteFile = useCallback((attachedFileToDelete: any) => {
     const newListImageWithoutDeletedOne = attachedFiles!.filter((file) => {
       return file !== attachedFileToDelete
     })
 
     setAttachedFiles(newListImageWithoutDeletedOne)
-  }
+  }, [])
 
   return (
     <DefaultLayout
