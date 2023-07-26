@@ -27,7 +27,7 @@ export const Chat: React.FC = () => {
 
   useEffect(() => {
     api
-      .get<MessageListProps[]>(`/coment/${id}`, {
+      .get<MessageListProps[]>(`/comment/${id}`, {
         headers: {
           'Content-Type': 'application/json',
           Authorization: `bearer ${token}`,
@@ -72,7 +72,7 @@ export const Chat: React.FC = () => {
                   <MessageComponent
                     key={messageHelpDesk.id}
                     id={messageHelpDesk.id}
-                    author={''}
+                    author={messageHelpDesk.user.name}
                     createdAt={messageHelpDesk.createdAt}
                     message={messageHelpDesk.message}
                   />
