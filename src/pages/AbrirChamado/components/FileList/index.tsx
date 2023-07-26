@@ -1,4 +1,4 @@
-import React, { ReactNode, useState } from 'react'
+import React, { ReactNode, memo, useState } from 'react'
 import { MdDelete } from 'react-icons/md'
 import {
   Button,
@@ -19,7 +19,7 @@ interface FileProps {
   onDeleteFile: (attachedFileToDelete: any) => void
 }
 
-export const FileList: React.FC<FileProps> = ({ file, onDeleteFile }) => {
+const FileList: React.FC<FileProps> = ({ file, onDeleteFile }) => {
   const [openDialogAlert, setOpenDialogAlert] = useState(false)
   const { isLoading } = useHelpDeskContext()
 
@@ -70,12 +70,7 @@ export const FileList: React.FC<FileProps> = ({ file, onDeleteFile }) => {
           flexDirection={'column'}
         >
           <Box>
-            <Typography
-              variant="h6"
-              sx={{ fontSize: '16px' }}
-              width={'20ch'}
-              noWrap
-            >
+            <Typography variant="h6" fontSize={'1rem'} width={'20ch'} noWrap>
               {file.name}
             </Typography>
           </Box>
@@ -123,3 +118,5 @@ export const FileList: React.FC<FileProps> = ({ file, onDeleteFile }) => {
     </Card>
   )
 }
+
+export default memo(FileList)
