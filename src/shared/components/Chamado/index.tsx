@@ -13,30 +13,31 @@ import {
   Divider,
 } from '@mui/material'
 import Zoom from '@mui/material/Zoom'
-import React, { useState, useEffect } from 'react'
+import React, { memo } from 'react'
 
 import { FiPaperclip } from 'react-icons/fi'
 import { RiTimer2Line } from 'react-icons/ri'
 import { useMatch, useNavigate, useResolvedPath } from 'react-router-dom'
 
-import api from '../../../service/api/config/configApi'
 import { format, formatDistanceToNow } from 'date-fns'
 import ptBR from 'date-fns/locale/pt-BR'
+import { MdOutlineEmojiPeople } from 'react-icons/md'
 
 export interface HelpDeskDataProps {
   id: string
   author: string
+  accountable: string
   title: string
   category?: string
   description: string
   maxLines: number
   files?: File[]
-  count_files?: number
+  countFiles?: number
   createdAt: Date
   onClick?: () => void
   to: string
 }
-export const Chamado: React.FC<HelpDeskDataProps> = ({
+const Chamado: React.FC<HelpDeskDataProps> = ({
   id,
   author,
   category,
@@ -44,31 +45,11 @@ export const Chamado: React.FC<HelpDeskDataProps> = ({
   createdAt,
   title,
   onClick,
+  accountable,
+  countFiles,
   to,
 }) => {
-  const [attachedFiles, setAttachedFiles] = useState<File[]>([])
-
   const navigate = useNavigate()
-
-  const token = localStorage.getItem('access_token')
-
-  const fetchChamado = async () => {
-    try {
-      const response = await api.get<HelpDeskDataProps>(`/helpdesk/${id}`, {
-        headers: {
-          Authorization: `bearer ${token}`,
-        },
-      })
-      const { data } = response
-      setAttachedFiles(data.files!)
-    } catch (error) {
-      console.error('Erro ao obter os dados do chamado', error)
-    }
-  }
-
-  useEffect(() => {
-    fetchChamado()
-  }, [id])
 
   const publishedDateFormatted = () => {
     return format(createdAt, "d 'de' LLLL 'às' HH:mm'h'", {
@@ -155,8 +136,8 @@ export const Chamado: React.FC<HelpDeskDataProps> = ({
             alignItems={'center'}
             justifyContent={'space-between'}
           >
-            <Badge badgeContent={attachedFiles.length} color="primary">
-              {attachedFiles && attachedFiles.length > 0 ? (
+            <Badge badgeContent={countFiles} color="primary">
+              {countFiles! > 0 ? (
                 <Icon>
                   <FiPaperclip size={15} />
                 </Icon>
@@ -165,7 +146,7 @@ export const Chamado: React.FC<HelpDeskDataProps> = ({
               )}
             </Badge>
 
-            {attachedFiles && attachedFiles.length > 0 ? (
+            {countFiles! > 0 ? (
               <Divider
                 orientation="vertical"
                 flexItem
@@ -185,9 +166,21 @@ export const Chamado: React.FC<HelpDeskDataProps> = ({
                 position={'relative'}
               >
                 <Chip label={id} size="small" sx={{ width: '12ch' }} />
-                <Tooltip title="Aberto" TransitionComponent={Zoom} arrow>
-                  <Icon>
-                    <RiTimer2Line color="#d3d3d3" />
+                <Tooltip
+                  TransitionComponent={Zoom}
+                  arrow
+                  title={
+                    accountable
+                      ? `${accountable} assumiu este chamado`
+                      : 'Aberto'
+                  }
+                >
+                  <Icon color={accountable ? 'success' : 'primary'}>
+                    {accountable ? (
+                      <MdOutlineEmojiPeople />
+                    ) : (
+                      <RiTimer2Line color="#d3d3d3" />
+                    )}
                   </Icon>
                 </Tooltip>
               </Box>
@@ -198,3 +191,5 @@ export const Chamado: React.FC<HelpDeskDataProps> = ({
     </CardActionArea>
   )
 }
+
+export default memo(Chamado)
