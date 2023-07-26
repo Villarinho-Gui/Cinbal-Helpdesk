@@ -48,7 +48,7 @@ export const MessageTextField: React.FC = () => {
 
     try {
       await api
-        .post<SendMessageProps>(`/coment/${id}`, formData, headers)
+        .post<SendMessageProps>(`/comment/${id}`, formData, headers)
         .then(() => {
           toggleMessage()
           setTextFieldMessage('')
