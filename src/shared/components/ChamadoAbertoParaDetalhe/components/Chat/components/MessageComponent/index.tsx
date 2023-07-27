@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { memo } from 'react'
 import { Box, CardContent, Typography, useTheme } from '@mui/material'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
@@ -12,7 +12,7 @@ interface MessageProps {
   message: string
 }
 
-export const MessageComponent: React.FC<MessageProps> = ({
+const MessageComponent: React.FC<MessageProps> = ({
   author,
   createdAt,
   message,
@@ -70,3 +70,5 @@ export const MessageComponent: React.FC<MessageProps> = ({
     </>
   )
 }
+
+export default memo(MessageComponent)
