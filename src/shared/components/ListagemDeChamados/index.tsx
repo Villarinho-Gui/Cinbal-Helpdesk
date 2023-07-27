@@ -83,7 +83,8 @@ const ListagemDeChamados: React.FC = () => {
         console.error(error)
         alert('Ocorreu um erro ao buscar os chamados')
       })
-  }, [isNewHelpDesk, token])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isNewHelpDesk])
 
   const filteredBySearchTextField =
     searchTextField.length > 0
