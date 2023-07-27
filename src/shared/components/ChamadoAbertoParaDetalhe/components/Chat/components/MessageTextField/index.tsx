@@ -37,18 +37,20 @@ export const MessageTextField: React.FC = () => {
 
     const formData = new FormData()
 
-    formData.append('message', textFieldMessage)
-
     const headers = {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `bearer ${token}`,
       },
     }
+    const helpdeskId = id
+
+    formData.append('message', textFieldMessage)
+    formData.append('helpdeskId', helpdeskId!)
 
     try {
       await api
-        .post<SendMessageProps>(`/comment/${id}`, formData, headers)
+        .post<SendMessageProps>(`/comment/`, formData, headers)
         .then(() => {
           toggleMessage()
           setTextFieldMessage('')
@@ -56,6 +58,7 @@ export const MessageTextField: React.FC = () => {
         })
     } catch (error) {
       console.error(error)
+      setIsLoading(false)
     }
   }
 
