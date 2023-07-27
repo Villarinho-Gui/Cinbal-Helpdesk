@@ -65,6 +65,7 @@ const ChamadoAbertoParaDetalhe: React.FC = () => {
   const token = localStorage.getItem('access_token')
 
   const { isAdmin, accountable, setAccountable } = useUserHelpDeskContext()
+  const { user, setIsAssumed, isAssumed } = useUserHelpDeskContext()
 
   const fetchChamado = async () => {
     setIsLoading(true)
@@ -87,13 +88,11 @@ const ChamadoAbertoParaDetalhe: React.FC = () => {
 
   useEffect(() => {
     fetchChamado()
-  }, [id])
+  }, [id, isAssumed])
 
   const takeOverHelpDesk = async () => {
     const formData = new FormData()
     formData.append('accountable', accountable!)
-    console.log(formData.get(helpDeskData?.user.name!))
-
     const headers = {
       headers: {
         'Content-Type': 'application/json',
@@ -101,9 +100,9 @@ const ChamadoAbertoParaDetalhe: React.FC = () => {
       },
     }
     try {
-      await api.patch(`/helpdesk/${id}`, formData, headers).then((response) => {
-        setAccountable(helpDeskData?.accountable!)
-        console.log(accountable)
+      await api.patch(`/helpdesk/${id}`, formData, headers).then(() => {
+        setAccountable(user?.name!)
+        setIsAssumed(true)
       })
     } catch (error) {
       console.error(error)
@@ -171,16 +170,19 @@ const ChamadoAbertoParaDetalhe: React.FC = () => {
               onClick={takeOverHelpDesk}
             >
               {helpDeskData?.accountable
-                ? `${helpDeskData.accountable} assumiu este chamado`
+                ? `Você assumiu este chamado`
                 : 'Assumir Chamado'}
             </Button>
           ) : (
             <Typography
+              marginRight={'15px'}
+              fontSize={'1rem'}
               variant="body2"
               color="text.secondary"
-              sx={{ fontSize: '0.9rem', marginRight: '10px' }}
             >
-              {helpDeskData?.accountable} assumiu este chamado.
+              {helpDeskData?.accountable
+                ? `${helpDeskData.accountable} assumiu este chamado`
+                : ''}
             </Typography>
           )}
         </Box>
