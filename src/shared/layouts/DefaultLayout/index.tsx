@@ -61,12 +61,13 @@ const DefaultLayout: React.FC<IDefaultLayoutProps> = ({
   const { toggleTheme, themeName } = useAppThemeContext()
 
   const navigate = useNavigate()
-  const { user } = useUserHelpDeskContext()
+  const { user, setIsLogged } = useUserHelpDeskContext()
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
   const open = Boolean(anchorEl)
 
   const logoutUser = () => {
+    setIsLogged(false)
     localStorage.removeItem('access_token')
     navigate('/login')
   }
