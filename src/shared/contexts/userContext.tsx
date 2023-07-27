@@ -16,10 +16,12 @@ interface UserContextProps {
   accountable: string | null
   user: UserProps | null
   isLogged: boolean
+  isAssumed: boolean
   setIsAdmin: React.Dispatch<React.SetStateAction<string | null>>
   setAccountable: React.Dispatch<React.SetStateAction<string | null>>
   setUser: React.Dispatch<React.SetStateAction<UserProps | null>>
   setIsLogged: React.Dispatch<React.SetStateAction<boolean>>
+  setIsAssumed: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 interface UserContextChildren {
@@ -36,6 +38,7 @@ export const UserProvider: React.FC<UserContextChildren> = ({ children }) => {
   const [accountable, setAccountable] = useState<string | null>(null)
   const [user, setUser] = useState<UserProps | null>(null)
   const [isLogged, setIsLogged] = useState<boolean>(false)
+  const [isAssumed, setIsAssumed] = useState<boolean>(false)
 
   const token = localStorage.getItem('access_token')
 
@@ -52,12 +55,15 @@ export const UserProvider: React.FC<UserContextChildren> = ({ children }) => {
         setIsAdmin(data.role)
         setUser(data)
       })
-  }, [token])
+    console.log(isLogged)
+  }, [isLogged])
 
   return (
     <UserContext.Provider
       value={{
         isAdmin,
+        isAssumed,
+        setIsAssumed,
         setIsAdmin,
         accountable,
         setAccountable,
