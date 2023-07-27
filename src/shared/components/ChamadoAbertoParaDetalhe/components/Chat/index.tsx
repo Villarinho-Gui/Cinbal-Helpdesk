@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Box, List, ListItem, useTheme } from '@mui/material'
 import { MessageTextField } from './components/MessageTextField'
-import { MessageComponent } from './components/MessageComponent'
+import MessageComponent from './components/MessageComponent'
 import api from '../../../../../service/api/config/configApi'
 import { useParams } from 'react-router-dom'
 import { useHelpDeskContext } from '../../../../contexts/HelpDeskContext'
@@ -43,7 +43,8 @@ export const Chat: React.FC = () => {
       .catch((error) => {
         console.error(error)
       })
-  }, [id, token, isNewMessage])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isNewMessage])
 
   return (
     <>
