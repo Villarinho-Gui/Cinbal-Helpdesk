@@ -4,7 +4,7 @@ import React, { memo } from 'react'
 
 import { Box, Drawer, Link, useMediaQuery, useTheme } from '@mui/material'
 import { useDrawerContext } from '../../contexts/DrawerContext'
-import ListagemDeChamados from '../ListagemDeChamados'
+import { ListagemDeChamados } from '../ListagemDeChamados'
 import { useAppThemeContext } from '../../contexts/ThemeContext'
 import logoDarkMode from '../../../media/images/logo-full.png'
 import logoLightMode from '../../../media/images/logo2-full.png'
