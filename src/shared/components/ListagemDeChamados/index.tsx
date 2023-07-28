@@ -1,4 +1,4 @@
-import React, { useState, useEffect, memo } from 'react'
+import React, { useState, useEffect } from 'react'
 import DefaultLayout from '../../layouts/DefaultLayout'
 
 import {
@@ -39,7 +39,7 @@ interface HelpDeskListProp {
   createdAt: Date
 }
 
-const ListagemDeChamados: React.FC = () => {
+export const ListagemDeChamados: React.FC = () => {
   const [helpDeskData, setHelpDeskData] = useState<HelpDeskListProp[]>([])
   const [filteredHelpDeskDataByDate, setFilteredHelpDeskDataByDate] = useState<
     HelpDeskListProp[]
@@ -237,5 +237,3 @@ const ListagemDeChamados: React.FC = () => {
     </DefaultLayout>
   )
 }
-
-export default memo(ListagemDeChamados)
