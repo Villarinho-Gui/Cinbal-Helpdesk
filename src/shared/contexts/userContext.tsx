@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { createContext, useContext, useEffect, useState } from 'react'
 
 import api from '../../service/api/config/configApi'
@@ -55,7 +56,6 @@ export const UserProvider: React.FC<UserContextChildren> = ({ children }) => {
         setIsAdmin(data.role)
         setUser(data)
       })
-    console.log(isLogged)
   }, [isLogged])
 
   return (
