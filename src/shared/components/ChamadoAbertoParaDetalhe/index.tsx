@@ -18,13 +18,21 @@ import {
   Grid,
   Paper,
   Button,
+  Menu,
+  MenuItem,
 } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 import api from '../../../service/api/config/configApi'
-import { MdImage, MdDownload, MdOutlineEmojiPeople } from 'react-icons/md'
+import {
+  MdImage,
+  MdDownload,
+  MdOutlineEmojiPeople,
+  MdMoreVert,
+} from 'react-icons/md'
 import { Chat } from './components/Chat'
 import { AiFillFile } from 'react-icons/ai'
 import { useUserHelpDeskContext } from '../../contexts/userContext'
+import { RiTimer2Line } from 'react-icons/ri'
 
 interface FileProps {
   id: string
@@ -64,8 +72,25 @@ const ChamadoAbertoParaDetalhe: React.FC = () => {
   const { id } = useParams()
   const token = localStorage.getItem('access_token')
 
-  const { isAdmin, accountable, setAccountable } = useUserHelpDeskContext()
-  const { user, setIsAssumed, isAssumed } = useUserHelpDeskContext()
+  const [newAccountable, setNewAccountable] = useState<string | null>('')
+
+  const {
+    user,
+    setIsAssumed,
+    isAssumed,
+    setAccountable,
+    accountable,
+    isAdmin,
+  } = useUserHelpDeskContext()
+
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
+  const open = Boolean(anchorEl)
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget)
+  }
+  const handleClose = () => {
+    setAnchorEl(null)
+  }
 
   const fetchChamado = async () => {
     setIsLoading(true)
@@ -103,6 +128,27 @@ const ChamadoAbertoParaDetalhe: React.FC = () => {
       await api.patch(`/helpdesk/${id}`, formData, headers).then(() => {
         setAccountable(user?.name!)
         setIsAssumed(true)
+      })
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  const removeHelpDeskResponsibility = async () => {
+    console.log(accountable)
+    const formData = new FormData()
+    formData.append('accountable', newAccountable!)
+    const headers = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `bearer ${token}`,
+      },
+    }
+    console.log(newAccountable)
+    try {
+      await api.patch(`/helpdesk/${id}`, formData, headers).then(() => {
+        setIsAssumed(false)
+        console.log('Chamou')
       })
     } catch (error) {
       console.error(error)
@@ -156,35 +202,70 @@ const ChamadoAbertoParaDetalhe: React.FC = () => {
           <Typography variant="h6" margin={2}>
             {helpDeskData?.title}
           </Typography>
-          {isAdmin === 'admin' ? (
-            <Button
-              variant={helpDeskData?.accountable ? 'text' : 'contained'}
-              size="small"
-              endIcon={<MdOutlineEmojiPeople />}
-              color={helpDeskData?.accountable ? 'success' : 'info'}
-              disableElevation
-              disabled={!!helpDeskData?.accountable}
-              sx={{
-                marginRight: '15px',
+          <Box>
+            {isAdmin === 'admin' ? (
+              <Button
+                variant={helpDeskData?.accountable ? 'text' : 'contained'}
+                size="small"
+                endIcon={<MdOutlineEmojiPeople />}
+                color={helpDeskData?.accountable ? 'success' : 'info'}
+                disableElevation
+                disabled={!!helpDeskData?.accountable}
+                sx={{
+                  marginRight: '15px',
+                }}
+                onClick={takeOverHelpDesk}
+              >
+                {helpDeskData?.accountable
+                  ? helpDeskData.accountable === user?.name
+                    ? `Você assumiu este chamado`
+                    : `${helpDeskData.accountable} assumiu este chamado`
+                  : 'Assumir Chamado'}
+              </Button>
+            ) : (
+              <Typography
+                marginRight={'15px'}
+                fontSize={'1rem'}
+                variant="body2"
+                color="text.secondary"
+              >
+                {helpDeskData?.accountable ? (
+                  `${helpDeskData.accountable} assumiu este chamado`
+                ) : (
+                  <Icon sx={{ marginTop: '5px' }}>
+                    <RiTimer2Line size={25} />
+                  </Icon>
+                )}
+              </Typography>
+            )}
+            <IconButton
+              aria-controls={open ? 'long-menu' : undefined}
+              aria-expanded={open ? 'true' : undefined}
+              aria-haspopup="true"
+              onClick={handleClick}
+            >
+              <MdMoreVert />
+            </IconButton>
+            <Menu
+              id="long-menu"
+              MenuListProps={{
+                'aria-labelledby': 'long-button',
               }}
-              onClick={takeOverHelpDesk}
+              anchorEl={anchorEl}
+              open={open}
+              onClose={handleClose}
+              // PaperProps={{
+              //   style: {
+              //     maxHeight: ITEM_HEIGHT * 4.5,
+              //     width: '20ch',
+              //   },
+              // }}
             >
-              {helpDeskData?.accountable
-                ? `Você assumiu este chamado`
-                : 'Assumir Chamado'}
-            </Button>
-          ) : (
-            <Typography
-              marginRight={'15px'}
-              fontSize={'1rem'}
-              variant="body2"
-              color="text.secondary"
-            >
-              {helpDeskData?.accountable
-                ? `${helpDeskData.accountable} assumiu este chamado`
-                : ''}
-            </Typography>
-          )}
+              <MenuItem onClick={removeHelpDeskResponsibility}>
+                Passar HelpDesk
+              </MenuItem>
+            </Menu>
+          </Box>
         </Box>
         <Box display="flex" justifyContent="space-between" paddingBottom={2}>
           <Box>
