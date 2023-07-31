@@ -2,6 +2,7 @@ import React, { memo } from 'react'
 import { Box, CardContent, Typography, useTheme } from '@mui/material'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
+import { useUserHelpDeskContext } from '../../../../../../contexts/userContext'
 
 // import { Container } from './styles';
 
@@ -13,11 +14,14 @@ interface MessageProps {
 }
 
 const MessageComponent: React.FC<MessageProps> = ({
+  id,
   author,
   createdAt,
   message,
 }) => {
   const theme = useTheme()
+
+  const { user } = useUserHelpDeskContext()
 
   const publishedDateFormatted = () => {
     return format(new Date(createdAt), "HH:mm'h'", {
@@ -28,7 +32,11 @@ const MessageComponent: React.FC<MessageProps> = ({
   return (
     <>
       <Box
-        bgcolor={theme.palette.primary.main}
+        bgcolor={
+          user?.name !== author
+            ? theme.palette.primary.dark
+            : theme.palette.primary.light
+        }
         sx={{
           maxWidth: '400px',
           minWidth: '250px',
@@ -43,25 +51,28 @@ const MessageComponent: React.FC<MessageProps> = ({
         <CardContent sx={{ flex: 1 }}>
           <Box display={'flex'} justifyContent={'space-between'}>
             <Typography
-              variant="h2"
-              sx={{ fontSize: '14px', marginBottom: '10px' }}
-              color={'#fff'}
+              variant="body2"
+              color={theme.palette.primary.contrastText}
+              width={'20ch'}
+              noWrap
             >
               {author}
             </Typography>
             <Typography
-              variant="h2"
-              sx={{ fontSize: '14px', marginBottom: '10px' }}
-              color={'#fff'}
+              variant="body2"
+              color={theme.palette.primary.contrastText}
             >
               <time title={createdAt ? publishedDateFormatted() : ''}>
-                {' '}
                 {publishedDateFormatted()}
               </time>
             </Typography>
           </Box>
           <Box maxWidth={'max'}>
-            <Typography variant="body2" textAlign={'left'} color={'#fff'}>
+            <Typography
+              variant="body2"
+              textAlign={'left'}
+              color={theme.palette.primary.contrastText}
+            >
               {message}
             </Typography>
           </Box>
