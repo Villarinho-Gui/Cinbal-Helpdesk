@@ -3,7 +3,7 @@ import React, { createContext, useContext, useEffect, useState } from 'react'
 
 import api from '../../service/api/config/configApi'
 
-interface UserProps {
+export interface UserProps {
   name: string
   sector: string
   email: string
