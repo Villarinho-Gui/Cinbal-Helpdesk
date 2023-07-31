@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
-import React, { memo, useEffect, useState } from 'react'
+import React, { memo, useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import DefaultLayout from '../../layouts/DefaultLayout'
 import { format, formatDistanceToNow } from 'date-fns'
@@ -20,6 +20,10 @@ import {
   Button,
   Menu,
   MenuItem,
+  Select,
+  InputLabel,
+  SelectChangeEvent,
+  CircularProgress,
 } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 import api from '../../../service/api/config/configApi'
@@ -31,8 +35,9 @@ import {
 } from 'react-icons/md'
 import { Chat } from './components/Chat'
 import { AiFillFile } from 'react-icons/ai'
-import { useUserHelpDeskContext } from '../../contexts/userContext'
-import { RiTimer2Line } from 'react-icons/ri'
+import { UserProps, useUserHelpDeskContext } from '../../contexts/userContext'
+import { IoMdSend } from 'react-icons/io'
+import { useForm, SubmitHandler } from 'react-hook-form'
 
 interface FileProps {
   id: string
@@ -43,6 +48,16 @@ interface FileProps {
     | 'image/png'
     | 'image/bmp'
     | 'application/pdf'
+}
+
+interface AdminUsers extends UserProps {
+  id?: string
+  name: string
+  sector: string
+  email: string
+  extension: string
+  position: string
+  role: string
 }
 
 interface HelpDeskDetailsProps {
@@ -72,7 +87,9 @@ const ChamadoAbertoParaDetalhe: React.FC = () => {
   const { id } = useParams()
   const token = localStorage.getItem('access_token')
 
-  const [newAccountable, setNewAccountable] = useState<string | null>('')
+  const [newAccountable, setNewAccountable] = useState<string>('')
+  const [changingAccountable, setChangingAccountable] = useState<boolean>(false)
+  const [adminUsers, setAdminUsers] = useState<AdminUsers[]>([])
 
   const {
     user,
@@ -85,6 +102,7 @@ const ChamadoAbertoParaDetalhe: React.FC = () => {
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
   const open = Boolean(anchorEl)
+  const { handleSubmit, register } = useForm()
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget)
   }
@@ -117,6 +135,11 @@ const ChamadoAbertoParaDetalhe: React.FC = () => {
 
   const takeOverHelpDesk = async () => {
     const formData = new FormData()
+
+    if (changingAccountable) {
+      setAccountable(newAccountable)
+    }
+
     formData.append('accountable', accountable!)
     const headers = {
       headers: {
@@ -135,7 +158,6 @@ const ChamadoAbertoParaDetalhe: React.FC = () => {
   }
 
   const removeHelpDeskResponsibility = async () => {
-    console.log(accountable)
     const formData = new FormData()
     formData.append('accountable', newAccountable!)
     const headers = {
@@ -144,16 +166,38 @@ const ChamadoAbertoParaDetalhe: React.FC = () => {
         Authorization: `bearer ${token}`,
       },
     }
-    console.log(newAccountable)
     try {
       await api.patch(`/helpdesk/${id}`, formData, headers).then(() => {
         setIsAssumed(false)
-        console.log('Chamou')
+        setChangingAccountable(true)
       })
     } catch (error) {
       console.error(error)
     }
   }
+
+  const listAdminUsers = async () => {
+    const headers = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `bearer ${token}`,
+      },
+    }
+    api.get<AdminUsers[]>('/user', headers).then((response) => {
+      const { data } = response
+      setAdminUsers(data)
+    })
+  }
+
+  useEffect(() => {
+    listAdminUsers()
+  }, [])
+
+  const accountableRef = useRef(accountable)
+
+  useEffect(() => {
+    accountableRef.current = accountable
+  }, [accountable])
 
   const publishedDateFormatted = () => {
     return format(
@@ -202,69 +246,116 @@ const ChamadoAbertoParaDetalhe: React.FC = () => {
           <Typography variant="h6" margin={2}>
             {helpDeskData?.title}
           </Typography>
-          <Box>
+          <Box
+            display={'flex'}
+            width={'50%'}
+            justifyContent={'end'}
+            alignItems={'center'}
+          >
             {isAdmin === 'admin' ? (
-              <Button
-                variant={helpDeskData?.accountable ? 'text' : 'contained'}
-                size="small"
-                endIcon={<MdOutlineEmojiPeople />}
-                color={helpDeskData?.accountable ? 'success' : 'info'}
-                disableElevation
-                disabled={!!helpDeskData?.accountable}
-                sx={{
-                  marginRight: '15px',
-                }}
-                onClick={takeOverHelpDesk}
-              >
-                {helpDeskData?.accountable
-                  ? helpDeskData.accountable === user?.name
-                    ? `Você assumiu este chamado`
-                    : `${helpDeskData.accountable} assumiu este chamado`
-                  : 'Assumir Chamado'}
-              </Button>
+              changingAccountable ? (
+                <form
+                  method="POST"
+                  onSubmit={handleSubmit(takeOverHelpDesk)}
+                  style={{ display: 'flex' }}
+                >
+                  <Select
+                    {...register('newAccountable')}
+                    name="newAccountable"
+                    type={'text'}
+                    size="small"
+                    value={newAccountable ?? newAccountable}
+                    onChange={(e: SelectChangeEvent) =>
+                      setNewAccountable(e.target.value)
+                    }
+                    fullWidth
+                    sx={{ marginRight: '20px' }}
+                  >
+                    {adminUsers.map((user) => {
+                      return user.name === accountableRef.current ? (
+                        ''
+                      ) : (
+                        <MenuItem key={user.id} value={user.name}>
+                          {user.name === accountableRef.current
+                            ? ''
+                            : user.name}
+                        </MenuItem>
+                      )
+                    })}
+                  </Select>
+                  <IconButton
+                    type="submit"
+                    disabled={isLoading}
+                    onClick={takeOverHelpDesk}
+                  >
+                    <Icon>
+                      {isLoading ? (
+                        <CircularProgress size={25} />
+                      ) : (
+                        <IoMdSend size={20} />
+                      )}
+                    </Icon>
+                  </IconButton>
+                </form>
+              ) : (
+                <Button
+                  variant={helpDeskData?.accountable ? 'text' : 'contained'}
+                  size="small"
+                  endIcon={<MdOutlineEmojiPeople />}
+                  color={helpDeskData?.accountable ? 'success' : 'info'}
+                  disableElevation
+                  disabled={!!helpDeskData?.accountable}
+                  sx={{
+                    marginRight: '15px',
+                  }}
+                  onClick={takeOverHelpDesk}
+                >
+                  {helpDeskData?.accountable
+                    ? helpDeskData.accountable === user?.name
+                      ? `Você assumiu este chamado`
+                      : `${helpDeskData.accountable} assumiu este chamado`
+                    : 'Assumir Chamado'}
+                </Button>
+              )
             ) : (
               <Typography
-                marginRight={'15px'}
-                fontSize={'1rem'}
-                variant="body2"
-                color="text.secondary"
+                variant={'body2'}
+                color={'text.secondary'}
+                marginRight={4}
               >
-                {helpDeskData?.accountable ? (
-                  `${helpDeskData.accountable} assumiu este chamado`
-                ) : (
-                  <Icon sx={{ marginTop: '5px' }}>
-                    <RiTimer2Line size={25} />
-                  </Icon>
-                )}
+                {helpDeskData?.accountable
+                  ? `${helpDeskData.accountable} assumiu este chamado`
+                  : ''}
               </Typography>
             )}
-            <IconButton
-              aria-controls={open ? 'long-menu' : undefined}
-              aria-expanded={open ? 'true' : undefined}
-              aria-haspopup="true"
-              onClick={handleClick}
-            >
-              <MdMoreVert />
-            </IconButton>
-            <Menu
-              id="long-menu"
-              MenuListProps={{
-                'aria-labelledby': 'long-button',
-              }}
-              anchorEl={anchorEl}
-              open={open}
-              onClose={handleClose}
-              // PaperProps={{
-              //   style: {
-              //     maxHeight: ITEM_HEIGHT * 4.5,
-              //     width: '20ch',
-              //   },
-              // }}
-            >
-              <MenuItem onClick={removeHelpDeskResponsibility}>
-                Passar HelpDesk
-              </MenuItem>
-            </Menu>
+
+            {isAdmin === 'admin' && helpDeskData?.accountable === user?.name ? (
+              <>
+                <IconButton
+                  aria-controls={open ? 'long-menu' : undefined}
+                  aria-expanded={open ? 'true' : undefined}
+                  aria-haspopup="true"
+                  onClick={handleClick}
+                >
+                  <MdMoreVert />
+                </IconButton>
+                <Menu
+                  id="long-menu"
+                  MenuListProps={{
+                    'aria-labelledby': 'long-button',
+                  }}
+                  anchorEl={anchorEl}
+                  open={open}
+                  onClose={handleClose}
+                >
+                  <MenuItem onClick={removeHelpDeskResponsibility}>
+                    Passar HelpDesk
+                  </MenuItem>
+                </Menu>
+              </>
+            ) : (
+              ''
+            )}
           </Box>
         </Box>
         <Box display="flex" justifyContent="space-between" paddingBottom={2}>
