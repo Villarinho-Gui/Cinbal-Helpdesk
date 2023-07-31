@@ -5,7 +5,7 @@ import MessageComponent from './components/MessageComponent'
 import api from '../../../../../service/api/config/configApi'
 import { useParams } from 'react-router-dom'
 import { useHelpDeskContext } from '../../../../contexts/HelpDeskContext'
-
+import { useUserHelpDeskContext } from '../../../../contexts/userContext'
 interface MessageListProps {
   id: string
   user: {
@@ -13,6 +13,9 @@ interface MessageListProps {
   }
   message: string
   createdAt: Date
+  helpdesk: {
+    id: string
+  }
 }
 
 export const Chat: React.FC = () => {
@@ -20,6 +23,7 @@ export const Chat: React.FC = () => {
 
   const theme = useTheme()
   const { isNewMessage } = useHelpDeskContext()
+  const { user } = useUserHelpDeskContext()
 
   const { id } = useParams()
 
@@ -59,27 +63,30 @@ export const Chat: React.FC = () => {
             display: 'flex',
             flexDirection: 'column',
             overflow: 'auto',
-            // justifyContent: 'flex-end',
           }}
         >
-          {messageData &&
-            messageData.map((messageHelpDesk: MessageListProps) => {
-              return (
-                <ListItem
+          {messageData.map((messageHelpDesk: MessageListProps) => {
+            return id === messageHelpDesk.helpdesk.id ? (
+              <ListItem
+                key={messageHelpDesk.id}
+                disablePadding
+                sx={{
+                  justifyContent:
+                    user!.name !== messageHelpDesk.user.name ? 'start' : 'end',
+                }}
+              >
+                <MessageComponent
                   key={messageHelpDesk.id}
-                  disablePadding
-                  sx={{ justifyContent: 'end' }}
-                >
-                  <MessageComponent
-                    key={messageHelpDesk.id}
-                    id={messageHelpDesk.id}
-                    author={messageHelpDesk.user.name}
-                    createdAt={messageHelpDesk.createdAt}
-                    message={messageHelpDesk.message}
-                  />
-                </ListItem>
-              )
-            })}
+                  id={messageHelpDesk.id}
+                  author={messageHelpDesk.user.name}
+                  createdAt={messageHelpDesk.createdAt}
+                  message={messageHelpDesk.message}
+                />
+              </ListItem>
+            ) : (
+              ''
+            )
+          })}
         </List>
       </Box>
       <MessageTextField />
