@@ -157,15 +157,25 @@ const Chamado: React.FC<HelpDeskDataProps> = ({
             )}
 
             <Box display={'flex'} flex={1} justifyContent={'space-between'}>
-              <Typography color={'#49B3E8'}>{category}</Typography>
+              <Chip label={category} size="small" />
+
               <Box
                 display={'flex'}
+                alignItems={'center'}
                 flex={1}
                 justifyContent={'end'}
                 gap={2}
                 position={'relative'}
               >
-                <Chip label={id} size="small" sx={{ width: '12ch' }} />
+                <Typography
+                  variant="body2"
+                  fontSize={'0.8rem'}
+                  noWrap
+                  width={'10ch'}
+                >
+                  ID:
+                  {id}
+                </Typography>
                 <Tooltip
                   TransitionComponent={Zoom}
                   arrow
