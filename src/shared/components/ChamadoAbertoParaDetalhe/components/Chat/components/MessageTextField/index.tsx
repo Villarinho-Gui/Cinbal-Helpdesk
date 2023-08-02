@@ -16,7 +16,7 @@ import { useForm } from 'react-hook-form'
 import { useParams } from 'react-router-dom'
 import { useHelpDeskContext } from '../../../../../../contexts/HelpDeskContext'
 
-interface SendMessageProps {
+export interface SendMessageProps {
   messageContent: string
   helpdeskId: string
   files?: File[]
