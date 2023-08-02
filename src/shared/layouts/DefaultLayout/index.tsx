@@ -11,7 +11,7 @@ import {
   CardContent,
   Menu,
 } from '@mui/material'
-import React, { ReactNode, memo, useCallback } from 'react'
+import React, { ReactNode, memo, useCallback, useEffect, useRef } from 'react'
 
 import { GiHamburgerMenu } from 'react-icons/gi'
 import { IoMdPerson } from 'react-icons/io'
@@ -20,7 +20,7 @@ import { CgLogOut } from 'react-icons/cg'
 
 import { useDrawerContext } from '../../contexts/DrawerContext'
 
-import { BsMoonFill } from 'react-icons/bs'
+import { BsFillBellFill, BsMoonFill } from 'react-icons/bs'
 import { AiFillHome, AiOutlinePlus } from 'react-icons/ai'
 import { MdClose } from 'react-icons/md'
 
@@ -28,6 +28,10 @@ import { useAppThemeContext } from '../../contexts/ThemeContext'
 
 import { useNavigate } from 'react-router-dom'
 import { useUserHelpDeskContext } from '../../contexts/userContext'
+import { useHelpDeskContext } from '../../contexts/HelpDeskContext'
+
+import { RiFeedbackFill, RiMessageFill } from 'react-icons/ri'
+import { MessageListProps } from '../../components/ChamadoAbertoParaDetalhe/components/Chat'
 interface IDefaultLayoutProps {
   children: React.ReactNode
   tituloPagina: string | undefined
@@ -39,6 +43,8 @@ interface IDefaultLayoutProps {
   mostrarBotaoHome?: boolean
   mostrarBotaoOpenHelpDesk?: boolean
   mostrarTituloPagina?: boolean
+
+  showNotificationButton?: boolean
 }
 
 const DefaultLayout: React.FC<IDefaultLayoutProps> = ({
@@ -50,6 +56,7 @@ const DefaultLayout: React.FC<IDefaultLayoutProps> = ({
   mostrarBotaoTema,
   mostrarBotaoHome,
   mostrarBotaoOpenHelpDesk,
+  showNotificationButton,
 
   mostrarTituloPagina = true,
 }) => {
@@ -59,12 +66,18 @@ const DefaultLayout: React.FC<IDefaultLayoutProps> = ({
 
   const { toggleDrawerOpen, isDrawerOpen } = useDrawerContext()
   const { toggleTheme, themeName } = useAppThemeContext()
-
-  const navigate = useNavigate()
+  const { isNewMessage, messageNotification } = useHelpDeskContext()
   const { user, setIsLogged } = useUserHelpDeskContext()
 
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
-  const open = Boolean(anchorEl)
+  const navigate = useNavigate()
+
+  const [openInformation, setOpenInformation] =
+    React.useState<null | HTMLElement>(null)
+  const openCardInformation = Boolean(openInformation)
+
+  const [openNotification, setOpenNotification] =
+    React.useState<null | HTMLElement>(null)
+  const openCardNotification = Boolean(openNotification)
 
   const logoutUser = () => {
     setIsLogged(false)
@@ -72,15 +85,33 @@ const DefaultLayout: React.FC<IDefaultLayoutProps> = ({
     navigate('/login')
   }
 
-  const handleClick = useCallback(
+  const openUserInformation = useCallback(
     (event: React.MouseEvent<HTMLButtonElement>) => {
-      setAnchorEl(event.currentTarget)
+      setOpenInformation(event.currentTarget)
     },
     [],
   )
-  const handleClose = () => {
-    setAnchorEl(null)
+
+  const openNotifications = useCallback(
+    (event: React.MouseEvent<HTMLButtonElement>) => {
+      setOpenNotification(event.currentTarget)
+    },
+    [],
+  )
+
+  const handleCloseUserInformation = () => {
+    setOpenInformation(null)
   }
+
+  const handleCloseNotification = () => {
+    setOpenNotification(null)
+  }
+
+  const messageRef = useRef(messageNotification)
+
+  useEffect(() => {
+    messageRef.current = messageNotification
+  }, [messageNotification])
 
   return (
     <Box height="98%" display="flex" flexDirection="column" gap={1}>
@@ -146,7 +177,7 @@ const DefaultLayout: React.FC<IDefaultLayoutProps> = ({
             {mostrarBotaoPerfil && (
               <>
                 <Tooltip title="Perfil" placement="bottom" arrow>
-                  <IconButton onClick={handleClick}>
+                  <IconButton onClick={openUserInformation}>
                     <Icon>
                       <IoMdPerson size={20} />
                     </Icon>
@@ -154,9 +185,9 @@ const DefaultLayout: React.FC<IDefaultLayoutProps> = ({
                 </Tooltip>
                 <Menu
                   id="basic-menu"
-                  anchorEl={anchorEl}
-                  open={open}
-                  onClose={handleClose}
+                  anchorEl={openInformation}
+                  open={openCardInformation}
+                  onClose={handleCloseUserInformation}
                   MenuListProps={{
                     'aria-labelledby': 'basic-button',
                   }}
@@ -222,6 +253,122 @@ const DefaultLayout: React.FC<IDefaultLayoutProps> = ({
                       </Typography>
                     </CardContent>
                   </Card>
+                </Menu>
+              </>
+            )}
+
+            {showNotificationButton && (
+              <>
+                <Tooltip title="Notificações" arrow>
+                  <IconButton onClick={openNotifications}>
+                    <Icon>
+                      <BsFillBellFill size={20} />
+                    </Icon>
+                  </IconButton>
+                </Tooltip>
+                <Menu
+                  id="basic-menu"
+                  anchorEl={openNotification}
+                  open={openCardNotification}
+                  onClose={handleCloseNotification}
+                  sx={{ maxHeight: '700px' }}
+                  MenuListProps={{
+                    'aria-labelledby': 'basic-button',
+                  }}
+                >
+                  {isNewMessage ? (
+                    messageNotification.map((message: MessageListProps) => {
+                      return (
+                        <Card
+                          key={message.id}
+                          component={Box}
+                          padding={1}
+                          elevation={0}
+                          variant="outlined"
+                          marginTop={0.5}
+                          marginX={0.4}
+                          width={'450px'}
+                        >
+                          <CardContent sx={{ display: 'flex', gap: '10px' }}>
+                            <Box>
+                              <RiFeedbackFill
+                                size={25}
+                                color={theme.palette.primary.main}
+                              />
+                            </Box>
+                            <Box
+                              display={'flex'}
+                              gap={1}
+                              alignItems={'flex-start'}
+                              flexDirection={'column'}
+                            >
+                              <Typography variant="h4" fontSize={'1rem'}>
+                                <strong>{message.user.name}</strong> interagiu
+                                no chamado de título:{' '}
+                                <strong>{message.helpdesk.title}</strong>
+                              </Typography>
+                              <Typography
+                                variant="body2"
+                                color={'text.secondary'}
+                                noWrap
+                              >
+                                {message.message}
+                              </Typography>
+                              <Box
+                                display={'flex'}
+                                alignItems={'center'}
+                                justifyContent={'space-between'}
+                                flex={1}
+                                width={'100%'}
+                                marginTop={2}
+                              >
+                                <Box
+                                  display={'flex'}
+                                  gap={1}
+                                  alignItems={'center'}
+                                >
+                                  <Typography>
+                                    <strong>Id:</strong>{' '}
+                                  </Typography>
+
+                                  <Typography
+                                    noWrap
+                                    width={'10ch'}
+                                    variant="body2"
+                                    fontSize={'0.85rem'}
+                                  >
+                                    {message.helpdesk.id}
+                                  </Typography>
+                                </Box>
+                                <Button
+                                  variant="outlined"
+                                  onClick={() => {
+                                    navigate(
+                                      `/home/chamado/detalhe/${message.helpdesk.id}`,
+                                    )
+                                  }}
+                                >
+                                  Ir para o chamado
+                                </Button>
+                              </Box>
+                            </Box>
+                          </CardContent>
+                        </Card>
+                      )
+                    })
+                  ) : (
+                    <Box
+                      display={'flex'}
+                      gap={5}
+                      alignItems={'center'}
+                      margin={2}
+                    >
+                      <Typography>Nenhuma Notificação </Typography>
+                      <Icon>
+                        <RiMessageFill />
+                      </Icon>
+                    </Box>
+                  )}
                 </Menu>
               </>
             )}
