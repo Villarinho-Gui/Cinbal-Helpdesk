@@ -17,6 +17,7 @@ const Dashboard: React.FC = () => {
       mostrarBotaoHome
       mostrarBotaoOpenHelpDesk
       barraDeFerramentas={''}
+      showNotificationButton
     >
       <Box         
           padding={2}
