@@ -6,7 +6,7 @@ import api from '../../../../../service/api/config/configApi'
 import { useParams } from 'react-router-dom'
 import { useHelpDeskContext } from '../../../../contexts/HelpDeskContext'
 import { useUserHelpDeskContext } from '../../../../contexts/userContext'
-interface MessageListProps {
+export interface MessageListProps {
   id: string
   user: {
     name: string
@@ -15,6 +15,8 @@ interface MessageListProps {
   createdAt: Date
   helpdesk: {
     id: string
+    accountable: string
+    title?: string
   }
 }
 
@@ -22,7 +24,7 @@ export const Chat: React.FC = () => {
   const [messageData, setMessageData] = useState<MessageListProps[]>([])
 
   const theme = useTheme()
-  const { isNewMessage } = useHelpDeskContext()
+  const { isNewMessage, setMessageNotification } = useHelpDeskContext()
   const { user } = useUserHelpDeskContext()
 
   const { id } = useParams()
@@ -39,6 +41,7 @@ export const Chat: React.FC = () => {
       })
       .then((response) => {
         const { data } = response
+        setMessageNotification(data)
         setMessageData(data)
         if (isNewMessage) {
           setMessageData(data)
@@ -58,36 +61,42 @@ export const Chat: React.FC = () => {
         flexDirection={'column'}
         height={250}
       >
-        <List
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            overflow: 'auto',
-          }}
-        >
-          {messageData.map((messageHelpDesk: MessageListProps) => {
-            return id === messageHelpDesk.helpdesk.id ? (
-              <ListItem
-                key={messageHelpDesk.id}
-                disablePadding
-                sx={{
-                  justifyContent:
-                    user!.name !== messageHelpDesk.user.name ? 'start' : 'end',
-                }}
-              >
-                <MessageComponent
-                  key={messageHelpDesk.id}
-                  id={messageHelpDesk.id}
-                  author={messageHelpDesk.user.name}
-                  createdAt={messageHelpDesk.createdAt}
-                  message={messageHelpDesk.message}
-                />
-              </ListItem>
-            ) : (
-              ''
-            )
-          })}
-        </List>
+        {user?.role === 'admin' ? (
+          <List
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              overflow: 'auto',
+            }}
+          >
+            {messageData.map((messageHelpDesk: MessageListProps) => {
+              return (
+                id === messageHelpDesk.helpdesk.id && (
+                  <ListItem
+                    key={messageHelpDesk.id}
+                    disablePadding
+                    sx={{
+                      justifyContent:
+                        user!.name !== messageHelpDesk.user!.name
+                          ? 'start'
+                          : 'end',
+                    }}
+                  >
+                    <MessageComponent
+                      key={messageHelpDesk.id}
+                      id={messageHelpDesk.id}
+                      author={messageHelpDesk.user.name}
+                      createdAt={messageHelpDesk.createdAt}
+                      message={messageHelpDesk.message}
+                    />
+                  </ListItem>
+                )
+              )
+            })}
+          </List>
+        ) : (
+          ''
+        )}
       </Box>
       <MessageTextField />
     </>
