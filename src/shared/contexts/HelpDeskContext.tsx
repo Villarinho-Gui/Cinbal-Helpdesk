@@ -1,4 +1,5 @@
 import React, { createContext, useCallback, useContext, useState } from 'react'
+import { MessageListProps } from '../components/ChamadoAbertoParaDetalhe/components/Chat'
 
 interface HelpDeskContextProps {
   toggleHelpDesk: () => void
@@ -7,6 +8,11 @@ interface HelpDeskContextProps {
   isNewMessage: true | false
   toggleLoading: () => void
   isLoading: true | false
+
+  messageNotification: MessageListProps[]
+  setMessageNotification: React.Dispatch<
+    React.SetStateAction<MessageListProps[]>
+  >
 }
 
 interface HelpDeskContextChildren {
@@ -25,6 +31,10 @@ export const HelpDeskProvider: React.FC<HelpDeskContextChildren> = ({
   const [isNewHelpDesk, setIsNewHelpDesk] = useState(false)
   const [isNewMessage, setIsNewMessage] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+
+  const [messageNotification, setMessageNotification] = useState<
+    MessageListProps[]
+  >([])
 
   const toggleHelpDesk = useCallback(() => {
     setIsNewHelpDesk((oldHelpDesk) => !oldHelpDesk)
@@ -47,6 +57,8 @@ export const HelpDeskProvider: React.FC<HelpDeskContextChildren> = ({
         isLoading,
         toggleMessage,
         isNewMessage,
+        messageNotification,
+        setMessageNotification,
       }}
     >
       {children}
