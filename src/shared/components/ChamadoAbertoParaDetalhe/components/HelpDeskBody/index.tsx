@@ -1,5 +1,5 @@
 import { Box, Chip, Divider, Grid, Skeleton, Typography } from '@mui/material'
-import React from 'react'
+import React, { memo } from 'react'
 
 interface HelpDeskPostInformationProps {
   id: string | undefined
@@ -127,4 +127,4 @@ const HelpDeskBody: React.FC<HelpDeskPostInformationProps> = ({
   )
 }
 
-export default HelpDeskBody
+export default memo(HelpDeskBody)

@@ -21,9 +21,9 @@ import { Chat } from './components/Chat'
 import { AiFillFile } from 'react-icons/ai'
 import { useUserHelpDeskContext } from '../../contexts/userContext'
 
-import { HelpDeskHeader } from './components/HelpDeskHeader'
 import { useFetch } from '../../hooks/useFetch'
 import HelpDeskBody from './components/HelpDeskBody'
+import HelpDeskHeader from './components/HelpDeskHeader'
 
 interface FileProps {
   id: string

@@ -12,7 +12,7 @@ import {
   SelectChangeEvent,
   Typography,
 } from '@mui/material'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { memo, useEffect, useRef, useState } from 'react'
 import { IoMdSend } from 'react-icons/io'
 import { MdMoreVert, MdOutlineEmojiPeople } from 'react-icons/md'
 import { useUserHelpDeskContext } from '../../../../contexts/userContext'
@@ -27,7 +27,7 @@ interface HelpDeskHeaderProps {
   isLoading: boolean
 }
 
-export const HelpDeskHeader: React.FC<HelpDeskHeaderProps> = ({
+const HelpDeskHeader: React.FC<HelpDeskHeaderProps> = ({
   title,
   helpDeskAccountable,
   token,
@@ -72,7 +72,6 @@ export const HelpDeskHeader: React.FC<HelpDeskHeaderProps> = ({
     try {
       await api.patch(`/helpdesk/${id}`, formData, headers).then(() => {
         setAccountable(user?.name!)
-        console.log(accountable)
         setIsAssumed(true)
       })
     } catch (error) {
@@ -224,3 +223,5 @@ export const HelpDeskHeader: React.FC<HelpDeskHeaderProps> = ({
     </Box>
   )
 }
+
+export default memo(HelpDeskHeader)
