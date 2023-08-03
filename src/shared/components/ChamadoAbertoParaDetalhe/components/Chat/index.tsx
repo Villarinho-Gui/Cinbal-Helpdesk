@@ -1,57 +1,28 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { Box, List, ListItem, useTheme } from '@mui/material'
 import { MessageTextField } from './components/MessageTextField'
 import MessageComponent from './components/MessageComponent'
-import api from '../../../../../service/api/config/configApi'
 import { useParams } from 'react-router-dom'
-import { useHelpDeskContext } from '../../../../contexts/HelpDeskContext'
 import { useUserHelpDeskContext } from '../../../../contexts/userContext'
-export interface MessageListProps {
-  id: string
-  user: {
-    name: string
-  }
-  message: string
-  createdAt: Date
-  helpdesk: {
-    id: string
-    accountable: string
-    title?: string
-  }
-}
+import { useMessage } from '../../../../hooks/useMessage'
 
 export const Chat: React.FC = () => {
-  const [messageData, setMessageData] = useState<MessageListProps[]>([])
-
   const theme = useTheme()
-  const { isNewMessage, setMessageNotification } = useHelpDeskContext()
   const { user } = useUserHelpDeskContext()
 
   const { id } = useParams()
 
   const token = localStorage.getItem('access_token')
+  const headers = {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `bearer ${token}`,
+    },
+  }
 
-  useEffect(() => {
-    api
-      .get<MessageListProps[]>(`/comment/${id}`, {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `bearer ${token}`,
-        },
-      })
-      .then((response) => {
-        const { data } = response
-        setMessageNotification(data)
-        setMessageData(data)
-        if (isNewMessage) {
-          setMessageData(data)
-        }
-      })
-      .catch((error) => {
-        console.error(error)
-      })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isNewMessage])
+  const { comment } = useMessage(`/comment/${id}`, headers)
+
+  const comments = comment
 
   return (
     <>
@@ -61,42 +32,38 @@ export const Chat: React.FC = () => {
         flexDirection={'column'}
         height={250}
       >
-        {user?.role === 'admin' ? (
-          <List
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              overflow: 'auto',
-            }}
-          >
-            {messageData.map((messageHelpDesk: MessageListProps) => {
-              return (
-                id === messageHelpDesk.helpdesk.id && (
-                  <ListItem
+        <List
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            overflow: 'auto',
+          }}
+        >
+          {comments.map((messageHelpDesk) => {
+            return (
+              id === messageHelpDesk.helpdesk.id && (
+                <ListItem
+                  key={messageHelpDesk.id}
+                  disablePadding
+                  sx={{
+                    justifyContent:
+                      user!.name !== messageHelpDesk.user!.name
+                        ? 'start'
+                        : 'end',
+                  }}
+                >
+                  <MessageComponent
                     key={messageHelpDesk.id}
-                    disablePadding
-                    sx={{
-                      justifyContent:
-                        user!.name !== messageHelpDesk.user!.name
-                          ? 'start'
-                          : 'end',
-                    }}
-                  >
-                    <MessageComponent
-                      key={messageHelpDesk.id}
-                      id={messageHelpDesk.id}
-                      author={messageHelpDesk.user.name}
-                      createdAt={messageHelpDesk.createdAt}
-                      message={messageHelpDesk.message}
-                    />
-                  </ListItem>
-                )
+                    id={messageHelpDesk.id}
+                    author={messageHelpDesk.user.name}
+                    createdAt={messageHelpDesk.createdAt}
+                    message={messageHelpDesk.message}
+                  />
+                </ListItem>
               )
-            })}
-          </List>
-        ) : (
-          ''
-        )}
+            )
+          })}
+        </List>
       </Box>
       <MessageTextField />
     </>
