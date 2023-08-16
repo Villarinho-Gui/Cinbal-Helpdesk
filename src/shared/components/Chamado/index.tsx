@@ -179,11 +179,7 @@ const Chamado: React.FC<HelpDeskDataProps> = ({
                 <Tooltip
                   TransitionComponent={Zoom}
                   arrow
-                  title={
-                    accountable
-                      ? `${accountable} assumiu este chamado`
-                      : 'Aberto'
-                  }
+                  title={accountable ? `Em andamento` : 'Aberto'}
                 >
                   <Icon color={accountable ? 'success' : 'primary'}>
                     {accountable ? (
