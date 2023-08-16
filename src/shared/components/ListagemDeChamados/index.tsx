@@ -25,19 +25,7 @@ import 'react-date-range/dist/theme/default.css' // theme css file
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import { format } from 'date-fns'
 import Chamado from '../Chamado'
-interface HelpDeskListProp {
-  id: string
-  user: {
-    name: string
-  }
-  accountable: string
-  title: string
-  category: string
-  description: string
-  files?: File[]
-  countFiles: number
-  createdAt: Date
-}
+import { HelpDeskListProp } from '../../types/helpdeskType'
 
 export const ListagemDeChamados: React.FC = () => {
   const [helpDeskData, setHelpDeskData] = useState<HelpDeskListProp[]>([])
