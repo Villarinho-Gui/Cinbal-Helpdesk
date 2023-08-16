@@ -4,6 +4,7 @@ import React, { createContext, useContext, useEffect, useState } from 'react'
 import api from '../../service/api/config/configApi'
 
 export interface UserProps {
+  id: string
   name: string
   sector: string
   email: string
