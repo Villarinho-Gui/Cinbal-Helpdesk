@@ -9,7 +9,7 @@ import { HelpDeskProvider } from './shared/contexts/HelpDeskContext'
 import { LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 import { ptBR as ptBRDate } from 'date-fns/locale'
-import { UserProvider } from './shared/contexts/userContext'
+import { UserProvider } from './shared/contexts/UserContext'
 
 export const App: React.FC = () => {
   return (
