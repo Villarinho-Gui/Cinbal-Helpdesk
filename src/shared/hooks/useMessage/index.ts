@@ -1,49 +1,26 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect, useState } from 'react'
+import { useQuery } from 'react-query'
 import api from '../../../service/api/config/configApi'
-import { AxiosRequestConfig } from 'axios'
-import { useHelpDeskContext } from '../../contexts/HelpDeskContext'
 import { useParams } from 'react-router-dom'
+import { CommentsProps } from '../../types/helpdeskType'
 
-interface CommentsProps {
-  id: string
-  message: string
-  user: {
-    name: string
-  }
-  helpdesk: {
-    id: string
-  }
-  createdAt: Date
-}
-
-export function useMessage(url: string, headers: AxiosRequestConfig) {
-  const [comment, setComment] = useState<CommentsProps[]>([])
-  const [error, setError] = useState(null)
-  const [isLoading, setIsLoading] = useState<boolean>(false)
-
+export function useMessage() {
   const { id } = useParams()
-
-  const { isNewMessage } = useHelpDeskContext()
-
-  const fetchHelpDeskMessage = async () => {
-    setIsLoading(true)
-    try {
-      const apiResponse: any = await api.get<CommentsProps[]>(url, headers)
-
-      const { data } = apiResponse
-
-      setComment(data)
-      setError(null)
-    } catch (error: any) {
-      setError(error)
-    } finally {
-      setIsLoading(false)
-    }
+  const token = localStorage.getItem('access_token')
+  const headers = {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `bearer ${token}`,
+    },
   }
+  const { data } = useQuery(['comments', id], async () => {
+    const responseApi = await api.get<CommentsProps>(
+      `http://localhost:3535/comment/${id}`,
+      headers,
+    )
 
-  useEffect(() => {
-    fetchHelpDeskMessage()
-  }, [isNewMessage, id])
-  return { comment, error, isLoading }
+    return responseApi
+  })
+
+  return { data }
 }
