@@ -15,7 +15,7 @@ import {
 
 // import logo from '../../../media/images/logo2-full.png'
 import { SubmitHandler } from 'react-hook-form'
-import { useUserHelpDeskContext } from '../../../shared/contexts/userContext'
+import { useUserHelpDeskContext } from '../../../shared/contexts/UserContext'
 interface LoginData {
   email: string
   password: string
