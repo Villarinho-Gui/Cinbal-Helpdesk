@@ -11,37 +11,57 @@ import {
   Select,
   SelectChangeEvent,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from '@mui/material'
-import React, { memo, useEffect, useRef, useState } from 'react'
+import React, { useState } from 'react'
 import { IoMdSend } from 'react-icons/io'
 import { MdMoreVert, MdOutlineEmojiPeople } from 'react-icons/md'
-import { useUserHelpDeskContext } from '../../../../contexts/userContext'
+import { useUserHelpDeskContext } from '../../../../contexts/UserContext'
 import { useForm } from 'react-hook-form'
 import api from '../../../../../service/api/config/configApi'
-
+import * as yup from 'yup'
+import { UserProps } from '../../../../hooks/useUser'
+import { yupResolver } from '@hookform/resolvers/yup'
 interface HelpDeskHeaderProps {
   title: string | undefined
   helpDeskAccountable: string | undefined
   token: string | null
   id: string | undefined
+  adminUser: UserProps[] | undefined
   isLoading: boolean
 }
 
-const HelpDeskHeader: React.FC<HelpDeskHeaderProps> = ({
+const changeAccountableSchema = yup
+  .object()
+  .shape({
+    accountable: yup.string().required(),
+  })
+  .required()
+
+export const HelpDeskHeader: React.FC<HelpDeskHeaderProps> = ({
   title,
   helpDeskAccountable,
   token,
   id,
+  adminUser,
   isLoading,
 }) => {
   const { user, isAdmin, accountable, setIsAssumed, setAccountable } =
     useUserHelpDeskContext()
   const [changingAccountable, setChangingAccountable] = useState<boolean>(false)
-  const [newAccountable, setNewAccountable] = useState<string>('')
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
 
+  const currentUser = user
+
+  const { handleSubmit, register } = useForm({
+    resolver: yupResolver(changeAccountableSchema),
+    defaultValues: {
+      accountable: '',
+    },
+  })
+
   const open = Boolean(anchorEl)
-  const { handleSubmit, register } = useForm()
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget)
   }
@@ -49,18 +69,12 @@ const HelpDeskHeader: React.FC<HelpDeskHeaderProps> = ({
     setAnchorEl(null)
   }
 
-  const accountableRef = useRef(accountable)
-
-  useEffect(() => {
-    accountableRef.current = accountable
-  }, [accountable])
+  const theme = useTheme()
+  const smDown = useMediaQuery(theme.breakpoints.down('sm'))
+  const mdDown = useMediaQuery(theme.breakpoints.down('md'))
 
   const takeOverHelpDesk = async () => {
     const formData = new FormData()
-
-    if (changingAccountable) {
-      setAccountable(newAccountable)
-    }
 
     formData.append('accountable', accountable!)
     const headers = {
@@ -71,31 +85,18 @@ const HelpDeskHeader: React.FC<HelpDeskHeaderProps> = ({
     }
     try {
       await api.patch(`/helpdesk/${id}`, formData, headers).then(() => {
-        setAccountable(user?.name!)
         setIsAssumed(true)
+        setAccountable(user!.name)
+        setChangingAccountable(false)
       })
     } catch (error) {
       console.error(error)
     }
   }
 
-  const removeHelpDeskResponsibility = async () => {
-    const formData = new FormData()
-    formData.append('accountable', newAccountable!)
-    const headers = {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `bearer ${token}`,
-      },
-    }
-    try {
-      await api.patch(`/helpdesk/${id}`, formData, headers).then(() => {
-        setIsAssumed(false)
-        setChangingAccountable(true)
-      })
-    } catch (error) {
-      console.error(error)
-    }
+  const removeAccountable = () => {
+    setChangingAccountable(true)
+    setAccountable('')
   }
 
   return (
@@ -108,7 +109,7 @@ const HelpDeskHeader: React.FC<HelpDeskHeaderProps> = ({
       marginBottom={5}
       elevation={0}
     >
-      <Typography variant="h6" margin={2}>
+      <Typography variant="h6" margin={2} noWrap={mdDown}>
         {title}
       </Typography>
       <Box
@@ -122,29 +123,30 @@ const HelpDeskHeader: React.FC<HelpDeskHeaderProps> = ({
             <form
               method="POST"
               onSubmit={handleSubmit(takeOverHelpDesk)}
-              style={{ display: 'flex' }}
+              style={{ display: 'flex', width: '350px' }}
             >
               <Select
-                {...register('newAccountable')}
-                name="newAccountable"
+                {...register('accountable')}
+                name="accountable"
                 type={'text'}
                 size="small"
-                value={newAccountable ?? newAccountable}
+                value={accountable!}
                 onChange={(e: SelectChangeEvent) =>
-                  setNewAccountable(e.target.value)
+                  setAccountable(e.target.value)
                 }
                 fullWidth
                 sx={{ marginRight: '20px' }}
               >
-                {/* {adminUser.map((user: any) => {
-                  return user.name === accountableRef.current ? (
-                    ''
-                  ) : (
-                    <MenuItem key={user.id} value={user.name}>
-                      {user.name === accountableRef.current ? '' : user.name}
-                    </MenuItem>
+                {adminUser?.map((user) => {
+                  return (
+                    user.role === 'admin' &&
+                    currentUser?.id !== user.id && (
+                      <MenuItem key={user.id} value={user.name}>
+                        {user.name}
+                      </MenuItem>
+                    )
                   )
-                })} */}
+                })}
               </Select>
               <IconButton
                 type="submit"
@@ -173,8 +175,11 @@ const HelpDeskHeader: React.FC<HelpDeskHeaderProps> = ({
               }}
               onClick={takeOverHelpDesk}
             >
-              {helpDeskAccountable
-                ? helpDeskAccountable === user!.name
+              {smDown
+                ? ''
+                : helpDeskAccountable
+                ? helpDeskAccountable === user!.name &&
+                  accountable === user!.name
                   ? `Você assumiu este chamado`
                   : `${helpDeskAccountable} assumiu este chamado`
                 : 'Assumir Chamado'}
@@ -211,9 +216,7 @@ const HelpDeskHeader: React.FC<HelpDeskHeaderProps> = ({
               open={open}
               onClose={handleClose}
             >
-              <MenuItem onClick={removeHelpDeskResponsibility}>
-                Passar HelpDesk
-              </MenuItem>
+              <MenuItem onClick={removeAccountable}>Passar HelpDesk</MenuItem>
             </Menu>
           </>
         ) : (
@@ -223,5 +226,3 @@ const HelpDeskHeader: React.FC<HelpDeskHeaderProps> = ({
     </Box>
   )
 }
-
-export default memo(HelpDeskHeader)
