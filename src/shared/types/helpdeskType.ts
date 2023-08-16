@@ -47,4 +47,18 @@ export interface HelpDeskProps {
   accountable?: string
 }
 
+export interface HelpDeskListProp {
+  id: string
+  user: {
+    name: string
+  }
+  accountable: string
+  title: string
+  category: string
+  description: string
+  files?: File[]
+  countFiles: number
+  createdAt: Date
+}
+
 export default HelpDeskProps
