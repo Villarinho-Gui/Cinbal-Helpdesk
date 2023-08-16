@@ -1,11 +1,8 @@
 import React, { memo } from 'react'
 import { Box, CardContent, Typography, useTheme } from '@mui/material'
+import { useUserHelpDeskContext } from '../../../../../../contexts/UserContext'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
-import { useUserHelpDeskContext } from '../../../../../../contexts/userContext'
-
-// import { Container } from './styles';
-
 interface MessageProps {
   id: string
   author: string
@@ -14,10 +11,9 @@ interface MessageProps {
 }
 
 const MessageComponent: React.FC<MessageProps> = ({
-  id,
   author,
-  createdAt,
   message,
+  createdAt,
 }) => {
   const theme = useTheme()
 
