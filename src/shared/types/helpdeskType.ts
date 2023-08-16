@@ -1,3 +1,12 @@
+export interface UserProps {
+  id: string | undefined
+  name: string | undefined
+  sector: string | undefined
+  email: string | undefined
+  extension: string | undefined
+  position: string | undefined
+  role: string | undefined
+}
 export interface FileProps {
   id: string
   filename: string
