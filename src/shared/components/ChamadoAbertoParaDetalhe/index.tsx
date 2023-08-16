@@ -19,11 +19,14 @@ import { useTheme } from '@mui/material/styles'
 import { MdImage, MdDownload } from 'react-icons/md'
 import { Chat } from './components/Chat'
 import { AiFillFile } from 'react-icons/ai'
-import { useUserHelpDeskContext } from '../../contexts/userContext'
+import { useUserHelpDeskContext } from '../../contexts/UserContext'
 
 import { useFetch } from '../../hooks/useFetch'
+import { useUser } from '../../hooks/useUser'
+
 import HelpDeskBody from './components/HelpDeskBody'
-import HelpDeskHeader from './components/HelpDeskHeader'
+import { HelpDeskHeader } from './components/HelpDeskHeader'
+import { CommentsProps } from '../../types/helpdeskType'
 
 interface FileProps {
   id: string
@@ -45,7 +48,11 @@ const ChamadoAbertoParaDetalhe: React.FC = () => {
     },
   }
   const { id } = useParams()
-  const { helpDeskData, isLoading } = useFetch(`/helpdesk/${id}`, headers)
+
+  const { data, isLoading } = useFetch()
+  const attachedFiles = data?.files
+
+  const { users } = useUser(`/user`, headers)
 
   const theme = useTheme()
   const { accountable } = useUserHelpDeskContext()
@@ -55,20 +62,14 @@ const ChamadoAbertoParaDetalhe: React.FC = () => {
     accountableRef.current = accountable
   }, [accountable])
 
-  const attachedFiles = helpDeskData?.files
-
   const publishedDateFormatted = () => {
-    return format(
-      new Date(helpDeskData!.createdAt),
-      "d 'de' LLLL 'às' HH:mm'h'",
-      {
-        locale: ptBR,
-      },
-    )
+    return format(new Date(data!.createdAt), "d 'de' LLLL 'às' HH:mm'h'", {
+      locale: ptBR,
+    })
   }
 
   const publishedDateRelativeToNow = () => {
-    return formatDistanceToNow(new Date(helpDeskData!.createdAt), {
+    return formatDistanceToNow(new Date(data!.createdAt), {
       locale: ptBR,
       addSuffix: true,
     })
@@ -94,26 +95,27 @@ const ChamadoAbertoParaDetalhe: React.FC = () => {
         borderColor={theme.palette.divider}
       >
         <HelpDeskHeader
-          title={helpDeskData?.title}
-          helpDeskAccountable={helpDeskData?.accountable}
           id={id}
           token={token}
+          title={data?.title}
+          helpDeskAccountable={data?.accountable}
+          adminUser={users}
           isLoading={isLoading}
         />
         <HelpDeskBody
           id={id}
-          author={helpDeskData?.user.name}
-          sector={helpDeskData?.user.sector}
-          category={helpDeskData?.category}
-          description={helpDeskData?.description}
-          createdAt={helpDeskData?.createdAt}
+          author={data?.user.name}
+          sector={data?.user.sector}
+          category={data?.category}
+          description={data?.description}
+          createdAt={data?.createdAt}
           isLoading={isLoading}
           createdAtFormatted={publishedDateFormatted}
           createdAtFormattedRelativeToNow={publishedDateRelativeToNow}
         />
         <Divider />
 
-        {helpDeskData?.files && helpDeskData?.files.length > 0 && (
+        {data?.files && data?.files.length > 0 && (
           <Grid container spacing={2} maxWidth={'100%'} paddingY={'20px'}>
             {attachedFiles!.map((file: FileProps) => (
               <Grid item xl={2} lg={6} md={6} sm={12} xs={12} key={file.id}>
