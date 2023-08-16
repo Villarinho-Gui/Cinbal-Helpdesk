@@ -49,7 +49,7 @@ const ChamadoAbertoParaDetalhe: React.FC = () => {
   }
   const { id } = useParams()
 
-  const { data, isLoading } = useFetch()
+  const { data, isLoading } = useFetch(`http://localhost:3535/helpdesk/${id}`)
   const attachedFiles = data?.files
 
   const { users } = useUser(`/user`, headers)
