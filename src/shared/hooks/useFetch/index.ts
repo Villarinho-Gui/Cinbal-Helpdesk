@@ -4,7 +4,7 @@ import api from '../../../service/api/config/configApi'
 import { useQuery } from 'react-query'
 import { HelpDeskProps } from '../../types/helpdeskType'
 
-export function useFetch() {
+export function useFetch(url: string) {
   const { id } = useParams()
   const token = localStorage.getItem('access_token')
   const headers = {
@@ -14,10 +14,7 @@ export function useFetch() {
     },
   }
   const { data, isLoading } = useQuery(['id', id], async () => {
-    const responseApi = await api.get<HelpDeskProps>(
-      `http://localhost:3535/helpdesk/${id}`,
-      headers,
-    )
+    const responseApi = await api.get<HelpDeskProps>(url, headers)
     return responseApi.data
   })
 
