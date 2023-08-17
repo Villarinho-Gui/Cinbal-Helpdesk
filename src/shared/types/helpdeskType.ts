@@ -58,6 +58,7 @@ export interface HelpDeskListProp {
   description: string
   files?: File[]
   countFiles: number
+  status: string
   createdAt: Date
 }
 
