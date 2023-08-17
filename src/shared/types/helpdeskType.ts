@@ -44,6 +44,7 @@ export interface HelpDeskProps {
   createdAt: Date
   files?: FileProps[]
   comments?: CommentsProps[]
+  status: string
   accountable?: string
 }
 
