@@ -32,6 +32,7 @@ interface OpenHelpDesk {
   title: string
   category: string
   description: string
+  status: string
   files?: File[]
 }
 
@@ -81,6 +82,7 @@ export const AbrirChamado: React.FC = () => {
       title: '',
       category: '',
       description: '',
+      status: 'Aberto',
       files: undefined,
     },
   })
