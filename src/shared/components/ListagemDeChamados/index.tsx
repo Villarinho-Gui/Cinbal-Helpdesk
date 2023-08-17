@@ -170,6 +170,7 @@ export const ListagemDeChamados: React.FC = () => {
                   countFiles={UniqueHelpDesk.countFiles}
                   onClick={smDown ? toggleDrawerOpen : undefined}
                   to={`chamado/detalhe/${UniqueHelpDesk.id}`}
+                  status={UniqueHelpDesk.status}
                 />
               </ListItem>
             ))}
@@ -191,6 +192,7 @@ export const ListagemDeChamados: React.FC = () => {
                 countFiles={UniqueHelpDesk.countFiles}
                 onClick={smDown ? toggleDrawerOpen : undefined}
                 to={`chamado/detalhe/${UniqueHelpDesk.id}`}
+                status={UniqueHelpDesk.status}
               />
             </ListItem>
           ))}
