@@ -5,6 +5,8 @@ import {
   CircularProgress,
   Icon,
   IconButton,
+  ListItemIcon,
+  ListItemText,
   Menu,
   MenuItem,
   Paper,
@@ -23,6 +25,8 @@ import * as yup from 'yup'
 import { UserProps } from '../../../../hooks/useUser'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useUserHelpDeskContext } from '../../../../contexts/userContext'
+import { FaExchangeAlt } from 'react-icons/fa'
+import { AiFillLike } from 'react-icons/ai'
 interface HelpDeskHeaderProps {
   title: string | undefined
   helpDeskAccountable: string | undefined
@@ -241,8 +245,24 @@ export const HelpDeskHeader: React.FC<HelpDeskHeaderProps> = ({
               open={open}
               onClose={handleClose}
             >
-              <MenuItem onClick={removeAccountable}>Passar HelpDesk</MenuItem>
-              <MenuItem onClick={setToDone}>Concluir HelpDesk</MenuItem>
+              <MenuItem
+                onClick={removeAccountable}
+                sx={{ display: 'flex', gap: '5px', alignItems: 'center' }}
+              >
+                <ListItemText>Passar HelpDesk</ListItemText>
+                <ListItemIcon>
+                  <FaExchangeAlt />
+                </ListItemIcon>
+              </MenuItem>
+              <MenuItem
+                onClick={setToDone}
+                sx={{ display: 'flex', gap: '10px', alignItems: 'center' }}
+              >
+                <ListItemText>Concluir HelpDesk</ListItemText>
+                <ListItemIcon>
+                  <AiFillLike />
+                </ListItemIcon>
+              </MenuItem>
             </Menu>
           </>
         ) : (
