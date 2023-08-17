@@ -190,13 +190,13 @@ const Chamado: React.FC<HelpDeskDataProps> = ({
                       : 'Aberto'
                   }
                 >
-                  <Icon color={accountable ? 'success' : 'primary'}>
+                  <Icon color="primary">
                     {status === 'Concluído' ? (
-                      <AiFillLike />
+                      <AiFillLike color="#03d361" />
                     ) : status === 'Em Andamento' ? (
-                      <MdOutlineEmojiPeople />
+                      <MdOutlineEmojiPeople color="#f7ce4a" />
                     ) : (
-                      <RiTimer2Line color="#d3d3d3" />
+                      <RiTimer2Line color="#dddddd" />
                     )}
                   </Icon>
                 </Tooltip>
