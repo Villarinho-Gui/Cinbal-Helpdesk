@@ -46,6 +46,7 @@ export interface HelpDeskProps {
   comments?: CommentsProps[]
   status: string
   accountable?: string
+  length: number
 }
 
 export interface HelpDeskListProp {
