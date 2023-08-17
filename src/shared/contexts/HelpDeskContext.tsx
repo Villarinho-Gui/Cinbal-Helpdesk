@@ -7,10 +7,6 @@ interface HelpDeskContextProps {
   isNewMessage: true | false
   toggleLoading: () => void
   isLoading: boolean
-  helpdeskStatus: 'Em Andamento' | 'Aberto' | 'Concluído'
-  setHelpdeskStatus: React.Dispatch<
-    React.SetStateAction<'Em Andamento' | 'Aberto' | 'Concluído'>
-  >
 }
 interface HelpDeskContextChildren {
   children: React.ReactNode
@@ -28,10 +24,6 @@ export const HelpDeskProvider: React.FC<HelpDeskContextChildren> = ({
   const [isNewHelpDesk, setIsNewHelpDesk] = useState(false)
   const [isNewMessage, setIsNewMessage] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-
-  const [helpdeskStatus, setHelpdeskStatus] = useState<
-    'Em Andamento' | 'Aberto' | 'Concluído'
-  >('Em Andamento')
 
   const toggleHelpDesk = useCallback(() => {
     setIsNewHelpDesk((oldHelpDesk) => !oldHelpDesk)
@@ -54,8 +46,6 @@ export const HelpDeskProvider: React.FC<HelpDeskContextChildren> = ({
         isLoading,
         toggleMessage,
         isNewMessage,
-        helpdeskStatus,
-        setHelpdeskStatus,
       }}
     >
       {children}
