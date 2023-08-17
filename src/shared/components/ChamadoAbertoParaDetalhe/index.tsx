@@ -19,14 +19,11 @@ import { useTheme } from '@mui/material/styles'
 import { MdImage, MdDownload } from 'react-icons/md'
 import { Chat } from './components/Chat'
 import { AiFillFile } from 'react-icons/ai'
-import { useUserHelpDeskContext } from '../../contexts/UserContext'
-
 import { useFetch } from '../../hooks/useFetch'
 import { useUser } from '../../hooks/useUser'
-
 import HelpDeskBody from './components/HelpDeskBody'
 import { HelpDeskHeader } from './components/HelpDeskHeader'
-import { CommentsProps } from '../../types/helpdeskType'
+import { useUserHelpDeskContext } from '../../contexts/userContext'
 
 interface FileProps {
   id: string
@@ -50,6 +47,7 @@ const ChamadoAbertoParaDetalhe: React.FC = () => {
   const { id } = useParams()
 
   const { data, isLoading } = useFetch(`http://localhost:3535/helpdesk/${id}`)
+
   const attachedFiles = data?.files
 
   const { users } = useUser(`/user`, headers)
@@ -101,6 +99,7 @@ const ChamadoAbertoParaDetalhe: React.FC = () => {
           helpDeskAccountable={data?.accountable}
           adminUser={users}
           isLoading={isLoading}
+          status={data?.status!}
         />
         <HelpDeskBody
           id={id}
