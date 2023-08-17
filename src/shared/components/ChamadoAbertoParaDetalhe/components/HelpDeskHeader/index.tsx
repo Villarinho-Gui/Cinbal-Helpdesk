@@ -22,7 +22,6 @@ import api from '../../../../../service/api/config/configApi'
 import * as yup from 'yup'
 import { UserProps } from '../../../../hooks/useUser'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { useHelpDeskContext } from '../../../../contexts/HelpDeskContext'
 import { useUserHelpDeskContext } from '../../../../contexts/userContext'
 interface HelpDeskHeaderProps {
   title: string | undefined
@@ -31,6 +30,7 @@ interface HelpDeskHeaderProps {
   id: string | undefined
   adminUser: UserProps[] | undefined
   isLoading: boolean
+  status: string
 }
 
 const changeAccountableSchema = yup
@@ -47,10 +47,10 @@ export const HelpDeskHeader: React.FC<HelpDeskHeaderProps> = ({
   id,
   adminUser,
   isLoading,
+  status,
 }) => {
   const { user, isAdmin, accountable, setIsAssumed, setAccountable } =
     useUserHelpDeskContext()
-  const { helpdeskStatus } = useHelpDeskContext()
   const [changingAccountable, setChangingAccountable] = useState<boolean>(false)
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
 
@@ -77,9 +77,10 @@ export const HelpDeskHeader: React.FC<HelpDeskHeaderProps> = ({
 
   const takeOverHelpDesk = async () => {
     const formData = new FormData()
+    const updateToInProgress = 'Em Andamento'
 
     formData.append('accountable', accountable!)
-    formData.append('status', helpdeskStatus)
+    formData.append('status', updateToInProgress)
     const headers = {
       headers: {
         'Content-Type': 'application/json',
@@ -92,6 +93,25 @@ export const HelpDeskHeader: React.FC<HelpDeskHeaderProps> = ({
         setAccountable(user!.name)
         setChangingAccountable(false)
       })
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  const setToDone = async () => {
+    const formData = new FormData()
+    const updateToDone = 'Concluído'
+
+    formData.append('status', updateToDone)
+    const headers = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `bearer ${token}`,
+      },
+    }
+
+    try {
+      await api.patch(`/helpdesk/${id}`, formData, headers)
     } catch (error) {
       console.error(error)
     }
@@ -172,7 +192,7 @@ export const HelpDeskHeader: React.FC<HelpDeskHeaderProps> = ({
               endIcon={<MdOutlineEmojiPeople />}
               color={helpDeskAccountable ? 'success' : 'info'}
               disableElevation
-              disabled={!!helpDeskAccountable}
+              disabled={!!helpDeskAccountable || status === 'Concluído'}
               sx={{
                 marginRight: '15px',
               }}
@@ -185,6 +205,8 @@ export const HelpDeskHeader: React.FC<HelpDeskHeaderProps> = ({
                   accountable === user!.name
                   ? `Você assumiu este chamado`
                   : `${helpDeskAccountable} assumiu este chamado`
+                : status === 'Concluído'
+                ? 'HelpDesk Concluído'
                 : 'Assumir Chamado'}
             </Button>
           )
@@ -220,7 +242,7 @@ export const HelpDeskHeader: React.FC<HelpDeskHeaderProps> = ({
               onClose={handleClose}
             >
               <MenuItem onClick={removeAccountable}>Passar HelpDesk</MenuItem>
-              <MenuItem>Concluir HelpDesk</MenuItem>
+              <MenuItem onClick={setToDone}>Concluir HelpDesk</MenuItem>
             </Menu>
           </>
         ) : (
