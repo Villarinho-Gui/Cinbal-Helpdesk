@@ -1,20 +1,17 @@
 import React, { createContext, useCallback, useContext, useState } from 'react'
-import { MessageListProps } from '../components/ChamadoAbertoParaDetalhe/components/Chat'
 
 interface HelpDeskContextProps {
   toggleHelpDesk: () => void
-  isNewHelpDesk: true | false
+  isNewHelpDesk: boolean
   toggleMessage: () => void
   isNewMessage: true | false
   toggleLoading: () => void
-  isLoading: true | false
-
-  messageNotification: MessageListProps[]
-  setMessageNotification: React.Dispatch<
-    React.SetStateAction<MessageListProps[]>
+  isLoading: boolean
+  helpdeskStatus: 'Em Andamento' | 'Aberto' | 'Concluído'
+  setHelpdeskStatus: React.Dispatch<
+    React.SetStateAction<'Em Andamento' | 'Aberto' | 'Concluído'>
   >
 }
-
 interface HelpDeskContextChildren {
   children: React.ReactNode
 }
@@ -32,9 +29,9 @@ export const HelpDeskProvider: React.FC<HelpDeskContextChildren> = ({
   const [isNewMessage, setIsNewMessage] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
 
-  const [messageNotification, setMessageNotification] = useState<
-    MessageListProps[]
-  >([])
+  const [helpdeskStatus, setHelpdeskStatus] = useState<
+    'Em Andamento' | 'Aberto' | 'Concluído'
+  >('Em Andamento')
 
   const toggleHelpDesk = useCallback(() => {
     setIsNewHelpDesk((oldHelpDesk) => !oldHelpDesk)
@@ -57,8 +54,8 @@ export const HelpDeskProvider: React.FC<HelpDeskContextChildren> = ({
         isLoading,
         toggleMessage,
         isNewMessage,
-        messageNotification,
-        setMessageNotification,
+        helpdeskStatus,
+        setHelpdeskStatus,
       }}
     >
       {children}
