@@ -22,11 +22,13 @@ import { useMatch, useNavigate, useResolvedPath } from 'react-router-dom'
 import { format, formatDistanceToNow } from 'date-fns'
 import ptBR from 'date-fns/locale/pt-BR'
 import { MdOutlineEmojiPeople } from 'react-icons/md'
+import { AiFillLike } from 'react-icons/ai'
 
 export interface HelpDeskDataProps {
   id: string
   author: string
   accountable: string
+  status: string
   title: string
   category?: string
   description: string
@@ -46,6 +48,7 @@ const Chamado: React.FC<HelpDeskDataProps> = ({
   title,
   onClick,
   accountable,
+  status,
   countFiles,
   to,
 }) => {
@@ -179,10 +182,18 @@ const Chamado: React.FC<HelpDeskDataProps> = ({
                 <Tooltip
                   TransitionComponent={Zoom}
                   arrow
-                  title={accountable ? `Em andamento` : 'Aberto'}
+                  title={
+                    status === 'Em Andamento'
+                      ? 'Em andamento'
+                      : status === 'Concluído'
+                      ? 'Concluído'
+                      : 'Aberto'
+                  }
                 >
                   <Icon color={accountable ? 'success' : 'primary'}>
-                    {accountable ? (
+                    {status === 'Concluído' ? (
+                      <AiFillLike />
+                    ) : status === 'Em Andamento' ? (
                       <MdOutlineEmojiPeople />
                     ) : (
                       <RiTimer2Line color="#d3d3d3" />
