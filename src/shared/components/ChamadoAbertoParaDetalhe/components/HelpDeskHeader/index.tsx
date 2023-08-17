@@ -17,12 +17,13 @@ import {
 import React, { useState } from 'react'
 import { IoMdSend } from 'react-icons/io'
 import { MdMoreVert, MdOutlineEmojiPeople } from 'react-icons/md'
-import { useUserHelpDeskContext } from '../../../../contexts/UserContext'
 import { useForm } from 'react-hook-form'
 import api from '../../../../../service/api/config/configApi'
 import * as yup from 'yup'
 import { UserProps } from '../../../../hooks/useUser'
 import { yupResolver } from '@hookform/resolvers/yup'
+import { useHelpDeskContext } from '../../../../contexts/HelpDeskContext'
+import { useUserHelpDeskContext } from '../../../../contexts/userContext'
 interface HelpDeskHeaderProps {
   title: string | undefined
   helpDeskAccountable: string | undefined
@@ -49,6 +50,7 @@ export const HelpDeskHeader: React.FC<HelpDeskHeaderProps> = ({
 }) => {
   const { user, isAdmin, accountable, setIsAssumed, setAccountable } =
     useUserHelpDeskContext()
+  const { helpdeskStatus } = useHelpDeskContext()
   const [changingAccountable, setChangingAccountable] = useState<boolean>(false)
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
 
@@ -77,6 +79,7 @@ export const HelpDeskHeader: React.FC<HelpDeskHeaderProps> = ({
     const formData = new FormData()
 
     formData.append('accountable', accountable!)
+    formData.append('status', helpdeskStatus)
     const headers = {
       headers: {
         'Content-Type': 'application/json',
@@ -217,6 +220,7 @@ export const HelpDeskHeader: React.FC<HelpDeskHeaderProps> = ({
               onClose={handleClose}
             >
               <MenuItem onClick={removeAccountable}>Passar HelpDesk</MenuItem>
+              <MenuItem>Concluir HelpDesk</MenuItem>
             </Menu>
           </>
         ) : (
