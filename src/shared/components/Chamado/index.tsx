@@ -27,7 +27,6 @@ import { AiFillLike } from 'react-icons/ai'
 export interface HelpDeskDataProps {
   id: string
   author: string
-  accountable: string
   status: string
   title: string
   category?: string
@@ -47,7 +46,6 @@ const Chamado: React.FC<HelpDeskDataProps> = ({
   createdAt,
   title,
   onClick,
-  accountable,
   status,
   countFiles,
   to,
@@ -139,7 +137,7 @@ const Chamado: React.FC<HelpDeskDataProps> = ({
             alignItems={'center'}
             justifyContent={'space-between'}
           >
-            <Badge badgeContent={countFiles} color="primary">
+            <Badge badgeContent={countFiles} color="primary" variant="dot">
               {countFiles! > 0 ? (
                 <Icon>
                   <FiPaperclip size={15} />
@@ -190,13 +188,13 @@ const Chamado: React.FC<HelpDeskDataProps> = ({
                       : 'Aberto'
                   }
                 >
-                  <Icon color="primary">
+                  <Icon color="secondary" sx={{ marginBottom: '4px' }}>
                     {status === 'Concluído' ? (
-                      <AiFillLike color="#03d361" />
+                      <AiFillLike size={20} />
                     ) : status === 'Em Andamento' ? (
-                      <MdOutlineEmojiPeople color="#f7ce4a" />
+                      <MdOutlineEmojiPeople size={20} />
                     ) : (
-                      <RiTimer2Line color="#dddddd" />
+                      <RiTimer2Line size={20} />
                     )}
                   </Icon>
                 </Tooltip>
