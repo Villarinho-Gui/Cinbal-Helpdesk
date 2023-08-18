@@ -131,8 +131,8 @@ export const ListagemDeChamados: React.FC = () => {
 
   return (
     <DefaultLayout
-      tituloPagina={''}
-      mostrarTituloPagina={false}
+      tituloPagina={'HelpDesks'}
+      mostrarTituloPagina={true}
       mostrarBotaoTema={false}
       barraDeFerramentas={
         <BarraFerramentasListagemDeChamados
