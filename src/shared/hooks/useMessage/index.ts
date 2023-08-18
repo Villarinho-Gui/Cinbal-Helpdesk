@@ -14,7 +14,7 @@ export function useMessage() {
     },
   }
   const { data } = useQuery(['comments', id], async () => {
-    const responseApi = await api.get<CommentsProps>(
+    const responseApi = await api.get<CommentsProps[]>(
       `http://localhost:3535/comment/${id}`,
       headers,
     )
