@@ -31,7 +31,7 @@ interface UserContextChildren {
 }
 const UserContext = createContext({} as UserContextProps)
 
-export const useUserHelpDeskContext = () => {
+export const useUserContext = () => {
   return useContext(UserContext)
 }
 
