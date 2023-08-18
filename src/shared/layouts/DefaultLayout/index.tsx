@@ -105,8 +105,8 @@ const DefaultLayout: React.FC<IDefaultLayoutProps> = ({
   return (
     <Box height="98%" display="flex" flexDirection="column" gap={1}>
       <Box
-        padding={1}
-        height={theme.spacing(smDown ? 6 : mdDown ? 8 : 12)}
+        padding={2}
+        height={theme.spacing(smDown ? 6 : mdDown ? 8 : 4)}
         display="flex"
         alignItems="center"
         gap={2}
@@ -138,7 +138,13 @@ const DefaultLayout: React.FC<IDefaultLayoutProps> = ({
               whiteSpace="nowrap"
               overflow="hidden"
               textOverflow="elipses"
-              sx={{ fontSize: '1.812rem' }}
+              fontWeight={'bold'}
+              sx={{
+                fontSize: '1.812rem',
+                paddingTop: '20px',
+                marginBottom: '10p',
+              }}
+              color={`${[theme.typography.h6]}`}
             >
               {tituloPagina}
             </Typography>
