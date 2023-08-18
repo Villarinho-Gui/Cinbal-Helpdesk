@@ -2,16 +2,17 @@ import React from 'react'
 import { Box, List, ListItem, useTheme } from '@mui/material'
 import { MessageTextField } from './components/MessageTextField'
 import MessageComponent from './components/MessageComponent'
-import { useUserHelpDeskContext } from '../../../../contexts/UserContext'
 import { useMessage } from '../../../../hooks/useMessage'
 import { CommentsProps } from '../../../../types/helpdeskType'
 import { useParams } from 'react-router-dom'
+import { useUserContext } from '../../../../contexts/userContext'
 
 export const Chat: React.FC = () => {
   const theme = useTheme()
-  const { user } = useUserHelpDeskContext()
+  const { user } = useUserContext()
   const { data } = useMessage()
   const comments = data?.data
+
   const { id } = useParams()
   return (
     <>
@@ -21,7 +22,7 @@ export const Chat: React.FC = () => {
         flexDirection={'column'}
         height={250}
       >
-        {data?.data && data.data.length > 0 && (
+        {comments && comments.length > 0 && (
           <List
             sx={{
               display: 'flex',
