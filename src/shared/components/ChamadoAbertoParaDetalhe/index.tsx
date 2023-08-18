@@ -23,7 +23,7 @@ import { useFetch } from '../../hooks/useFetch'
 import { useUser } from '../../hooks/useUser'
 import HelpDeskBody from './components/HelpDeskBody'
 import { HelpDeskHeader } from './components/HelpDeskHeader'
-import { useUserHelpDeskContext } from '../../contexts/userContext'
+import { useUserContext } from '../../contexts/userContext'
 
 interface FileProps {
   id: string
@@ -53,7 +53,7 @@ const ChamadoAbertoParaDetalhe: React.FC = () => {
   const { users } = useUser(`/user`, headers)
 
   const theme = useTheme()
-  const { accountable } = useUserHelpDeskContext()
+  const { accountable } = useUserContext()
   const accountableRef = useRef(accountable)
 
   useEffect(() => {
