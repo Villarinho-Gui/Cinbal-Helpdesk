@@ -158,7 +158,7 @@ const Chamado: React.FC<HelpDeskDataProps> = ({
             )}
 
             <Box display={'flex'} flex={1} justifyContent={'space-between'}>
-              <Chip label={category} size="small" />
+              <Chip label={category} size="small" color="primary" />
 
               <Box
                 display={'flex'}
