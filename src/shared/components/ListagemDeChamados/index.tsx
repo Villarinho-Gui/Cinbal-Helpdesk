@@ -166,7 +166,6 @@ export const ListagemDeChamados: React.FC = () => {
                 <Chamado
                   id={UniqueHelpDesk.id}
                   author={UniqueHelpDesk.user.name}
-                  accountable={UniqueHelpDesk.accountable}
                   title={UniqueHelpDesk.title}
                   category={UniqueHelpDesk.category}
                   description={UniqueHelpDesk.description}
@@ -186,7 +185,6 @@ export const ListagemDeChamados: React.FC = () => {
               <Chamado
                 id={userHelpDesk.id}
                 author={userHelpDesk.user.name}
-                accountable={userHelpDesk.accountable}
                 title={userHelpDesk.title}
                 category={userHelpDesk.category}
                 description={userHelpDesk.description}
@@ -207,7 +205,6 @@ export const ListagemDeChamados: React.FC = () => {
               <Chamado
                 id={UniqueHelpDesk.id}
                 author={UniqueHelpDesk.user.name}
-                accountable={UniqueHelpDesk.accountable}
                 title={UniqueHelpDesk.title}
                 category={UniqueHelpDesk.category}
                 description={UniqueHelpDesk.description}
@@ -227,7 +224,6 @@ export const ListagemDeChamados: React.FC = () => {
             <Chamado
               id={userHelpDesk.id}
               author={userHelpDesk.user.name}
-              accountable={userHelpDesk.accountable}
               title={userHelpDesk.title}
               category={userHelpDesk.category}
               description={userHelpDesk.description}
