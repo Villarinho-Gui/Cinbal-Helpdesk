@@ -1,8 +1,8 @@
 import React, { memo } from 'react'
 import { Box, CardContent, Typography, useTheme } from '@mui/material'
-import { useUserHelpDeskContext } from '../../../../../../contexts/UserContext'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
+import { useUserContext } from '../../../../../../contexts/userContext'
 interface MessageProps {
   id: string
   author: string
@@ -17,7 +17,7 @@ const MessageComponent: React.FC<MessageProps> = ({
 }) => {
   const theme = useTheme()
 
-  const { user } = useUserHelpDeskContext()
+  const { user } = useUserContext()
 
   const publishedDateFormatted = () => {
     return format(new Date(createdAt), "HH:mm'h'", {
