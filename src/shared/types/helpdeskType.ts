@@ -31,7 +31,7 @@ export interface CommentsProps {
 }
 
 export interface HelpDeskProps {
-  id: string | undefined
+  id: string
   user: {
     name: string
     sector: string
@@ -46,6 +46,7 @@ export interface HelpDeskProps {
   comments?: CommentsProps[]
   status: string
   accountable?: string
+  countFiles: number
   length: number
 }
 
