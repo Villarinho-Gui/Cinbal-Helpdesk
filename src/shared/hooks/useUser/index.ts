@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react'
 import { AxiosRequestConfig } from 'axios'
 import api from '../../../service/api/config/configApi'
-import { useUserHelpDeskContext } from '../../contexts/UserContext'
+import { useUserContext } from '../../contexts/UserContext'
 
 export interface UserProps {
   id: string | undefined
@@ -19,7 +19,7 @@ export function useUser(url: string, headers: AxiosRequestConfig) {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [error, setError] = useState(null)
 
-  const { isLogged } = useUserHelpDeskContext()
+  const { isLogged } = useUserContext()
 
   const fetchUsers = async () => {
     setIsLoading(true)
