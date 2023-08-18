@@ -15,7 +15,7 @@ import {
 
 // import logo from '../../../media/images/logo2-full.png'
 import { SubmitHandler } from 'react-hook-form'
-import { useUserHelpDeskContext } from '../../../shared/contexts/UserContext'
+import { useUserContext } from '../../../shared/contexts/userContext'
 interface LoginData {
   email: string
   password: string
@@ -32,7 +32,7 @@ export const Login: React.FC = () => {
 
   const theme = useTheme()
   const navigate = useNavigate()
-  const { setIsLogged } = useUserHelpDeskContext()
+  const { setIsLogged } = useUserContext()
 
   const validateIfUserExistInDB: SubmitHandler<LoginData> = async (
     data,
