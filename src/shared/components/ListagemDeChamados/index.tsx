@@ -26,7 +26,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import { format } from 'date-fns'
 import Chamado from '../Chamado'
 import { HelpDeskListProp } from '../../types/helpdeskType'
-import { useUserHelpDeskContext } from '../../contexts/userContext'
+import { useUserContext } from '../../contexts/userContext'
 
 export const ListagemDeChamados: React.FC = () => {
   const [helpDeskData, setHelpDeskData] = useState<HelpDeskListProp[]>([])
@@ -50,7 +50,7 @@ export const ListagemDeChamados: React.FC = () => {
   const { isNewHelpDesk } = useHelpDeskContext()
   const token = localStorage.getItem('access_token')
 
-  const { user } = useUserHelpDeskContext()
+  const { user } = useUserContext()
   const currentUser = user
 
   useEffect(() => {
