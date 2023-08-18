@@ -11,7 +11,7 @@ import {
   CardContent,
   Menu,
 } from '@mui/material'
-import React, { ReactNode, memo, useCallback, useEffect, useRef } from 'react'
+import React, { ReactNode, memo, useCallback } from 'react'
 
 import { GiHamburgerMenu } from 'react-icons/gi'
 import { IoMdPerson } from 'react-icons/io'
@@ -27,11 +27,7 @@ import { MdClose } from 'react-icons/md'
 import { useAppThemeContext } from '../../contexts/ThemeContext'
 
 import { useNavigate } from 'react-router-dom'
-import { useUserHelpDeskContext } from '../../contexts/userContext'
-import { useHelpDeskContext } from '../../contexts/HelpDeskContext'
-
-import { RiFeedbackFill, RiMessageFill } from 'react-icons/ri'
-import { MessageListProps } from '../../components/ChamadoAbertoParaDetalhe/components/Chat'
+import { useUserContext } from '../../contexts/userContext'
 interface IDefaultLayoutProps {
   children: React.ReactNode
   tituloPagina: string | undefined
@@ -66,8 +62,7 @@ const DefaultLayout: React.FC<IDefaultLayoutProps> = ({
 
   const { toggleDrawerOpen, isDrawerOpen } = useDrawerContext()
   const { toggleTheme, themeName } = useAppThemeContext()
-  const { isNewMessage, messageNotification } = useHelpDeskContext()
-  const { user, setIsLogged } = useUserHelpDeskContext()
+  const { user, setIsLogged } = useUserContext()
 
   const navigate = useNavigate()
 
@@ -106,12 +101,6 @@ const DefaultLayout: React.FC<IDefaultLayoutProps> = ({
   const handleCloseNotification = () => {
     setOpenNotification(null)
   }
-
-  const messageRef = useRef(messageNotification)
-
-  useEffect(() => {
-    messageRef.current = messageNotification
-  }, [messageNotification])
 
   return (
     <Box height="98%" display="flex" flexDirection="column" gap={1}>
@@ -275,101 +264,7 @@ const DefaultLayout: React.FC<IDefaultLayoutProps> = ({
                   MenuListProps={{
                     'aria-labelledby': 'basic-button',
                   }}
-                >
-                  {isNewMessage ? (
-                    messageNotification.map((message: MessageListProps) => {
-                      return (
-                        <Card
-                          key={message.id}
-                          component={Box}
-                          padding={1}
-                          elevation={0}
-                          variant="outlined"
-                          marginTop={0.5}
-                          marginX={0.4}
-                          width={'450px'}
-                        >
-                          <CardContent sx={{ display: 'flex', gap: '10px' }}>
-                            <Box>
-                              <RiFeedbackFill
-                                size={25}
-                                color={theme.palette.primary.main}
-                              />
-                            </Box>
-                            <Box
-                              display={'flex'}
-                              gap={1}
-                              alignItems={'flex-start'}
-                              flexDirection={'column'}
-                            >
-                              <Typography variant="h4" fontSize={'1rem'}>
-                                <strong>{message.user.name}</strong> interagiu
-                                no chamado de título:{' '}
-                                <strong>{message.helpdesk.title}</strong>
-                              </Typography>
-                              <Typography
-                                variant="body2"
-                                color={'text.secondary'}
-                                noWrap
-                              >
-                                {message.message}
-                              </Typography>
-                              <Box
-                                display={'flex'}
-                                alignItems={'center'}
-                                justifyContent={'space-between'}
-                                flex={1}
-                                width={'100%'}
-                                marginTop={2}
-                              >
-                                <Box
-                                  display={'flex'}
-                                  gap={1}
-                                  alignItems={'center'}
-                                >
-                                  <Typography>
-                                    <strong>Id:</strong>{' '}
-                                  </Typography>
-
-                                  <Typography
-                                    noWrap
-                                    width={'10ch'}
-                                    variant="body2"
-                                    fontSize={'0.85rem'}
-                                  >
-                                    {message.helpdesk.id}
-                                  </Typography>
-                                </Box>
-                                <Button
-                                  variant="outlined"
-                                  onClick={() => {
-                                    navigate(
-                                      `/home/chamado/detalhe/${message.helpdesk.id}`,
-                                    )
-                                  }}
-                                >
-                                  Ir para o chamado
-                                </Button>
-                              </Box>
-                            </Box>
-                          </CardContent>
-                        </Card>
-                      )
-                    })
-                  ) : (
-                    <Box
-                      display={'flex'}
-                      gap={5}
-                      alignItems={'center'}
-                      margin={2}
-                    >
-                      <Typography>Nenhuma Notificação </Typography>
-                      <Icon>
-                        <RiMessageFill />
-                      </Icon>
-                    </Box>
-                  )}
-                </Menu>
+                ></Menu>
               </>
             )}
 
