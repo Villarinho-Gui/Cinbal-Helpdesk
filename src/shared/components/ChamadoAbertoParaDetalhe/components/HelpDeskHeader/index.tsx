@@ -24,7 +24,7 @@ import api from '../../../../../service/api/config/configApi'
 import * as yup from 'yup'
 import { UserProps } from '../../../../hooks/useUser'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { useUserHelpDeskContext } from '../../../../contexts/userContext'
+import { useUserContext } from '../../../../contexts/userContext'
 import { FaExchangeAlt } from 'react-icons/fa'
 import { AiFillLike } from 'react-icons/ai'
 interface HelpDeskHeaderProps {
@@ -54,7 +54,7 @@ export const HelpDeskHeader: React.FC<HelpDeskHeaderProps> = ({
   status,
 }) => {
   const { user, isAdmin, accountable, setIsAssumed, setAccountable } =
-    useUserHelpDeskContext()
+    useUserContext()
   const [changingAccountable, setChangingAccountable] = useState<boolean>(false)
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
 
