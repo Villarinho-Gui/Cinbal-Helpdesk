@@ -10,12 +10,10 @@ import {
 } from '@mui/material'
 import { AiOutlinePaperClip } from 'react-icons/ai'
 import { IoMdSend } from 'react-icons/io'
-// import { FileList } from '../../../../../../../pages/AbrirChamado/components/FileList'
 import api from '../../../../../../../service/api/config/configApi'
 import { useForm } from 'react-hook-form'
 import { useParams } from 'react-router-dom'
 import { useHelpDeskContext } from '../../../../../../contexts/HelpDeskContext'
-
 export interface SendMessageProps {
   messageContent: string
   helpdeskId: string
