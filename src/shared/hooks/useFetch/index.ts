@@ -14,7 +14,7 @@ export function useFetch(url: string) {
     },
   }
   const { data, isLoading } = useQuery(['id', id], async () => {
-    const responseApi = await api.get<HelpDeskProps[]>(url, headers)
+    const responseApi = await api.get<HelpDeskProps>(url, headers)
     return responseApi.data
   })
 
