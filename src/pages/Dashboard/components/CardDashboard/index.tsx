@@ -16,17 +16,7 @@ export const CardDashboard: React.FC = () => {
   const theme = useTheme()
 
   return (
-    <Card
-      elevation={0}
-      padding={2}
-      variant="outlined"
-      component={Box}
-      borderRadius={1}
-      marginX={2}
-      border="1px solid"
-      borderColor={theme.palette.divider}
-      width={200}
-    >
+    <Card elevation={0} variant="outlined">
       <CardContent>
         <Box>
           <Typography
