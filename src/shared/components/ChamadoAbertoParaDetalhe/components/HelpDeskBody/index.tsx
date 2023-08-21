@@ -1,4 +1,12 @@
-import { Box, Chip, Divider, Grid, Skeleton, Typography } from '@mui/material'
+import {
+  Box,
+  Chip,
+  Divider,
+  Grid,
+  Paper,
+  Skeleton,
+  Typography,
+} from '@mui/material'
 import React, { memo } from 'react'
 
 interface HelpDeskPostInformationProps {
@@ -77,7 +85,7 @@ const HelpDeskBody: React.FC<HelpDeskPostInformationProps> = ({
         justifyContent={'space-between'}
         paddingY={'20px'}
       >
-        <Grid item xs={12} lg={2}>
+        <Grid item xl={4} xs={12} md={6}>
           {isLoading ? (
             <Skeleton variant="text" sx={{ fontSize: '1.5rem' }} width="90px" />
           ) : (
@@ -89,6 +97,7 @@ const HelpDeskBody: React.FC<HelpDeskPostInformationProps> = ({
           item
           xl={4}
           xs={12}
+          md={6}
           sx={{
             display: 'flex',
             alignItems: 'center',
@@ -104,7 +113,15 @@ const HelpDeskBody: React.FC<HelpDeskPostInformationProps> = ({
           )}
         </Grid>
       </Grid>
-      <Box>
+      <Box
+        component={Paper}
+        display={'flex'}
+        alignItems={'center'}
+        justifyContent={'space-between'}
+        marginBottom={5}
+        elevation={0}
+        minHeight={50}
+      >
         {isLoading ? (
           <Skeleton
             variant="rounded"
@@ -113,11 +130,7 @@ const HelpDeskBody: React.FC<HelpDeskPostInformationProps> = ({
             height="100px"
           />
         ) : (
-          <Typography
-            variant="body2"
-            color="text.secondary"
-            sx={{ paddingBottom: '40px' }}
-          >
+          <Typography variant="body2" color="text.secondary" padding={2}>
             {description}
           </Typography>
         )}
