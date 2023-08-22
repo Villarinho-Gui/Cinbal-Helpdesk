@@ -57,7 +57,12 @@ export const HelpDeskList: React.FC<HelpDeskDashboardList> = ({
           <Typography noWrap variant="h6" fontSize={16} width={'25ch'}>
             {title}
           </Typography>
-          <Typography noWrap variant="body2" color="text.secondary">
+          <Typography
+            noWrap
+            variant="body2"
+            width={'25ch'}
+            color="text.secondary"
+          >
             {description}
           </Typography>
         </Box>
