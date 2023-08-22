@@ -18,6 +18,7 @@ interface HelpDeskDashboardList {
   title: string
   description: string
   status: string
+  createdAt: string
   to: string
 }
 
@@ -27,57 +28,42 @@ export const CardExibicaoMeusChamados: React.FC = () => {
 
   const currentUser = user
 
-  const filteredHelpDeskListByUser = data?.filter((helpDesk: HelpDeskProps) => {
-    return helpDesk.user.name === currentUser?.name
+  const accountable = data?.filter((helpdesk: HelpDeskProps) => {
+    return helpdesk.accountable === currentUser?.name
   })
 
   return (
     <Card elevation={0} variant="outlined">
-      <CardContent
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '10px',
-        }}
-      >
+      <CardContent>
         <Box display={'flex'} gap={'10px'} alignItems={'center'}>
           <HiCollection size={35} />
           <Box display={'flex'} flexDirection={'column'}>
-            <Typography variant="h6">Meus Chamados</Typography>
+            <Typography variant="h6">Chamados</Typography>
             <Typography variant="body2">
-              Chamados que você abriu estarão disponíveis aqui
+              Todos os chamados assumidos por você irão aparecer aqui.
             </Typography>
           </Box>
         </Box>
-        <Box height={'200px'} overflow={'auto'}>
+        <Box
+          height={'200px'}
+          overflow={'auto'}
+          display={'flex'}
+          flexDirection={'column'}
+        >
           <List>
-            {currentUser?.role === 'admin'
-              ? data?.map((helpdesk: HelpDeskDashboardList) => {
-                  return (
-                    <ListItem key={helpdesk.id} disablePadding>
-                      <HelpDeskList
-                        title={helpdesk.title}
-                        description={helpdesk.description}
-                        status={helpdesk.status}
-                        to={`/home/chamado/detalhe/${helpdesk.id}`}
-                      />
-                    </ListItem>
-                  )
-                })
-              : filteredHelpDeskListByUser?.map(
-                  (helpdesk: HelpDeskDashboardList) => {
-                    return (
-                      <ListItem key={helpdesk.id} disablePadding>
-                        <HelpDeskList
-                          title={helpdesk.title}
-                          description={helpdesk.description}
-                          status={helpdesk.status}
-                          to={`/home/chamado/detalhe/${helpdesk.id}`}
-                        />
-                      </ListItem>
-                    )
-                  },
-                )}
+            {accountable?.map((helpdesk: HelpDeskDashboardList) => {
+              return (
+                <ListItem key={helpdesk.id} disablePadding>
+                  <HelpDeskList
+                    title={helpdesk.title}
+                    description={helpdesk.description}
+                    status={helpdesk.status}
+                    createdAt={helpdesk.createdAt}
+                    to={`/home/chamado/detalhe/${helpdesk.id}`}
+                  />
+                </ListItem>
+              )
+            })}
           </List>
         </Box>
       </CardContent>
