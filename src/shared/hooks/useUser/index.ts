@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react'
 import { AxiosRequestConfig } from 'axios'
 import api from '../../../service/api/config/configApi'
-import { useUserContext } from '../../contexts/UserContext'
+import { useUserContext } from '../../contexts/userContext'
 
 export interface UserProps {
   id: string | undefined
