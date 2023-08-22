@@ -11,7 +11,15 @@ import { useFetch } from '../../../../shared/hooks/useFetch'
 import { HiCollection } from 'react-icons/hi'
 import { HelpDeskList } from './components/HelpDeskList'
 import { useUserContext } from '../../../../shared/contexts/userContext'
-import { HelpDeskListProp } from '../../../../shared/types/helpdeskType'
+import HelpDeskProps from '../../../../shared/types/helpdeskType'
+
+interface HelpDeskDashboardList {
+  id: string
+  title: string
+  description: string
+  status: string
+  to: string
+}
 
 export const CardExibicaoMeusChamados: React.FC = () => {
   const { data } = useFetch('http://localhost:3535/helpdesk')
@@ -19,11 +27,9 @@ export const CardExibicaoMeusChamados: React.FC = () => {
 
   const currentUser = user
 
-  const filteredHelpDeskListByUser = data?.filter(
-    (helpDesk: HelpDeskListProp) => {
-      return helpDesk.user.name === currentUser?.name
-    },
-  )
+  const filteredHelpDeskListByUser = data?.filter((helpDesk: HelpDeskProps) => {
+    return helpDesk.user.name === currentUser?.name
+  })
 
   return (
     <Card elevation={0} variant="outlined">
@@ -46,7 +52,7 @@ export const CardExibicaoMeusChamados: React.FC = () => {
         <Box height={'200px'} overflow={'auto'}>
           <List>
             {currentUser?.role === 'admin'
-              ? data?.map((helpdesk: HelpDeskListProp) => {
+              ? data?.map((helpdesk: HelpDeskDashboardList) => {
                   return (
                     <ListItem key={helpdesk.id} disablePadding>
                       <HelpDeskList
@@ -58,18 +64,20 @@ export const CardExibicaoMeusChamados: React.FC = () => {
                     </ListItem>
                   )
                 })
-              : filteredHelpDeskListByUser.map((helpdesk: HelpDeskListProp) => {
-                  return (
-                    <ListItem key={helpdesk.id} disablePadding>
-                      <HelpDeskList
-                        title={helpdesk.title}
-                        description={helpdesk.description}
-                        status={helpdesk.status}
-                        to={`/home/chamado/detalhe/${helpdesk.id}`}
-                      />
-                    </ListItem>
-                  )
-                })}
+              : filteredHelpDeskListByUser?.map(
+                  (helpdesk: HelpDeskDashboardList) => {
+                    return (
+                      <ListItem key={helpdesk.id} disablePadding>
+                        <HelpDeskList
+                          title={helpdesk.title}
+                          description={helpdesk.description}
+                          status={helpdesk.status}
+                          to={`/home/chamado/detalhe/${helpdesk.id}`}
+                        />
+                      </ListItem>
+                    )
+                  },
+                )}
           </List>
         </Box>
       </CardContent>
