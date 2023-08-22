@@ -1,23 +1,25 @@
 import {
-  Avatar,
-  Badge,
   Box,
   Card,
   CardActionArea,
+  Chip,
   Icon,
   ListItemButton,
   Typography,
 } from '@mui/material'
+import { format } from 'date-fns'
+import { ptBR } from 'date-fns/locale'
 import React from 'react'
 import { AiFillLike } from 'react-icons/ai'
 import { MdOutlineEmojiPeople } from 'react-icons/md'
-import { RiMessageFill, RiTimer2Line } from 'react-icons/ri'
+import { RiTimer2Line } from 'react-icons/ri'
 import { useMatch, useNavigate, useResolvedPath } from 'react-router-dom'
 
 interface HelpDeskDashboardList {
   title: string
   description: string
   status: string
+  createdAt: string
   to: string
 }
 
@@ -25,12 +27,19 @@ export const HelpDeskList: React.FC<HelpDeskDashboardList> = ({
   title,
   description,
   to,
+  createdAt,
   status,
 }) => {
   const navigate = useNavigate()
 
   const clickHelpDesk = () => {
     navigate(to)
+  }
+
+  const publishedDateFormatted = () => {
+    return format(new Date(createdAt), "HH:mm'h'", {
+      locale: ptBR,
+    })
   }
 
   const resolvedPath = useResolvedPath(to)
@@ -67,12 +76,13 @@ export const HelpDeskList: React.FC<HelpDeskDashboardList> = ({
           </Typography>
         </Box>
 
-        <Box display={'flex'} justifyContent={'flex-end'} width={'100%'}>
-          <Badge color="primary" variant="dot">
-            <Avatar sx={{ width: 24, height: 24, marginLeft: '20px' }}>
-              <RiMessageFill size={15} />
-            </Avatar>
-          </Badge>
+        <Box display={'flex'} justifyContent={'flex-end'}>
+          <Chip
+            label={publishedDateFormatted()}
+            size="small"
+            variant="outlined"
+            color="info"
+          />
         </Box>
       </Card>
     </CardActionArea>
