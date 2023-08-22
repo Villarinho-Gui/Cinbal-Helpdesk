@@ -2,18 +2,25 @@ import React from 'react'
 import { Box, List, ListItem, useTheme } from '@mui/material'
 import { MessageTextField } from './components/MessageTextField'
 import MessageComponent from './components/MessageComponent'
-import { useMessage } from '../../../../hooks/useMessage'
-import { CommentsProps } from '../../../../types/helpdeskType'
 import { useParams } from 'react-router-dom'
 import { useUserContext } from '../../../../contexts/userContext'
+import { useMessage } from '../../../../hooks/useMessage'
 
 export const Chat: React.FC = () => {
   const theme = useTheme()
   const { user } = useUserContext()
-  const { data } = useMessage()
-  const comments = data?.data
 
   const { id } = useParams()
+  const token = localStorage.getItem('access_token')
+  const headers = {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `bearer ${token}`,
+    },
+  }
+  const { comment } = useMessage(`http://localhost:3535/comment/${id}`, headers)
+  const comments = comment
+
   return (
     <>
       <Box
@@ -30,7 +37,7 @@ export const Chat: React.FC = () => {
               overflow: 'auto',
             }}
           >
-            {comments.map((messageHelpDesk: CommentsProps) => {
+            {comments.map((messageHelpDesk) => {
               return (
                 id === messageHelpDesk.helpdesk.id && (
                   <ListItem
