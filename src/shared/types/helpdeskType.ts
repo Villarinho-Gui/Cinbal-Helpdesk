@@ -28,6 +28,7 @@ export interface CommentsProps {
     name: string
   }
   createdAt: Date
+  messageStatus: string
 }
 
 export interface HelpDeskProps {
@@ -48,6 +49,8 @@ export interface HelpDeskProps {
   accountable?: string
   countFiles: number
   length: number
+  map: any
+  filter: any
 }
 
 export interface HelpDeskListProp {
