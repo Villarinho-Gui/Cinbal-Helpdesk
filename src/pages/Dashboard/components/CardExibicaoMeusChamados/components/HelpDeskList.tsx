@@ -7,7 +7,7 @@ import {
   ListItemButton,
   Typography,
 } from '@mui/material'
-import { format } from 'date-fns'
+import { formatDistanceToNow } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import React from 'react'
 import { AiFillLike } from 'react-icons/ai'
@@ -36,14 +36,25 @@ export const HelpDeskList: React.FC<HelpDeskDashboardList> = ({
     navigate(to)
   }
 
-  const publishedDateFormatted = () => {
-    return format(new Date(createdAt), "HH:mm'h'", {
+  const publishedDateRelativeToNow = () => {
+    return formatDistanceToNow(new Date(createdAt), {
       locale: ptBR,
+      addSuffix: true,
     })
   }
 
   const resolvedPath = useResolvedPath(to)
   const match = useMatch({ path: resolvedPath.pathname, end: false })
+
+  const dateRelativeToNow = () => {
+    const currentTime = new Date()
+    const publishedDate = new Date(createdAt)
+
+    const timeDifference = currentTime.getTime() - publishedDate.getTime()
+    const calcDays = Math.floor(timeDifference / (1000 * 3600 * 24))
+
+    return calcDays
+  }
 
   return (
     <CardActionArea onClick={clickHelpDesk}>
@@ -76,12 +87,16 @@ export const HelpDeskList: React.FC<HelpDeskDashboardList> = ({
           </Typography>
         </Box>
 
-        <Box display={'flex'} justifyContent={'flex-end'}>
+        <Box display={'flex'} justifyContent={'flex-end'} flex={1}>
           <Chip
-            label={publishedDateFormatted()}
+            label={publishedDateRelativeToNow()}
             size="small"
             variant="outlined"
-            color="info"
+            color={
+              dateRelativeToNow() >= 5 && status === 'Em Andamento'
+                ? 'warning'
+                : 'info'
+            }
           />
         </Box>
       </Card>
