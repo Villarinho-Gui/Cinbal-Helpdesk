@@ -30,10 +30,10 @@ const Dashboard: React.FC = () => {
           borderColor={theme.palette.divider}
         >
         <Grid container spacing={2}>
-          <Grid item xl={3}>
+          <Grid item xl={3} md={6} xs={12}>
             <CardDashboard />
           </Grid>
-          <Grid item xl={3}>
+          <Grid item xl={3} md={6} xs={12}>
             <CardExibicaoMeusChamados />
           </Grid>
         </Grid>
