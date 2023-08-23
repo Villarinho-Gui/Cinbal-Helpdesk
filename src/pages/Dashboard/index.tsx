@@ -4,10 +4,15 @@ import DefaultLayout from '../../shared/layouts/DefaultLayout'
 import { Box, Grid, useTheme } from '@mui/material'
 import { CardDashboard } from './components/CardDashboard'
 import { CardExibicaoMeusChamados } from './components/CardExibicaoMeusChamados'
+import { useUserContext } from '../../shared/contexts/userContext'
 
 
 const Dashboard: React.FC = () => {
   const theme = useTheme()
+
+  const { user } = useUserContext()
+
+  const currentUser = user
 
   return (
     <DefaultLayout  
@@ -34,7 +39,7 @@ const Dashboard: React.FC = () => {
             <CardDashboard />
           </Grid>
           <Grid item xl={3} md={6} xs={12}>
-            <CardExibicaoMeusChamados />
+            {currentUser?.role === "admin" && <CardExibicaoMeusChamados />}
           </Grid>
         </Grid>
       </Box>
