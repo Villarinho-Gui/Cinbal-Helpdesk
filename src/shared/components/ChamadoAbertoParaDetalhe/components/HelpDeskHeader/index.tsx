@@ -107,6 +107,7 @@ export const HelpDeskHeader: React.FC<HelpDeskHeaderProps> = ({
     const updateToDone = 'Concluído'
 
     formData.append('status', updateToDone)
+    formData.append('accountable', accountable!)
     const headers = {
       headers: {
         'Content-Type': 'application/json',
@@ -205,12 +206,12 @@ export const HelpDeskHeader: React.FC<HelpDeskHeaderProps> = ({
               {smDown
                 ? ''
                 : helpDeskAccountable
-                ? helpDeskAccountable === user!.name &&
-                  accountable === user!.name
+                ? status === 'Concluído'
+                  ? 'HelpDesk Concluído'
+                  : helpDeskAccountable === user!.name &&
+                    accountable === user!.name
                   ? `Você assumiu este chamado`
                   : `${helpDeskAccountable} assumiu este chamado`
-                : status === 'Concluído'
-                ? 'HelpDesk Concluído'
                 : 'Assumir Chamado'}
             </Button>
           )
@@ -226,7 +227,9 @@ export const HelpDeskHeader: React.FC<HelpDeskHeaderProps> = ({
           </Typography>
         )}
 
-        {isAdmin === 'admin' && helpDeskAccountable === user!.name ? (
+        {isAdmin === 'admin' &&
+        helpDeskAccountable === user!.name &&
+        status !== 'Concluído' ? (
           <>
             <IconButton
               aria-controls={open ? 'long-menu' : undefined}
