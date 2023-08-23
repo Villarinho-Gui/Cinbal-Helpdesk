@@ -121,6 +121,7 @@ const HelpDeskBody: React.FC<HelpDeskPostInformationProps> = ({
         marginBottom={5}
         elevation={0}
         minHeight={50}
+        whiteSpace={'pre-wrap'}
       >
         {isLoading ? (
           <Skeleton
@@ -130,7 +131,12 @@ const HelpDeskBody: React.FC<HelpDeskPostInformationProps> = ({
             height="100px"
           />
         ) : (
-          <Typography variant="body2" color="text.secondary" padding={2}>
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            padding={2}
+            textAlign={'left'}
+          >
             {description}
           </Typography>
         )}
