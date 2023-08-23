@@ -15,6 +15,7 @@ import { MdOutlineEmojiPeople } from 'react-icons/md'
 import { RiTimer2Line } from 'react-icons/ri'
 import { useMatch, useNavigate, useResolvedPath } from 'react-router-dom'
 
+// Fazer com que seja exibida uma mensagem mostrando "Concluído em 'data de conclusão'"
 interface HelpDeskDashboardList {
   title: string
   description: string
@@ -88,16 +89,18 @@ export const HelpDeskList: React.FC<HelpDeskDashboardList> = ({
         </Box>
 
         <Box display={'flex'} justifyContent={'flex-end'} flex={1}>
-          <Chip
-            label={publishedDateRelativeToNow()}
-            size="small"
-            variant="outlined"
-            color={
-              dateRelativeToNow() >= 5 && status === 'Em Andamento'
-                ? 'warning'
-                : 'info'
-            }
-          />
+          {status !== 'Concluído' && (
+            <Chip
+              label={publishedDateRelativeToNow()}
+              size="small"
+              variant="outlined"
+              color={
+                dateRelativeToNow() >= 5 && status === 'Em Andamento'
+                  ? 'warning'
+                  : 'info'
+              }
+            />
+          )}
         </Box>
       </Card>
     </CardActionArea>
