@@ -5,6 +5,8 @@ import { useParams } from 'react-router-dom'
 import DefaultLayout from '../../layouts/DefaultLayout'
 import { format, formatDistanceToNow } from 'date-fns'
 import ptBR from 'date-fns/locale/pt-BR'
+import api from '../../../service/api/config/configApi'
+import fileDownload from 'js-file-download'
 
 import {
   Box,
@@ -37,14 +39,16 @@ interface FileProps {
 }
 
 const ChamadoAbertoParaDetalhe: React.FC = () => {
+  const [fileUrl, setFileUrl] = useState('')
   const token = localStorage.getItem('access_token')
   const headers = {
     headers: {
-      'Content-Type': 'application/json',
+      // 'Content-Type': 'application/json',
       Authorization: `bearer ${token}`,
     },
   }
   const { id } = useParams()
+  const { filename } = useParams()
 
   const { data, isLoading } = useFetch(`http://localhost:3535/helpdesk/${id}`)
 
@@ -71,6 +75,18 @@ const ChamadoAbertoParaDetalhe: React.FC = () => {
       locale: ptBR,
       addSuffix: true,
     })
+  }
+
+  const downloadFile = async (file: FileProps) => {
+    await api
+      .get(`/file/${file.id}`, {
+        ...headers,
+        responseType: 'blob',
+      })
+      .then((response) => {
+        const fileName = file.filename
+        fileDownload(response.data, fileName)
+      })
   }
 
   return (
@@ -156,7 +172,7 @@ const ChamadoAbertoParaDetalhe: React.FC = () => {
                     </Box>
                   </Box>
 
-                  <IconButton>
+                  <IconButton onClick={() => downloadFile(file)}>
                     <MdDownload />
                   </IconButton>
                 </Card>
