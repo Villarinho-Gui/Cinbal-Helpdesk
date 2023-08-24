@@ -23,6 +23,7 @@ export interface CommentsProps {
   message: string
   helpdesk: {
     id: string
+    status: string
   }
   user: {
     name: string
