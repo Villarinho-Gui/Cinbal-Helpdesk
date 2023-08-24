@@ -39,7 +39,6 @@ interface FileProps {
 }
 
 const ChamadoAbertoParaDetalhe: React.FC = () => {
-  const [fileUrl, setFileUrl] = useState('')
   const token = localStorage.getItem('access_token')
   const headers = {
     headers: {
@@ -48,7 +47,6 @@ const ChamadoAbertoParaDetalhe: React.FC = () => {
     },
   }
   const { id } = useParams()
-  const { filename } = useParams()
 
   const { data, isLoading } = useFetch(`http://localhost:3535/helpdesk/${id}`)
 
@@ -181,16 +179,19 @@ const ChamadoAbertoParaDetalhe: React.FC = () => {
           </Grid>
         )}
 
-        <Box
-          maxWidth={'1024px'}
-          marginY={'10px'}
-          border="1px solid"
-          borderColor={theme.palette.divider}
-          borderRadius={'8px'}
-          padding={'10px'}
-        >
-          <Chat />
-        </Box>
+        {data?.status === 'Em Andamento' ||
+          (data?.status === 'Concluído' && (
+            <Box
+              maxWidth={'1024px'}
+              marginY={'10px'}
+              border="1px solid"
+              borderColor={theme.palette.divider}
+              borderRadius={'8px'}
+              padding={'10px'}
+            >
+              <Chat />
+            </Box>
+          ))}
       </Box>
     </DefaultLayout>
   )
