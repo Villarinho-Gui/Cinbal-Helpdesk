@@ -6,6 +6,7 @@ import {
   Icon,
   ListItemButton,
   Typography,
+  // useTheme,
 } from '@mui/material'
 import { formatDistanceToNow } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
@@ -56,6 +57,8 @@ export const HelpDeskList: React.FC<HelpDeskDashboardList> = ({
 
     return calcDays
   }
+  // const theme = useTheme()
+  // const smDown = theme.breakpoints.down('sm')
 
   return (
     <CardActionArea onClick={clickHelpDesk}>
@@ -88,7 +91,13 @@ export const HelpDeskList: React.FC<HelpDeskDashboardList> = ({
           </Typography>
         </Box>
 
-        <Box display={'flex'} justifyContent={'flex-end'} flex={1}>
+        <Box
+          display={'flex'}
+          justifyContent={'flex-end'}
+          flex={1}
+          gap={2}
+          alignItems={'center'}
+        >
           {status !== 'Concluído' && (
             <Chip
               label={publishedDateRelativeToNow()}
