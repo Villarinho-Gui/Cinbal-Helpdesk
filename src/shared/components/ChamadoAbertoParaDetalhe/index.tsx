@@ -179,19 +179,18 @@ const ChamadoAbertoParaDetalhe: React.FC = () => {
           </Grid>
         )}
 
-        {data?.status === 'Em Andamento' ||
-          (data?.status === 'Concluído' && (
-            <Box
-              maxWidth={'1024px'}
-              marginY={'10px'}
-              border="1px solid"
-              borderColor={theme.palette.divider}
-              borderRadius={'8px'}
-              padding={'10px'}
-            >
-              <Chat />
-            </Box>
-          ))}
+        {data?.status !== 'Aberto' && (
+          <Box
+            maxWidth={'1024px'}
+            marginY={'10px'}
+            border="1px solid"
+            borderColor={theme.palette.divider}
+            borderRadius={'8px'}
+            padding={'10px'}
+          >
+            <Chat />
+          </Box>
+        )}
       </Box>
     </DefaultLayout>
   )
