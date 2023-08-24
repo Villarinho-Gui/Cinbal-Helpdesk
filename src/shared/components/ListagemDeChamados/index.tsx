@@ -83,11 +83,21 @@ export const ListagemDeChamados: React.FC = () => {
       ? helpDeskData!.filter((helpDesk) => {
           return (
             (helpDesk.title &&
-              helpDesk.title.includes(searchTextField.toLowerCase())) ||
+              helpDesk.title
+                .toLowerCase()
+                .includes(searchTextField.toLowerCase())) ||
             (helpDesk.description &&
-              helpDesk.description.includes(searchTextField.toLowerCase())) ||
+              helpDesk.description
+                .toLowerCase()
+                .includes(searchTextField.toLowerCase())) ||
             (helpDesk.category &&
-              helpDesk.category.includes(searchTextField.toLowerCase()))
+              helpDesk.category
+                .toLowerCase()
+                .includes(searchTextField.toLowerCase())) ||
+            (helpDesk.user.name &&
+              helpDesk.user.name
+                .toLowerCase()
+                .includes(searchTextField.toLowerCase()))
           )
         })
       : []
