@@ -13,10 +13,16 @@ export function useFetch(url: string) {
       Authorization: `bearer ${token}`,
     },
   }
-  const { data, isLoading } = useQuery(['id', id], async () => {
-    const responseApi = await api.get<HelpDeskProps>(url, headers)
-    return responseApi.data
-  })
+  const { data, isLoading } = useQuery(
+    ['id', id],
+    async () => {
+      const responseApi = await api.get<HelpDeskProps>(url, headers)
+      return responseApi.data
+    },
+    {
+      refetchOnWindowFocus: false,
+    },
+  )
 
   return { data, isLoading }
 }
