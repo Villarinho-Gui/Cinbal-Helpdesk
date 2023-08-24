@@ -13,6 +13,7 @@ interface CommentsProps {
   }
   helpdesk: {
     id: string
+    status: string
   }
   createdAt: Date
 }
@@ -29,7 +30,7 @@ export function useMessage(url: string, headers: AxiosRequestConfig) {
   const fetchHelpDeskMessage = async () => {
     setIsLoading(true)
     try {
-      const apiResponse: any = await api.get<CommentsProps[]>(url, headers)
+      const apiResponse: any = await api.get<CommentsProps>(url, headers)
 
       const { data } = apiResponse
 
