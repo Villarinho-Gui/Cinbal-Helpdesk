@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box, List, ListItem, useTheme } from '@mui/material'
+import { Box, List, ListItem, Typography, useTheme } from '@mui/material'
 import { MessageTextField } from './components/MessageTextField'
 import MessageComponent from './components/MessageComponent'
 import { useParams } from 'react-router-dom'
@@ -20,6 +20,9 @@ export const Chat: React.FC = () => {
   }
   const { comment } = useMessage(`http://localhost:3535/comment/${id}`, headers)
   const comments = comment
+  const shouldShowMessageTextfield = comments.some(
+    (message) => message.helpdesk.status === 'Concluído',
+  )
 
   return (
     <>
@@ -64,7 +67,13 @@ export const Chat: React.FC = () => {
           </List>
         )}
       </Box>
-      <MessageTextField />
+      {shouldShowMessageTextfield === false ? (
+        <MessageTextField />
+      ) : (
+        <Typography variant="caption" color="text.secondary">
+          HelpDesk já concluído
+        </Typography>
+      )}
     </>
   )
 }
