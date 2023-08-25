@@ -1,10 +1,12 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { useParams } from 'react-router-dom'
 import api from '../../../service/api/config/configApi'
 import { useQuery } from 'react-query'
 import { HelpDeskProps } from '../../types/helpdeskType'
+import { useEffect } from 'react'
+import { useUserContext } from '../../contexts/userContext'
 
 export function useFetch(url: string) {
+  const { isAssumed } = useUserContext()
   const { id } = useParams()
   const token = localStorage.getItem('access_token')
   const headers = {
@@ -13,7 +15,7 @@ export function useFetch(url: string) {
       Authorization: `bearer ${token}`,
     },
   }
-  const { data, isLoading } = useQuery(
+  const { data, isLoading, refetch } = useQuery(
     ['id', id],
     async () => {
       const responseApi = await api.get<HelpDeskProps>(url, headers)
@@ -23,6 +25,11 @@ export function useFetch(url: string) {
       refetchOnWindowFocus: false,
     },
   )
+
+  useEffect(() => {
+    refetch()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isAssumed])
 
   return { data, isLoading }
 }
