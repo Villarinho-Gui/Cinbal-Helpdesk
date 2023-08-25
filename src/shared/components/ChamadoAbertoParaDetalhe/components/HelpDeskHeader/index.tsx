@@ -27,6 +27,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { useUserContext } from '../../../../contexts/userContext'
 import { FaExchangeAlt } from 'react-icons/fa'
 import { AiFillLike } from 'react-icons/ai'
+import { useHelpDeskContext } from '../../../../contexts/HelpDeskContext'
 interface HelpDeskHeaderProps {
   title: string | undefined
   helpDeskAccountable: string | undefined
@@ -55,6 +56,7 @@ export const HelpDeskHeader: React.FC<HelpDeskHeaderProps> = ({
 }) => {
   const { user, isAdmin, accountable, setIsAssumed, setAccountable } =
     useUserContext()
+  const { toggleHelpDeskStatus } = useHelpDeskContext()
   const [changingAccountable, setChangingAccountable] = useState<boolean>(false)
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
 
@@ -116,7 +118,9 @@ export const HelpDeskHeader: React.FC<HelpDeskHeaderProps> = ({
     }
 
     try {
-      await api.patch(`/helpdesk/${id}`, formData, headers)
+      await api.patch(`/helpdesk/${id}`, formData, headers).then(() => {
+        toggleHelpDeskStatus()
+      })
     } catch (error) {
       console.error(error)
     }
