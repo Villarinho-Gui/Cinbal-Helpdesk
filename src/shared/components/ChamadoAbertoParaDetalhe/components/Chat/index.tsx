@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box, List, ListItem, Typography, useTheme } from '@mui/material'
+import { Box, Card, List, ListItem, Typography, useTheme } from '@mui/material'
 import { MessageTextField } from './components/MessageTextField'
 import MessageComponent from './components/MessageComponent'
 import { useParams } from 'react-router-dom'
@@ -70,9 +70,11 @@ export const Chat: React.FC = () => {
       {shouldShowMessageTextfield === false ? (
         <MessageTextField />
       ) : (
-        <Typography variant="caption" color="text.secondary">
-          HelpDesk já concluído
-        </Typography>
+        <Box component={Card} elevation={0} padding={1}>
+          <Typography variant="caption" color="text.secondary">
+            HelpDesk já concluído
+          </Typography>
+        </Box>
       )}
     </>
   )
