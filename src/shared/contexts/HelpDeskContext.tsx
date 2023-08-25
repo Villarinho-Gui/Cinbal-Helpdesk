@@ -4,9 +4,11 @@ interface HelpDeskContextProps {
   toggleHelpDesk: () => void
   isNewHelpDesk: boolean
   toggleMessage: () => void
-  isNewMessage: true | false
+  isNewMessage: boolean
   toggleLoading: () => void
   isLoading: boolean
+  isDone: boolean
+  toggleHelpDeskStatus: () => void
 }
 interface HelpDeskContextChildren {
   children: React.ReactNode
@@ -24,6 +26,7 @@ export const HelpDeskProvider: React.FC<HelpDeskContextChildren> = ({
   const [isNewHelpDesk, setIsNewHelpDesk] = useState(false)
   const [isNewMessage, setIsNewMessage] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const [isDone, setIsDone] = useState(false)
 
   const toggleHelpDesk = useCallback(() => {
     setIsNewHelpDesk((oldHelpDesk) => !oldHelpDesk)
@@ -37,6 +40,9 @@ export const HelpDeskProvider: React.FC<HelpDeskContextChildren> = ({
     setIsLoading((oldIsLoading) => !oldIsLoading)
   }, [])
 
+  const toggleHelpDeskStatus = useCallback(() => {
+    setIsDone((oldStatus) => !oldStatus)
+  }, [])
   return (
     <HelpDeskContext.Provider
       value={{
@@ -46,6 +52,8 @@ export const HelpDeskProvider: React.FC<HelpDeskContextChildren> = ({
         isLoading,
         toggleMessage,
         isNewMessage,
+        isDone,
+        toggleHelpDeskStatus,
       }}
     >
       {children}
