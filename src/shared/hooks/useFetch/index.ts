@@ -4,9 +4,11 @@ import { useQuery } from 'react-query'
 import { HelpDeskProps } from '../../types/helpdeskType'
 import { useEffect } from 'react'
 import { useUserContext } from '../../contexts/userContext'
+import { useHelpDeskContext } from '../../contexts/HelpDeskContext'
 
 export function useFetch(url: string) {
   const { isAssumed } = useUserContext()
+  const { isDone } = useHelpDeskContext()
   const { id } = useParams()
   const token = localStorage.getItem('access_token')
   const headers = {
@@ -29,7 +31,7 @@ export function useFetch(url: string) {
   useEffect(() => {
     refetch()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isAssumed])
+  }, [isAssumed, isDone])
 
-  return { data, isLoading }
+  return { data, isLoading, refetch }
 }
