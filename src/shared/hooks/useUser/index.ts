@@ -24,7 +24,7 @@ export function useUser(url: string, headers: AxiosRequestConfig) {
   const fetchUsers = async () => {
     setIsLoading(true)
     try {
-      const apiResponse: any = await api.get<UserProps[]>(url, headers)
+      const apiResponse = await api.get<UserProps[]>(url, headers)
 
       const { data } = apiResponse
 
