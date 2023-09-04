@@ -36,7 +36,7 @@ const Dashboard: React.FC = () => {
         >
         <Grid container spacing={2}>
           <Grid item xl={3} md={6} xs={12}>
-            <CardDashboard />
+          {currentUser?.role === "admin" && <CardDashboard />}
           </Grid>
           <Grid item xl={3} md={6} xs={12}>
             {currentUser?.role === "admin" && <CardExibicaoMeusChamados />}
