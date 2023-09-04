@@ -61,7 +61,7 @@ const FileList: React.FC<FileProps> = ({ file, onDeleteFile }) => {
             style={{ borderRadius: '5px' }}
           />
         ) : (
-          <AiFillFile size={25} color="#FFBC2F" />
+          <AiFillFile size={25} />
         )}
         <Box
           display={'flex'}
