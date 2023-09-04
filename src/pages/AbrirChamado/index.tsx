@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-expressions */
-import React, { useCallback, useState } from 'react'
+import React, { useState } from 'react'
 import api from '../../service/api/config/configApi'
 import { uniqueId } from 'lodash'
 import { SubmitHandler, useForm } from 'react-hook-form'
@@ -158,13 +158,13 @@ export const AbrirChamado: React.FC = () => {
     setNewUploadFile(undefined)
   }
 
-  const deleteFile = useCallback((attachedFileToDelete: any) => {
+  const deleteFile = (attachedFileToDelete: any) => {
     const newListImageWithoutDeletedOne = attachedFiles!.filter((file) => {
       return file !== attachedFileToDelete
     })
 
     setAttachedFiles(newListImageWithoutDeletedOne)
-  }, [])
+  }
 
   return (
     <DefaultLayout
