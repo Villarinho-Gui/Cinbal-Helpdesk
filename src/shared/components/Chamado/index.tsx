@@ -23,6 +23,7 @@ import { format, formatDistanceToNow } from 'date-fns'
 import ptBR from 'date-fns/locale/pt-BR'
 import { MdOutlineEmojiPeople } from 'react-icons/md'
 import { AiFillLike } from 'react-icons/ai'
+import { FaUserClock } from 'react-icons/fa'
 
 export interface HelpDeskDataProps {
   id: string
@@ -185,7 +186,9 @@ const Chamado: React.FC<HelpDeskDataProps> = ({
                       ? 'Em andamento'
                       : status === 'Concluído'
                       ? 'Concluído'
-                      : 'Aberto'
+                      : status === 'Aberto'
+                      ? 'Aberto'
+                      : 'Aguardando Terceiro'
                   }
                 >
                   <Icon color="secondary" sx={{ marginBottom: '4px' }}>
@@ -193,8 +196,10 @@ const Chamado: React.FC<HelpDeskDataProps> = ({
                       <AiFillLike size={20} />
                     ) : status === 'Em Andamento' ? (
                       <MdOutlineEmojiPeople size={20} />
-                    ) : (
+                    ) : status === 'Aberto' ? (
                       <RiTimer2Line size={20} />
+                    ) : (
+                      <FaUserClock size={20} />
                     )}
                   </Icon>
                 </Tooltip>
