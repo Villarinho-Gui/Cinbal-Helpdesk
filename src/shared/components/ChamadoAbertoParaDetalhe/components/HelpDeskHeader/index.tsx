@@ -25,7 +25,7 @@ import * as yup from 'yup'
 import { UserProps } from '../../../../hooks/useUser'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useUserContext } from '../../../../contexts/userContext'
-import { FaExchangeAlt } from 'react-icons/fa'
+import { FaUserClock, FaUsersCog } from 'react-icons/fa'
 import { AiFillLike } from 'react-icons/ai'
 import { useHelpDeskContext } from '../../../../contexts/HelpDeskContext'
 interface HelpDeskHeaderProps {
@@ -126,6 +126,28 @@ export const HelpDeskHeader: React.FC<HelpDeskHeaderProps> = ({
     }
   }
 
+  const waitingOutsourced = async () => {
+    const formData = new FormData()
+    const updateToWaitingOutsourced = 'Terceiro'
+
+    formData.append('status', updateToWaitingOutsourced)
+    formData.append('accountable', accountable!)
+    const headers = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `bearer ${token}`,
+      },
+    }
+
+    try {
+      await api.patch(`/helpdesk/${id}`, formData, headers).then(() => {
+        toggleHelpDeskStatus()
+      })
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
   const removeAccountable = () => {
     setChangingAccountable(true)
     setAccountable('')
@@ -198,10 +220,20 @@ export const HelpDeskHeader: React.FC<HelpDeskHeaderProps> = ({
             <Button
               variant={helpDeskAccountable ? 'text' : 'contained'}
               size="small"
-              endIcon={<MdOutlineEmojiPeople />}
+              endIcon={
+                status === 'Terceiro' ? (
+                  <FaUserClock />
+                ) : (
+                  <MdOutlineEmojiPeople />
+                )
+              }
               color={helpDeskAccountable ? 'success' : 'info'}
               disableElevation
-              disabled={!!helpDeskAccountable || status === 'Concluído'}
+              disabled={
+                !!helpDeskAccountable ||
+                status === 'Concluído' ||
+                status === 'Terceiro'
+              }
               sx={{
                 marginRight: '15px',
               }}
@@ -212,10 +244,11 @@ export const HelpDeskHeader: React.FC<HelpDeskHeaderProps> = ({
                 : helpDeskAccountable
                 ? status === 'Concluído'
                   ? 'HelpDesk Concluído'
-                  : helpDeskAccountable === user!.name &&
-                    accountable === user!.name
+                  : helpDeskAccountable === user!.name
                   ? `Você assumiu este chamado`
                   : `${helpDeskAccountable} assumiu este chamado`
+                : status === 'Terceiro'
+                ? 'Aguardando terceiros'
                 : 'Assumir Chamado'}
             </Button>
           )
@@ -258,16 +291,27 @@ export const HelpDeskHeader: React.FC<HelpDeskHeaderProps> = ({
               >
                 <ListItemText>Passar HelpDesk</ListItemText>
                 <ListItemIcon>
-                  <FaExchangeAlt />
+                  <FaUsersCog />
                 </ListItemIcon>
               </MenuItem>
+              {status !== 'Concluído' && (
+                <MenuItem
+                  onClick={setToDone}
+                  sx={{ display: 'flex', gap: '10px', alignItems: 'center' }}
+                >
+                  <ListItemText>Concluir HelpDesk</ListItemText>
+                  <ListItemIcon>
+                    <AiFillLike />
+                  </ListItemIcon>
+                </MenuItem>
+              )}
               <MenuItem
-                onClick={setToDone}
+                onClick={waitingOutsourced}
                 sx={{ display: 'flex', gap: '10px', alignItems: 'center' }}
               >
-                <ListItemText>Concluir HelpDesk</ListItemText>
+                <ListItemText>Aguardando Terceirizado</ListItemText>
                 <ListItemIcon>
-                  <AiFillLike />
+                  <FaUserClock />
                 </ListItemIcon>
               </MenuItem>
             </Menu>
