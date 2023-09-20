@@ -7,56 +7,16 @@ import {
   Button,
   useTheme,
 } from '@mui/material'
-import React, { useState, useEffect } from 'react'
-
-import api from '../../../../service/api/config/configApi'
-
-interface FileProps {
-  id: string
-  url: string
-  callId: string
-}
-interface HelpDeskDashboardProps {
-  id: string
-  author: string
-  title: string
-  category: string
-  description: string
-  files?: FileProps[]
-  createdAt: Date
-}
+import React from 'react'
+import { useFetch } from '../../../../shared/hooks/useFetch'
 
 export const CardDashboard: React.FC = () => {
-  const [isLoadingChamados, setIsLoadingChamados] = useState<boolean>(false)
-  const [helpDeskData, setHelpDeskData] = useState<HelpDeskDashboardProps[]>([])
+  const { data, isLoading } = useFetch('http://localhost:3535/helpdesk/')
+
   const theme = useTheme()
 
-  useEffect(() => {
-    setIsLoadingChamados(true)
-
-    api.get('/chamados').then((response) => {
-      const { data } = response
-
-      setIsLoadingChamados(false)
-      if (response instanceof Error) {
-        alert(response.message)
-      } else {
-        setHelpDeskData(Object.values(data)[0] as HelpDeskDashboardProps[])
-      }
-    })
-  }, [])
-
   return (
-    <Card
-      elevation={0}
-      padding={2}
-      variant="outlined"
-      component={Box}
-      borderRadius={1}
-      marginX={2}
-      border="1px solid"
-      borderColor={theme.palette.divider}
-    >
+    <Card elevation={0} variant="outlined">
       <CardContent>
         <Box>
           <Typography
@@ -67,7 +27,7 @@ export const CardDashboard: React.FC = () => {
             Chamados Abertos
           </Typography>
           <Box display="flex" gap={2} width="100%" alignItems="center">
-            {isLoadingChamados ? (
+            {isLoading ? (
               <Skeleton
                 variant="text"
                 sx={{ fontSize: '4rem' }}
@@ -79,12 +39,12 @@ export const CardDashboard: React.FC = () => {
                 color={theme.palette.text.primary}
                 sx={{ fontSize: '3rem' }}
               >
-                {helpDeskData.length}
+                {data!.length}
               </Typography>
             )}
           </Box>
 
-          <Button>Visualizar</Button>
+          <Button variant="outlined">Visualizar</Button>
         </Box>
       </CardContent>
     </Card>

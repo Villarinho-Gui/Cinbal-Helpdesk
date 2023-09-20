@@ -4,7 +4,6 @@ import {
   Card,
   CardActionArea,
   CardContent,
-  Skeleton,
   Typography,
   Icon,
   Chip,
@@ -14,34 +13,33 @@ import {
   Divider,
 } from '@mui/material'
 import Zoom from '@mui/material/Zoom'
-import React, { useState, useEffect } from 'react'
+import React, { memo } from 'react'
 
 import { FiPaperclip } from 'react-icons/fi'
 import { RiTimer2Line } from 'react-icons/ri'
 import { useMatch, useNavigate, useResolvedPath } from 'react-router-dom'
 
-import api from '../../../service/api/config/configApi'
 import { format, formatDistanceToNow } from 'date-fns'
 import ptBR from 'date-fns/locale/pt-BR'
+import { MdOutlineEmojiPeople } from 'react-icons/md'
+import { AiFillLike } from 'react-icons/ai'
+import { FaUserClock } from 'react-icons/fa'
 
-interface FileProps {
-  id: string
-  url: string
-  callId: string
-}
 export interface HelpDeskDataProps {
   id: string
-  author?: string
+  author: string
+  status: string
   title: string
   category?: string
   description: string
   maxLines: number
-  files?: FileProps[]
+  files?: File[]
+  countFiles?: number
   createdAt: Date
   onClick?: () => void
   to: string
 }
-export const Chamado: React.FC<HelpDeskDataProps> = ({
+const Chamado: React.FC<HelpDeskDataProps> = ({
   id,
   author,
   category,
@@ -49,39 +47,11 @@ export const Chamado: React.FC<HelpDeskDataProps> = ({
   createdAt,
   title,
   onClick,
+  status,
+  countFiles,
   to,
 }) => {
-  const [, setHelpDeskData] = useState<HelpDeskDataProps | null>(null)
-  const [isLoading, setIsLoading] = useState(false)
-  const [attachedFiles, setAttachedFiles] = useState<string[]>([])
-
   const navigate = useNavigate()
-
-  const descriptionStyle = {
-    height: '35px',
-    display: '-webkit-box',
-    WebkitLineClamp: 2,
-    WebkitBoxOrient: 'vertical',
-    overflow: 'hidden',
-  }
-
-  const fetchChamado = async () => {
-    setIsLoading(true)
-    try {
-      const response = await api.get<HelpDeskDataProps>(`/chamado/${id}`)
-      const { data } = response
-      setHelpDeskData(data)
-      setAttachedFiles(Object.values(data)[0].files)
-      setIsLoading(false)
-    } catch (error) {
-      console.error('Erro ao obter os dados do chamado', error)
-      setIsLoading(false)
-    }
-  }
-
-  useEffect(() => {
-    fetchChamado()
-  }, [id])
 
   const publishedDateFormatted = () => {
     return format(createdAt, "d 'de' LLLL 'às' HH:mm'h'", {
@@ -110,7 +80,7 @@ export const Chamado: React.FC<HelpDeskDataProps> = ({
         variant="outlined"
         sx={{
           width: '99%',
-          height: '150px',
+          height: '155px',
           display: 'flex',
           flex: '1',
           marginX: 'auto',
@@ -126,7 +96,7 @@ export const Chamado: React.FC<HelpDeskDataProps> = ({
           >
             <Typography
               variant="h5"
-              sx={{ fontSize: '14px' }}
+              sx={{ fontSize: '14px', marginBottom: '10px' }}
               color="text.secondary"
             >
               {author}
@@ -135,26 +105,18 @@ export const Chamado: React.FC<HelpDeskDataProps> = ({
               title={createdAt ? publishedDateFormatted() : ''}
               dateTime={createdAt ? createdAt.toISOString() : ''}
             >
-              {isLoading ? (
-                <Skeleton
-                  variant="text"
-                  sx={{ fontSize: '1.5rem' }}
-                  width="90px"
-                />
-              ) : createdAt ? (
-                <Typography
-                  variant="body2"
-                  sx={{ fontSize: '0.8rem' }}
-                  color="text.secondary"
-                >
-                  {publishedDateRelativeToNow()}
-                </Typography>
-              ) : null}
+              <Typography
+                variant="body2"
+                sx={{ fontSize: '0.8rem' }}
+                color="text.secondary"
+              >
+                {publishedDateRelativeToNow()}
+              </Typography>
             </time>
           </Box>
           <Typography
             variant="h6"
-            color="text.primary"
+            color="text.secondary"
             sx={{
               fontSize: 14,
             }}
@@ -165,7 +127,9 @@ export const Chamado: React.FC<HelpDeskDataProps> = ({
           <Typography
             variant="body2"
             color="text.secondary"
-            sx={descriptionStyle}
+            sx={{ height: '35px' }}
+            width={'20ch'}
+            noWrap
           >
             {description}
           </Typography>
@@ -174,8 +138,8 @@ export const Chamado: React.FC<HelpDeskDataProps> = ({
             alignItems={'center'}
             justifyContent={'space-between'}
           >
-            <Badge badgeContent={attachedFiles.length} color="primary">
-              {attachedFiles && attachedFiles.length > 0 ? (
+            <Badge badgeContent={countFiles} color="primary" variant="dot">
+              {countFiles! > 0 ? (
                 <Icon>
                   <FiPaperclip size={15} />
                 </Icon>
@@ -184,7 +148,7 @@ export const Chamado: React.FC<HelpDeskDataProps> = ({
               )}
             </Badge>
 
-            {attachedFiles && attachedFiles.length > 0 ? (
+            {countFiles! > 0 ? (
               <Divider
                 orientation="vertical"
                 flexItem
@@ -195,18 +159,48 @@ export const Chamado: React.FC<HelpDeskDataProps> = ({
             )}
 
             <Box display={'flex'} flex={1} justifyContent={'space-between'}>
-              <Typography color={'#49B3E8'}>{category}</Typography>
+              <Chip label={category} size="small" color="primary" />
+
               <Box
                 display={'flex'}
+                alignItems={'center'}
                 flex={1}
                 justifyContent={'end'}
                 gap={2}
                 position={'relative'}
               >
-                <Chip label={id} size="small" sx={{ width: '12ch' }} />
-                <Tooltip title="Aberto" TransitionComponent={Zoom} arrow>
-                  <Icon>
-                    <RiTimer2Line color="#d3d3d3" />
+                <Typography
+                  variant="body2"
+                  fontSize={'0.8rem'}
+                  noWrap
+                  width={'10ch'}
+                >
+                  ID:
+                  {id}
+                </Typography>
+                <Tooltip
+                  TransitionComponent={Zoom}
+                  arrow
+                  title={
+                    status === 'Em Andamento'
+                      ? 'Em andamento'
+                      : status === 'Concluído'
+                      ? 'Concluído'
+                      : status === 'Aberto'
+                      ? 'Aberto'
+                      : 'Aguardando Terceiro'
+                  }
+                >
+                  <Icon color="secondary" sx={{ marginBottom: '4px' }}>
+                    {status === 'Concluído' ? (
+                      <AiFillLike size={20} />
+                    ) : status === 'Em Andamento' ? (
+                      <MdOutlineEmojiPeople size={20} />
+                    ) : status === 'Aberto' ? (
+                      <RiTimer2Line size={20} />
+                    ) : (
+                      <FaUserClock size={20} />
+                    )}
                   </Icon>
                 </Tooltip>
               </Box>
@@ -217,3 +211,5 @@ export const Chamado: React.FC<HelpDeskDataProps> = ({
     </CardActionArea>
   )
 }
+
+export default memo(Chamado)

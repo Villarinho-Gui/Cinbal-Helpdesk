@@ -7,8 +7,11 @@ import {
   useMediaQuery,
   useTheme,
   Button,
+  Card,
+  CardContent,
+  Menu,
 } from '@mui/material'
-import React, { ReactNode } from 'react'
+import React, { ReactNode, memo, useCallback } from 'react'
 
 import { GiHamburgerMenu } from 'react-icons/gi'
 import { IoMdPerson } from 'react-icons/io'
@@ -17,13 +20,14 @@ import { CgLogOut } from 'react-icons/cg'
 
 import { useDrawerContext } from '../../contexts/DrawerContext'
 
-import { BsMoonFill } from 'react-icons/bs'
+import { BsFillBellFill, BsMoonFill } from 'react-icons/bs'
 import { AiFillHome, AiOutlinePlus } from 'react-icons/ai'
-import { MdEmojiPeople, MdClose } from 'react-icons/md'
+import { MdClose } from 'react-icons/md'
 
 import { useAppThemeContext } from '../../contexts/ThemeContext'
 
 import { useNavigate } from 'react-router-dom'
+import { useUserContext } from '../../contexts/userContext'
 interface IDefaultLayoutProps {
   children: React.ReactNode
   tituloPagina: string | undefined
@@ -34,8 +38,9 @@ interface IDefaultLayoutProps {
   mostrarBotaoTema?: boolean
   mostrarBotaoHome?: boolean
   mostrarBotaoOpenHelpDesk?: boolean
-  mostrarBotaoAssumirChamado?: boolean
   mostrarTituloPagina?: boolean
+
+  showNotificationButton?: boolean
 }
 
 const DefaultLayout: React.FC<IDefaultLayoutProps> = ({
@@ -47,7 +52,7 @@ const DefaultLayout: React.FC<IDefaultLayoutProps> = ({
   mostrarBotaoTema,
   mostrarBotaoHome,
   mostrarBotaoOpenHelpDesk,
-  mostrarBotaoAssumirChamado,
+  showNotificationButton,
 
   mostrarTituloPagina = true,
 }) => {
@@ -57,14 +62,51 @@ const DefaultLayout: React.FC<IDefaultLayoutProps> = ({
 
   const { toggleDrawerOpen, isDrawerOpen } = useDrawerContext()
   const { toggleTheme, themeName } = useAppThemeContext()
+  const { user, setIsLogged } = useUserContext()
 
   const navigate = useNavigate()
 
+  const [openInformation, setOpenInformation] =
+    React.useState<null | HTMLElement>(null)
+  const openCardInformation = Boolean(openInformation)
+
+  const [openNotification, setOpenNotification] =
+    React.useState<null | HTMLElement>(null)
+  const openCardNotification = Boolean(openNotification)
+
+  const logoutUser = () => {
+    setIsLogged(false)
+    localStorage.removeItem('access_token')
+    navigate('/login')
+  }
+
+  const openUserInformation = useCallback(
+    (event: React.MouseEvent<HTMLButtonElement>) => {
+      setOpenInformation(event.currentTarget)
+    },
+    [],
+  )
+
+  const openNotifications = useCallback(
+    (event: React.MouseEvent<HTMLButtonElement>) => {
+      setOpenNotification(event.currentTarget)
+    },
+    [],
+  )
+
+  const handleCloseUserInformation = () => {
+    setOpenInformation(null)
+  }
+
+  const handleCloseNotification = () => {
+    setOpenNotification(null)
+  }
+
   return (
-    <Box height="98%" display="flex" flexDirection="column" gap={1}>
+    <Box height="100%" display="flex" flexDirection="column" gap={1}>
       <Box
-        padding={1}
-        height={theme.spacing(smDown ? 6 : mdDown ? 8 : 12)}
+        padding={2}
+        height={theme.spacing(smDown ? 6 : mdDown ? 8 : 4)}
         display="flex"
         alignItems="center"
         gap={2}
@@ -96,7 +138,13 @@ const DefaultLayout: React.FC<IDefaultLayoutProps> = ({
               whiteSpace="nowrap"
               overflow="hidden"
               textOverflow="elipses"
-              sx={{ fontSize: '1.812rem' }}
+              fontWeight={'bold'}
+              sx={{
+                fontSize: '1.812rem',
+                paddingTop: '20px',
+                marginBottom: '10p',
+              }}
+              color={`${[theme.typography.h6]}`}
             >
               {tituloPagina}
             </Typography>
@@ -105,7 +153,7 @@ const DefaultLayout: React.FC<IDefaultLayoutProps> = ({
           <Box display="flex" gap={1} alignItems="center">
             {mostrarBotaoLogout && (
               <Tooltip title="Sair" placement="bottom" arrow>
-                <IconButton onClick={() => navigate('/login')}>
+                <IconButton onClick={logoutUser}>
                   <CgLogOut size={20} />
                 </IconButton>
               </Tooltip>
@@ -122,13 +170,108 @@ const DefaultLayout: React.FC<IDefaultLayoutProps> = ({
             )}
 
             {mostrarBotaoPerfil && (
-              <Tooltip title="Perfil" placement="bottom" arrow>
-                <IconButton>
-                  <Icon>
-                    <IoMdPerson size={20} />
-                  </Icon>
-                </IconButton>
-              </Tooltip>
+              <>
+                <Tooltip title="Perfil" placement="bottom" arrow>
+                  <IconButton onClick={openUserInformation}>
+                    <Icon>
+                      <IoMdPerson size={20} />
+                    </Icon>
+                  </IconButton>
+                </Tooltip>
+                <Menu
+                  id="basic-menu"
+                  anchorEl={openInformation}
+                  open={openCardInformation}
+                  onClose={handleCloseUserInformation}
+                  MenuListProps={{
+                    'aria-labelledby': 'basic-button',
+                  }}
+                >
+                  <Card
+                    component={Box}
+                    elevation={0}
+                    border={'none'}
+                    color="#6F6F6F"
+                    sx={{
+                      width: '99%',
+                      height: 'max',
+                      display: 'flex',
+                      flex: '1',
+                      marginX: 'auto',
+                    }}
+                  >
+                    <CardContent>
+                      <Typography variant="h6" fontSize={15}>
+                        Usuário:
+                      </Typography>
+                      <Typography
+                        sx={{ fontSize: '0.8rem' }}
+                        color="text.secondary"
+                      >
+                        {user?.name}
+                      </Typography>
+                      <Typography variant="h6" fontSize={15}>
+                        Email:
+                      </Typography>
+                      <Typography
+                        sx={{ fontSize: '0.8rem' }}
+                        color="text.secondary"
+                      >
+                        {user?.email}
+                      </Typography>
+                      <Typography variant="h6" fontSize={15}>
+                        Setor:
+                      </Typography>
+                      <Typography
+                        sx={{ fontSize: '0.8rem' }}
+                        color="text.secondary"
+                      >
+                        {user?.sector}
+                      </Typography>
+                      <Typography variant="h6" fontSize={15}>
+                        Função:
+                      </Typography>
+                      <Typography
+                        sx={{ fontSize: '0.8rem' }}
+                        color="text.secondary"
+                      >
+                        {user?.position}
+                      </Typography>
+                      <Typography variant="h6" fontSize={15}>
+                        Ramal:
+                      </Typography>
+                      <Typography
+                        sx={{ fontSize: '0.8rem' }}
+                        color="text.secondary"
+                      >
+                        {user?.extension}
+                      </Typography>
+                    </CardContent>
+                  </Card>
+                </Menu>
+              </>
+            )}
+
+            {showNotificationButton && (
+              <>
+                <Tooltip title="Notificações" arrow>
+                  <IconButton onClick={openNotifications}>
+                    <Icon>
+                      <BsFillBellFill size={20} />
+                    </Icon>
+                  </IconButton>
+                </Tooltip>
+                <Menu
+                  id="basic-menu"
+                  anchorEl={openNotification}
+                  open={openCardNotification}
+                  onClose={handleCloseNotification}
+                  sx={{ maxHeight: '700px' }}
+                  MenuListProps={{
+                    'aria-labelledby': 'basic-button',
+                  }}
+                ></Menu>
+              </>
             )}
 
             {mostrarBotaoTema && (
@@ -148,23 +291,6 @@ const DefaultLayout: React.FC<IDefaultLayoutProps> = ({
       {barraDeFerramentas && <Box>{barraDeFerramentas}</Box>}
       <Box flex={1} overflow="auto">
         {children}{' '}
-        {mostrarBotaoAssumirChamado && (
-          <Box
-            display={'flex'}
-            justifyContent={'start'}
-            paddingY={'20px'}
-            marginX={'8px'}
-          >
-            <Button
-              variant="contained"
-              color="primary"
-              endIcon={<MdEmojiPeople />}
-              onClick={() => {}}
-            >
-              Assumir Chamado
-            </Button>
-          </Box>
-        )}
       </Box>
       {mostrarBotaoOpenHelpDesk && (
         <Box display={'flex'} justifyContent={'end'} padding={'20px'}>
@@ -183,4 +309,4 @@ const DefaultLayout: React.FC<IDefaultLayoutProps> = ({
   )
 }
 
-export default DefaultLayout
+export default memo(DefaultLayout)

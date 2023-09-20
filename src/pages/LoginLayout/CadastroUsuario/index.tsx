@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import React, { useState } from 'react'
 
 import { SubmitHandler, useForm } from 'react-hook-form'
@@ -16,17 +17,19 @@ import {
   Divider,
   useTheme,
   Snackbar,
-  Alert,
   Select,
   MenuItem,
   SelectChangeEvent,
+  SnackbarContent,
+  Alert,
 } from '@mui/material'
+import { MdOutlineErrorOutline } from 'react-icons/md'
 
 interface User {
   name: string
   email: string
   password: string
-  extension: number
+  extension: string
   position: string
   sector: string
   branch: string
@@ -54,7 +57,7 @@ const createUserFormSchema = z.object({
     .string()
     .nonempty('Esse campo é obrigatório!')
     .min(6, 'A senha precisa ter pelo menos 6 caracteres!'),
-  extension: z.number().max(4, 'Esse campo deve ter no máximo 4 números!'),
+  extension: z.string().max(4, 'Esse campo deve ter no máximo 4 números!'),
   position: z.string().nonempty('Esse campo é obrigatório!'),
   sector: z.string().nonempty('Esse campo é obrigatório!'),
   branch: z.string().nonempty('Esse campo é obrigatório!'),
@@ -74,9 +77,12 @@ export const CadastroUsuario: React.FC = () => {
   const [branch, setBranch] = useState('')
 
   const [openSuccessMessage, setOpenSuccessMessage] = useState(false)
+  const [openErrorMessage, setOpenErrorMessage] = useState(false)
 
   const navigate = useNavigate()
   const theme = useTheme()
+
+  const [responseApi, setResponseApi] = useState<string>('')
 
   const {
     register,
@@ -91,6 +97,7 @@ export const CadastroUsuario: React.FC = () => {
       position: '',
       sector: '',
       branch: '',
+      extension: '',
     },
   })
 
@@ -101,7 +108,7 @@ export const CadastroUsuario: React.FC = () => {
     formData.append('name', name)
     formData.append('email', email)
     formData.append('password', password)
-    formData.append('extension', extension.toString())
+    formData.append('extension', extension)
     formData.append('position', position)
     formData.append('sector', sector)
     formData.append('branch', branch)
@@ -112,14 +119,24 @@ export const CadastroUsuario: React.FC = () => {
       },
     }
     try {
-      await api.post<User>('/cadastro', formData, headers).then(() => {
+      setIsLoading(true)
+      await api.post<User>('/auth/register', formData, headers).then(() => {
         setOpenSuccessMessage(true)
+        setIsLoading(false)
         navigate('/login')
       })
-    } catch (error) {
-      console.log(error)
+    } catch (error: any) {
+      console.error(error)
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        setResponseApi(error.response.data.message)
+      }
+      setIsLoading(false)
+      setOpenErrorMessage(true)
     }
-    setIsLoading(true)
   }
 
   const handleClose = (
@@ -131,6 +148,7 @@ export const CadastroUsuario: React.FC = () => {
     }
 
     setOpenSuccessMessage(false)
+    setOpenErrorMessage(false)
   }
 
   return (
@@ -170,6 +188,7 @@ export const CadastroUsuario: React.FC = () => {
               }
               autoComplete="username"
               fullWidth
+              disabled={isLoading}
               size="small"
             />
           </Grid>
@@ -188,6 +207,7 @@ export const CadastroUsuario: React.FC = () => {
               type="email"
               placeholder="E-mail"
               fullWidth
+              disabled={isLoading}
               size="small"
             />
           </Grid>
@@ -207,6 +227,7 @@ export const CadastroUsuario: React.FC = () => {
               placeholder="Senha"
               autoComplete="current-password"
               fullWidth
+              disabled={isLoading}
               size="small"
             />
           </Grid>
@@ -232,6 +253,7 @@ export const CadastroUsuario: React.FC = () => {
               type="text"
               placeholder="Função"
               fullWidth
+              disabled={isLoading}
               size="small"
             />
           </Grid>
@@ -250,6 +272,7 @@ export const CadastroUsuario: React.FC = () => {
               type="text"
               placeholder="Setor"
               fullWidth
+              disabled={isLoading}
               size="small"
             />
           </Grid>
@@ -279,6 +302,7 @@ export const CadastroUsuario: React.FC = () => {
                 type="tel"
                 placeholder="Ramal"
                 fullWidth
+                disabled={isLoading}
                 inputMode="numeric"
                 size="small"
               />
@@ -296,6 +320,7 @@ export const CadastroUsuario: React.FC = () => {
                 }
                 error={!!errors.branch}
                 fullWidth
+                disabled={isLoading}
                 size="small"
               >
                 <MenuItem value={'vr'}>Volta Redonda</MenuItem>
@@ -344,9 +369,7 @@ export const CadastroUsuario: React.FC = () => {
                 onClose={handleClose}
                 anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
               >
-                <Alert severity="success" onClose={handleClose}>
-                  Usuário cadastrado com sucesso!
-                </Alert>
+                <SnackbarContent message={'Usuário cadastrado com sucesso!'} />
               </Snackbar>
             </Grid>
             <Grid item xl={6} lg={6} md={12} sm={12} xs={12}>
@@ -358,6 +381,21 @@ export const CadastroUsuario: React.FC = () => {
               >
                 Voltar
               </Button>
+              <Snackbar
+                open={openErrorMessage}
+                autoHideDuration={6000}
+                onClose={handleClose}
+                anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+              >
+                <Alert
+                  variant="filled"
+                  color="error"
+                  onClose={handleClose}
+                  icon={<MdOutlineErrorOutline />}
+                >
+                  {responseApi}
+                </Alert>
+              </Snackbar>
             </Grid>
           </Grid>
         </Grid>

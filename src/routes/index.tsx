@@ -4,11 +4,10 @@ import { Route, Routes, Navigate } from 'react-router-dom'
 import Dashboard from '../pages/Dashboard'
 import { CadastroUsuario } from '../pages/LoginLayout/CadastroUsuario'
 import { LoginLayout } from '../pages/LoginLayout'
-import { MenuLateral } from '../shared/components/MenuLateral'
+import MenuLateral from '../shared/components/MenuLateral'
 import { Login } from '../pages/LoginLayout/Login'
-import AbrirChamado from '../pages/AbrirChamado'
-import { ChamadoAbertoParaDetalhe } from '../shared/components/ChamadoAbertoParaDetalhe'
-import DownloadPage from '../pages/DownloadPage'
+import { AbrirChamado } from '../pages/AbrirChamado'
+import ChamadoAbertoParaDetalhe from '../shared/components/ChamadoAbertoParaDetalhe'
 
 export const AppRoutes: React.FC = () => {
   return (
@@ -24,7 +23,6 @@ export const AppRoutes: React.FC = () => {
           path="/home/chamado/detalhe/:id"
           element={<ChamadoAbertoParaDetalhe />}
         />
-        <Route path="/home/download/:filename" element={<DownloadPage />} />
       </Route>
       <Route path="*" element={<Navigate to="/login" />} />
     </Routes>

@@ -15,10 +15,11 @@ import {
 
 // import logo from '../../../media/images/logo2-full.png'
 import { SubmitHandler } from 'react-hook-form'
-
+import { useUserContext } from '../../../shared/contexts/userContext'
 interface LoginData {
   email: string
   password: string
+  access_token?: string
 }
 
 export const Login: React.FC = () => {
@@ -31,6 +32,7 @@ export const Login: React.FC = () => {
 
   const theme = useTheme()
   const navigate = useNavigate()
+  const { setIsLogged } = useUserContext()
 
   const validateIfUserExistInDB: SubmitHandler<LoginData> = async (
     data,
@@ -39,12 +41,14 @@ export const Login: React.FC = () => {
     event?.preventDefault()
 
     try {
-      const response = await api.post('/login', {
+      const response = await api.post<LoginData>('/auth/login', {
         email: data.email,
         password: data.password,
       })
 
-      return response.data
+      const token = response.data.access_token
+      localStorage.setItem('access_token', token!)
+      return token
     } catch (error) {
       console.error(error)
       return null
@@ -67,14 +71,15 @@ export const Login: React.FC = () => {
       password: userPassword,
     })
     setIsLoading(false)
-
     if (!userData) {
       setUserError('Usuário ou senha incorretos ')
       setPasswordError('Usuário ou senha incorretos ')
       setOpenErrorMessage(true)
       return
     }
-
+    if (userData) {
+      setIsLogged(true)
+    }
     navigate('/home/dashboard')
   }
 

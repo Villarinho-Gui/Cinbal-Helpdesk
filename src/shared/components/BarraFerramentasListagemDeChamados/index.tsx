@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { memo } from 'react'
 import {
   Box,
   Icon,
@@ -24,7 +24,7 @@ interface IBarraFerramentasAbrirChamado {
   aoClicarBotaoLimparFiltro?: () => void
 }
 
-export const BarraFerramentasListagemDeChamados: React.FC<
+const BarraFerramentasListagemDeChamados: React.FC<
   IBarraFerramentasAbrirChamado
 > = ({
   textoBusca = '',
@@ -82,3 +82,5 @@ export const BarraFerramentasListagemDeChamados: React.FC<
     </Box>
   )
 }
+
+export default memo(BarraFerramentasListagemDeChamados)

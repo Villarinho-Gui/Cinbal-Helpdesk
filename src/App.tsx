@@ -9,6 +9,7 @@ import { HelpDeskProvider } from './shared/contexts/HelpDeskContext'
 import { LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 import { ptBR as ptBRDate } from 'date-fns/locale'
+import { UserProvider } from './shared/contexts/userContext'
 
 export const App: React.FC = () => {
   return (
@@ -18,11 +19,13 @@ export const App: React.FC = () => {
         adapterLocale={ptBRDate}
       >
         <DrawerProvider>
-          <HelpDeskProvider>
-            <BrowserRouter>
-              <AppRoutes />
-            </BrowserRouter>
-          </HelpDeskProvider>
+          <UserProvider>
+            <HelpDeskProvider>
+              <BrowserRouter>
+                <AppRoutes />
+              </BrowserRouter>
+            </HelpDeskProvider>
+          </UserProvider>
         </DrawerProvider>
       </LocalizationProvider>
     </AppThemeProvider>

@@ -1,8 +1,11 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable no-unused-expressions */
 import React, { useState } from 'react'
 import api from '../../service/api/config/configApi'
-import { FileList } from './components/FileList'
 import { uniqueId } from 'lodash'
-import { useForm } from 'react-hook-form'
+import { SubmitHandler, useForm } from 'react-hook-form'
+import * as yup from 'yup'
+import { yupResolver } from '@hookform/resolvers/yup'
 
 import {
   Button,
@@ -17,120 +20,150 @@ import {
   MenuItem,
   Alert,
   CircularProgress,
-  Typography,
   Snackbar,
+  SelectChangeEvent,
 } from '@mui/material'
 import DefaultLayout from '../../shared/layouts/DefaultLayout'
 import { AiOutlinePaperClip } from 'react-icons/ai'
-
-import * as yup from 'yup'
-import { yupResolver } from '@hookform/resolvers/yup'
 import { useHelpDeskContext } from '../../shared/contexts/HelpDeskContext'
+import FileList from './components/FileList'
 
-const createChamadoSchema = yup
+interface OpenHelpDesk {
+  title: string
+  category: string
+  description: string
+  status: string
+  files?: File[]
+}
+
+const createHelpDeskSchema = yup
   .object()
   .shape({
-    titulo: yup.string().required().min(3).max(50),
-    categoria: yup.string().required(),
-    descricao: yup.string().min(3).max(500).required(),
+    title: yup.string().required().min(3).max(50),
+    category: yup.string().required(),
+    description: yup.string().min(3).max(500).required(),
   })
   .required()
 
-export default function AbrirChamado() {
-  const [attachedFiles, setAttachedFiles] = useState([])
-  const [newUploadImage, setNewUploadImage] = useState([])
+export const AbrirChamado: React.FC = () => {
+  const [textFieldTitle, setTextFieldTitle] = useState('')
+  const [textFieldDescription, setTextFieldDescription] = useState('')
+  const [selectFieldCategory, setSelectFieldCategory] = useState<
+    | 'Email'
+    | 'Ramal'
+    | 'Rede'
+    | 'Fluig'
+    | 'Hardware'
+    | 'Software'
+    | 'PcFactory'
+    | 'Preactor'
+    | 'Protheus'
+    | 'Vexon'
+    | 'Portal do Cliente'
+    | 'Outros'
+  >('Email')
 
-  const [isLoading, setIsLoading] = useState(false)
-  const theme = useTheme()
+  const [attachedFiles, setAttachedFiles] = useState<File[] | undefined>([])
+  const [newUploadFile, setNewUploadFile] = useState<File | undefined>()
 
-  const [title, setTitle] = useState('')
-  const [description, setDescription] = useState('')
-  const [category, setCategory] = useState('')
-  const [files, setFiles] = useState('')
   const [openSuccessMessage, setOpenSuccessMessage] = useState(false)
   const [openErrorMessage, setOpenErrorMessage] = useState(false)
 
-  const { toggleHelpDesk } = useHelpDeskContext()
+  const theme = useTheme()
+  const { toggleHelpDesk, toggleLoading, isLoading } = useHelpDeskContext()
 
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm({
-    resolver: yupResolver(createChamadoSchema),
+    resolver: yupResolver(createHelpDeskSchema),
     defaultValues: {
       title: '',
       category: '',
       description: '',
-      files: '',
+      status: 'Aberto',
+      files: undefined,
     },
   })
 
-  const PostChamado = async () => {
-    event.preventDefault()
-    setIsLoading(true)
+  const PostHelpDesk: SubmitHandler<OpenHelpDesk> = async () => {
+    toggleLoading()
+    const token = localStorage.getItem('access_token')
+
     const formData = new FormData()
 
-    formData.append('title', title)
-    formData.append('category', category)
-    formData.append('description', description)
+    formData.append('title', textFieldTitle)
+    formData.append('category', selectFieldCategory)
+    formData.append('description', textFieldDescription)
 
-    for (let i = 0; i < files.length; i++) {
-      formData.append('files', files[i])
+    for (let quantity = 0; quantity < attachedFiles!.length; quantity++) {
+      const quantityDisplayed = quantity
+      const attachedFilesToSend = attachedFiles![quantityDisplayed]
+      formData.append('files', attachedFilesToSend)
     }
 
     const headers = {
       headers: {
         'Content-Type': 'multipart/form-data',
+        Authorization: `Bearer ${token}`,
       },
     }
 
     try {
-      await api.post('/abrir-chamado', formData, headers).then(() => {
+      await api.post<OpenHelpDesk>('/helpdesk', formData, headers).then(() => {
+        setTextFieldTitle('')
+        setTextFieldDescription('')
         setOpenSuccessMessage(true)
         toggleHelpDesk()
       })
     } catch (error) {
-      console.log(error)
+      console.error(error)
       setOpenErrorMessage(true)
     }
 
-    setIsLoading(false)
+    toggleLoading()
   }
 
-  const triggerCloseSuccessMessage = (event, reason) => {
+  const triggerCloseSuccessMessage = (
+    event: React.SyntheticEvent | Event,
+    reason?: string,
+  ) => {
     if (reason === 'clickaway') {
       return
     }
-
     setOpenSuccessMessage(false)
   }
 
-  const triggerCloseErrorMessage = (event, reason) => {
+  const triggerCloseErrorMessage = (
+    event: React.SyntheticEvent | Event,
+    reason?: string,
+  ) => {
     if (reason === 'clickaway') {
       return
     }
-
     setOpenErrorMessage(false)
   }
 
-  function triggerNewImageChange(event) {
-    setNewUploadImage(event.target.value)
+  function triggerNewImageChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.currentTarget.files![0]
+    setNewUploadFile(file)
   }
 
-  function triggerSelectNewFile(e) {
-    e.preventDefault()
-    setAttachedFiles([...attachedFiles, newUploadImage])
+  function triggerSelectNewFile() {
+    if (newUploadFile !== undefined) {
+      setAttachedFiles([...attachedFiles!, newUploadFile!])
+    }
 
-    setNewUploadImage('')
+    setNewUploadFile(undefined)
   }
 
-  function deleteImage(imageToDelete) {
-    const newListImageWithoutDeletedOne = files.filter((image) => {
-      return image !== imageToDelete
+  const deleteFile = (attachedFileToDelete: any) => {
+    const newListImageWithoutDeletedOne = attachedFiles!.filter((file) => {
+      return file !== attachedFileToDelete
     })
 
-    setFiles(newListImageWithoutDeletedOne)
+    setAttachedFiles(newListImageWithoutDeletedOne)
   }
 
   return (
@@ -162,7 +195,7 @@ export default function AbrirChamado() {
         >
           <form
             className="AbrirChamadoForm"
-            onSubmit={handleSubmit(PostChamado)}
+            onSubmit={handleSubmit(PostHelpDesk)}
             method="POST"
           >
             <Grid
@@ -175,20 +208,17 @@ export default function AbrirChamado() {
               <Grid item xl={4} lg={6}>
                 <Box sx={{ minWidth: 120, paddingTop: 3 }}>
                   <TextField
-                    id="titulo_id"
-                    {...register('titulo')}
-                    name="titulo"
+                    {...register('title')}
+                    name="title"
                     label="Título"
                     type="text"
                     variant="outlined"
-                    value={title}
                     disabled={isLoading}
-                    onChange={(e) => setTitle(e.target.value)}
+                    value={textFieldTitle}
+                    onChange={(e) => setTextFieldTitle(e.target.value)}
                     error={!!errors.title}
                     helperText={
-                      <Typography variant="body2" color="error">
-                        {errors.title && <span>{errors.title?.message}</span>}
-                      </Typography>
+                      errors.title && <span>{errors.title?.message}</span>
                     }
                     sx={{ width: '100%' }}
                   />
@@ -196,63 +226,68 @@ export default function AbrirChamado() {
               </Grid>
               <Grid item xl={4}>
                 <Select
-                  label="Categoria"
-                  {...register('categoria')}
+                  {...register('category')}
                   placeholder="categoria"
-                  name="categoria"
-                  value={category}
+                  name="category"
                   disabled={isLoading}
                   type="text"
-                  onChange={(e) => setCategory(e.target.value)}
-                  error={!!errors.category}
-                  helperText={
-                    <Typography variant="body2" color="error">
-                      {errors.category && (
-                        <span>{errors.category?.message}</span>
-                      )}
-                    </Typography>
+                  value={selectFieldCategory}
+                  onChange={(event: SelectChangeEvent) =>
+                    setSelectFieldCategory(
+                      event.target.value as
+                        | 'Email'
+                        | 'Ramal'
+                        | 'Rede'
+                        | 'Fluig'
+                        | 'Hardware'
+                        | 'Software'
+                        | 'PcFactory'
+                        | 'Preactor'
+                        | 'Protheus'
+                        | 'Vexon'
+                        | 'Portal do Cliente'
+                        | 'Outros',
+                    )
                   }
+                  error={!!errors.category}
                   sx={{ width: '100%' }}
                 >
-                  <MenuItem value={'email'}>Email</MenuItem>
-                  <MenuItem value={'ramal'}>Ramal</MenuItem>
-                  <MenuItem value={'rede'}>Rede</MenuItem>
-                  <MenuItem value={'fluig'}>Fluig</MenuItem>
-                  <MenuItem value={'hardware'}>Hardware</MenuItem>
-                  <MenuItem value={'software'}>Software</MenuItem>
-                  <MenuItem value={'pcfactory'}>PcFactory</MenuItem>
-                  <MenuItem value={'preactor'}>Preactor</MenuItem>
-                  <MenuItem value={'protheus'}>Protheus</MenuItem>
-                  <MenuItem value={'vexon'}>Vexon</MenuItem>
-                  <MenuItem value={'portaldocliente'}>
+                  <MenuItem value={'Email'}>Email</MenuItem>
+                  <MenuItem value={'Ramal'}>Ramal</MenuItem>
+                  <MenuItem value={'Rede'}>Rede</MenuItem>
+                  <MenuItem value={'Fluig'}>Fluig</MenuItem>
+                  <MenuItem value={'Hardware'}>Hardware</MenuItem>
+                  <MenuItem value={'Software'}>Software</MenuItem>
+                  <MenuItem value={'PcFactory'}>PcFactory</MenuItem>
+                  <MenuItem value={'Preactor'}>Preactor</MenuItem>
+                  <MenuItem value={'Protheus'}>Protheus</MenuItem>
+                  <MenuItem value={'Vexon'}>Vexon</MenuItem>
+                  <MenuItem value={'PortalDoCliente'}>
                     Portal do Cliente
                   </MenuItem>
-                  <MenuItem value={'outros'}>Outros</MenuItem>
+                  <MenuItem value={'Outros'}>Outros</MenuItem>
                 </Select>
               </Grid>
             </Grid>
 
             <Grid item xl={6} lg={9} sx={{ marginY: '20px' }}>
               <TextField
-                id="descricao_id"
-                name="descricao"
-                {...register('descricao')}
+                {...register('description')}
+                name="description"
                 label="Descrição"
                 type="text"
                 variant="outlined"
+                value={textFieldDescription}
                 multiline
                 rows={4}
                 sx={{ width: '100%' }}
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
+                onChange={(e) => setTextFieldDescription(e.target.value)}
                 disabled={isLoading}
                 error={!!errors.description}
                 helperText={
-                  <Typography variant="body2" color="error">
-                    {errors.description && (
-                      <span>{errors.description?.message}</span>
-                    )}
-                  </Typography>
+                  errors.description && (
+                    <span>{errors.description?.message}</span>
+                  )
                 }
               />
             </Grid>
@@ -264,7 +299,7 @@ export default function AbrirChamado() {
               alignItems={'center'}
               gap={2}
             >
-              {files && files.length > 0 && (
+              {attachedFiles && attachedFiles.length > 0 && (
                 <Grid
                   container
                   gap={2}
@@ -272,12 +307,12 @@ export default function AbrirChamado() {
                   paddingX={2}
                   className="FileList"
                 >
-                  {files.map((file) => {
+                  {attachedFiles.map((file) => {
                     return (
                       <FileList
-                        image={file}
-                        key={uniqueId(file.id)}
-                        onDeleteImage={deleteImage}
+                        file={file}
+                        key={uniqueId(String(file.lastModified))}
+                        onDeleteFile={deleteFile}
                       />
                     )
                   })}
@@ -300,21 +335,24 @@ export default function AbrirChamado() {
                 <Tooltip title="Anexar arquivo" placement="top" arrow>
                   <IconButton
                     className="upload"
-                    variant="contained"
                     component="label"
                     color="primary"
                     onChange={triggerSelectNewFile}
+                    disabled={isLoading}
                   >
                     <input
-                      name="file"
-                      value={newUploadImage}
-                      {...register('image')}
+                      {...register('files')}
+                      id="file-input"
                       hidden
-                      accept="image/*"
-                      multiple="3"
+                      // accept="image/*"
                       type="file"
+                      multiple
+                      disabled={isLoading}
                       onChange={(e) => {
-                        setFiles([...files, ...e.target.files])
+                        setAttachedFiles([
+                          ...attachedFiles!,
+                          ...e.target.files!,
+                        ])
                         triggerNewImageChange(e)
                       }}
                     />

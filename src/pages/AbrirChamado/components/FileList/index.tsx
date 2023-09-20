@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { MdDelete, MdImage } from 'react-icons/md'
+import React, { ReactNode, memo, useState } from 'react'
+import { MdDelete } from 'react-icons/md'
 import {
   Button,
   Card,
@@ -11,13 +11,20 @@ import {
   DialogContent,
   DialogContentText,
 } from '@mui/material'
+import { useHelpDeskContext } from '../../../../shared/contexts/HelpDeskContext'
 import { filesize } from 'filesize'
+import { AiFillFile } from 'react-icons/ai'
+interface FileProps {
+  file: File
+  onDeleteFile: (attachedFileToDelete: any) => void
+}
 
-export function FileList({ image, onDeleteImage }) {
+const FileList: React.FC<FileProps> = ({ file, onDeleteFile }) => {
   const [openDialogAlert, setOpenDialogAlert] = useState(false)
+  const { isLoading } = useHelpDeskContext()
 
   function triggerDeleteImage() {
-    onDeleteImage(image)
+    onDeleteFile(file)
   }
 
   const triggerOpenDialogAlert = () => {
@@ -42,10 +49,19 @@ export function FileList({ image, onDeleteImage }) {
       variant="outlined"
     >
       <Box display={'flex'} alignItems={'center'} gap={'1rem'}>
-        {image ? (
-          <img src={URL.createObjectURL(image)} alt="" height={40} width={40} />
+        {file.name.includes('.jpeg') ||
+        file.name.includes('.jpg') ||
+        file.name.includes('.gif') ||
+        file.name.includes('.png') ? (
+          <img
+            src={URL.createObjectURL(file)}
+            alt=""
+            height={40}
+            width={40}
+            style={{ borderRadius: '5px' }}
+          />
         ) : (
-          <img src={<MdImage size={35} />} alt="" />
+          <AiFillFile size={25} />
         )}
         <Box
           display={'flex'}
@@ -53,29 +69,23 @@ export function FileList({ image, onDeleteImage }) {
           justifyContent={'center'}
           flexDirection={'column'}
         >
-          <Box
-            maxWidth={'30ch'}
-            whiteSpace={'nowrap'}
-            textOverflow={'ellipsis'}
-            overflow={'hidden'}
-          >
-            <Typography variant="h6" sx={{ fontSize: '16px' }}>
-              {image.name}
+          <Box>
+            <Typography variant="h6" fontSize={'1rem'} width={'20ch'} noWrap>
+              {file.name}
             </Typography>
           </Box>
-          <Box
-            fontSize={'0.75rem'}
-            marginTop={'4px'}
-            maxWidth={'30ch'}
-            width={'70%'}
-          >
+          <Box fontSize={'0.75rem'} marginTop={'4px'} width={'70%'}>
             <Typography variant="body2" fontSize={'12px'} color="#999">
-              {filesize(image.size)}
+              {filesize(file.size) as ReactNode}
             </Typography>
           </Box>
         </Box>
       </Box>
-      <Button color="error" onClick={triggerOpenDialogAlert}>
+      <Button
+        color="error"
+        onClick={triggerOpenDialogAlert}
+        disabled={isLoading}
+      >
         <MdDelete size={25} />
       </Button>
       <Dialog open={openDialogAlert} onClose={triggerCloseDialogAlert}>
@@ -108,3 +118,5 @@ export function FileList({ image, onDeleteImage }) {
     </Card>
   )
 }
+
+export default memo(FileList)

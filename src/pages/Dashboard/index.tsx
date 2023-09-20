@@ -3,13 +3,19 @@ import React from 'react'
 import DefaultLayout from '../../shared/layouts/DefaultLayout'
 import { Box, Grid, useTheme } from '@mui/material'
 import { CardDashboard } from './components/CardDashboard'
+import { CardExibicaoMeusChamados } from './components/CardExibicaoMeusChamados'
+import { useUserContext } from '../../shared/contexts/userContext'
 
 
 const Dashboard: React.FC = () => {
   const theme = useTheme()
 
+  const { user } = useUserContext()
+
+  const currentUser = user
+
   return (
-    <DefaultLayout 
+    <DefaultLayout  
       tituloPagina="Dashboard" 
       mostrarBotaoTema       
       mostrarBotaoLogout
@@ -17,6 +23,7 @@ const Dashboard: React.FC = () => {
       mostrarBotaoHome
       mostrarBotaoOpenHelpDesk
       barraDeFerramentas={''}
+      showNotificationButton
     >
       <Box         
           padding={2}
@@ -28,8 +35,11 @@ const Dashboard: React.FC = () => {
           borderColor={theme.palette.divider}
         >
         <Grid container spacing={2}>
-          <Grid item lg={4} xs={12}>
-            <CardDashboard />
+          <Grid item xl={3} md={6} xs={12}>
+          {currentUser?.role === "admin" && <CardDashboard />}
+          </Grid>
+          <Grid item xl={3} md={6} xs={12}>
+            {currentUser?.role === "admin" && <CardExibicaoMeusChamados />}
           </Grid>
         </Grid>
       </Box>

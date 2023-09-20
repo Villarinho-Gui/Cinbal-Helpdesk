@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import DefaultLayout from '../../layouts/DefaultLayout'
-import { Chamado, HelpDeskDataProps } from '../Chamado'
 
 import {
   Button,
@@ -16,7 +15,7 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material'
-import { BarraFerramentasListagemDeChamados } from '../BarraFerramentasListagemDeChamados'
+import BarraFerramentasListagemDeChamados from '../BarraFerramentasListagemDeChamados'
 
 import api from '../../../service/api/config/configApi'
 import { useDrawerContext } from '../../contexts/DrawerContext'
@@ -25,23 +24,11 @@ import 'react-date-range/dist/styles.css' // main style file
 import 'react-date-range/dist/theme/default.css' // theme css file
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import { format } from 'date-fns'
+import Chamado from '../Chamado'
+import { HelpDeskListProp } from '../../types/helpdeskType'
+import { useUserContext } from '../../contexts/userContext'
 
-interface FileProps {
-  id: string
-  url: string
-  callId: string
-}
-interface HelpDeskListProp extends HelpDeskDataProps {
-  id: string
-  author: string
-  title: string
-  category: string
-  description: string
-  files?: FileProps[]
-  createdAt: Date
-}
-
-export const ListagemDeChamados: React.FC<HelpDeskListProp> = () => {
+export const ListagemDeChamados: React.FC = () => {
   const [helpDeskData, setHelpDeskData] = useState<HelpDeskListProp[]>([])
   const [filteredHelpDeskDataByDate, setFilteredHelpDeskDataByDate] = useState<
     HelpDeskListProp[]
@@ -61,29 +48,34 @@ export const ListagemDeChamados: React.FC<HelpDeskListProp> = () => {
 
   const { toggleDrawerOpen } = useDrawerContext()
   const { isNewHelpDesk } = useHelpDeskContext()
+  const token = localStorage.getItem('access_token')
+
+  const { user } = useUserContext()
+  const currentUser = user
 
   useEffect(() => {
     setIsLoading(true)
-
     api
-      .get<HelpDeskDataProps>('/chamados')
+      .get<HelpDeskListProp[]>('/helpdesk', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((response) => {
         const { data } = response
-        const allHelpDeskData = Object.values(data)[0]
-
         setIsLoading(false)
 
-        setHelpDeskData(allHelpDeskData)
-        setFilteredHelpDeskDataByDate(allHelpDeskData)
-
+        setHelpDeskData(data)
+        setFilteredHelpDeskDataByDate(data)
         if (isNewHelpDesk) {
-          setHelpDeskData(allHelpDeskData)
+          setHelpDeskData(data)
         }
       })
       .catch((error) => {
-        console.log(error)
+        console.error(error)
         alert('Ocorreu um erro ao buscar os chamados')
       })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isNewHelpDesk])
 
   const filteredBySearchTextField =
@@ -91,14 +83,28 @@ export const ListagemDeChamados: React.FC<HelpDeskListProp> = () => {
       ? helpDeskData!.filter((helpDesk) => {
           return (
             (helpDesk.title &&
-              helpDesk.title.includes(searchTextField.toLowerCase())) ||
+              helpDesk.title
+                .toLowerCase()
+                .includes(searchTextField.toLowerCase())) ||
             (helpDesk.description &&
-              helpDesk.description.includes(searchTextField.toLowerCase())) ||
+              helpDesk.description
+                .toLowerCase()
+                .includes(searchTextField.toLowerCase())) ||
             (helpDesk.category &&
-              helpDesk.category.includes(searchTextField.toLowerCase()))
+              helpDesk.category
+                .toLowerCase()
+                .includes(searchTextField.toLowerCase())) ||
+            (helpDesk.user.name &&
+              helpDesk.user.name
+                .toLowerCase()
+                .includes(searchTextField.toLowerCase()))
           )
         })
       : []
+
+  const filteredHelpDeskListByUser = helpDeskData.filter((helpDesk) => {
+    return helpDesk.user.name === currentUser?.name
+  })
 
   const triggerSelectDate = (date: any) => {
     const filterByDate = filteredHelpDeskDataByDate.filter(
@@ -135,11 +141,10 @@ export const ListagemDeChamados: React.FC<HelpDeskListProp> = () => {
 
   return (
     <DefaultLayout
-      tituloPagina={''}
-      mostrarTituloPagina={false}
+      tituloPagina={'HelpDesks'}
+      mostrarTituloPagina={true}
       mostrarBotaoTema={false}
       barraDeFerramentas={
-        // ...
         <BarraFerramentasListagemDeChamados
           mostrarInputBusca
           mostrarBotaoFiltro
@@ -151,7 +156,6 @@ export const ListagemDeChamados: React.FC<HelpDeskListProp> = () => {
           aoClicarBotaoFiltro={triggerOpenFilterDialog}
           aoClicarBotaoLimparFiltro={removeFilter}
         />
-        // ...
       }
     >
       {isLoading && <LinearProgress variant="indeterminate" />}
@@ -160,46 +164,93 @@ export const ListagemDeChamados: React.FC<HelpDeskListProp> = () => {
           <Typography variant="body2" sx={{ marginLeft: '10px' }}>
             Nenhum chamado correspondente
           </Typography>
-        ) : (
-          <List sx={{ overflow: 'auto', padding: '0px' }}>
+        ) : currentUser?.role === 'admin' ? (
+          <List
+            sx={{
+              overflow: 'auto',
+              padding: '0px',
+            }}
+          >
             {filteredBySearchTextField.map((UniqueHelpDesk) => (
               <ListItem key={UniqueHelpDesk.id} disablePadding>
                 <Chamado
                   id={UniqueHelpDesk.id}
-                  author={UniqueHelpDesk.author}
+                  author={UniqueHelpDesk.user.name}
                   title={UniqueHelpDesk.title}
                   category={UniqueHelpDesk.category}
                   description={UniqueHelpDesk.description}
                   maxLines={2}
                   createdAt={new Date(UniqueHelpDesk.createdAt)}
-                  files={UniqueHelpDesk.files}
+                  countFiles={UniqueHelpDesk.countFiles}
                   onClick={smDown ? toggleDrawerOpen : undefined}
                   to={`chamado/detalhe/${UniqueHelpDesk.id}`}
+                  status={UniqueHelpDesk.status}
                 />
               </ListItem>
             ))}
           </List>
+        ) : (
+          filteredHelpDeskListByUser.map((userHelpDesk) => (
+            <ListItem key={userHelpDesk.id} disablePadding>
+              <Chamado
+                id={userHelpDesk.id}
+                author={userHelpDesk.user.name}
+                title={userHelpDesk.title}
+                category={userHelpDesk.category}
+                description={userHelpDesk.description}
+                maxLines={2}
+                createdAt={new Date(userHelpDesk.createdAt)}
+                countFiles={userHelpDesk.countFiles}
+                onClick={smDown ? toggleDrawerOpen : undefined}
+                to={`chamado/detalhe/${userHelpDesk.id}`}
+                status={userHelpDesk.status}
+              />
+            </ListItem>
+          ))
         )
-      ) : (
+      ) : currentUser?.role === 'admin' ? (
         <List sx={{ overflow: 'auto', padding: '0px' }}>
           {helpDeskData.map((UniqueHelpDesk) => (
             <ListItem key={UniqueHelpDesk.id} disablePadding>
               <Chamado
                 id={UniqueHelpDesk.id}
-                author={UniqueHelpDesk.author}
+                author={UniqueHelpDesk.user.name}
                 title={UniqueHelpDesk.title}
                 category={UniqueHelpDesk.category}
                 description={UniqueHelpDesk.description}
                 maxLines={2}
                 createdAt={new Date(UniqueHelpDesk.createdAt)}
+                countFiles={UniqueHelpDesk.countFiles}
                 onClick={smDown ? toggleDrawerOpen : undefined}
                 to={`chamado/detalhe/${UniqueHelpDesk.id}`}
+                status={UniqueHelpDesk.status}
               />
             </ListItem>
           ))}
         </List>
+      ) : filteredHelpDeskListByUser.length > 0 ? (
+        filteredHelpDeskListByUser.map((userHelpDesk) => (
+          <ListItem key={userHelpDesk.id} disablePadding>
+            <Chamado
+              id={userHelpDesk.id}
+              author={userHelpDesk.user.name}
+              title={userHelpDesk.title}
+              category={userHelpDesk.category}
+              description={userHelpDesk.description}
+              maxLines={2}
+              createdAt={new Date(userHelpDesk.createdAt)}
+              countFiles={userHelpDesk.countFiles}
+              onClick={smDown ? toggleDrawerOpen : undefined}
+              to={`chamado/detalhe/${userHelpDesk.id}`}
+              status={userHelpDesk.status}
+            />
+          </ListItem>
+        ))
+      ) : (
+        <Typography variant="body2" sx={{ marginLeft: '10px' }}>
+          Você ainda não tem nenhum chamado aberto!
+        </Typography>
       )}
-
       {showMessageIfNotExistHelpDeskFilteredByDate ? (
         <Typography variant="body2" sx={{ marginLeft: '10px' }}>
           Nenhum chamado nesta data

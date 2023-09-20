@@ -1,24 +1,17 @@
 /* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable import/no-duplicates */
-import React from 'react'
+import React, { memo } from 'react'
 
-import { Box, Drawer, Link, useMediaQuery, useTheme } from '@mui/material'
+import { Box, Drawer, useMediaQuery, useTheme } from '@mui/material'
 import { useDrawerContext } from '../../contexts/DrawerContext'
 import { ListagemDeChamados } from '../ListagemDeChamados'
-import { useAppThemeContext } from '../../contexts/ThemeContext'
-import logoDarkMode from '../../../media/images/logo-full.png'
-import logoLightMode from '../../../media/images/logo2-full.png'
-import { useNavigate } from 'react-router-dom'
 import { Outlet } from 'react-router-dom'
 
-export const MenuLateral: React.FC = () => {
+const MenuLateral: React.FC = () => {
   const theme = useTheme()
   const smDown = useMediaQuery(theme.breakpoints.down('sm'))
 
   const { isDrawerOpen, toggleDrawerOpen } = useDrawerContext()
-  const { themeName } = useAppThemeContext()
-
-  const navigate = useNavigate()
 
   return (
     <>
@@ -30,37 +23,10 @@ export const MenuLateral: React.FC = () => {
       >
         <Box
           width={theme.spacing(50)}
-          height="94vh"
+          height="100vh"
           display="flex"
           flexDirection="column"
         >
-          <Box
-            position={'relative'}
-            top="40px"
-            left="110px"
-            width="max-content"
-          >
-            {themeName === 'light' ? (
-              <Link
-                component="button"
-                onClick={() => navigate('/home/dashboard')}
-              >
-                <img
-                  src={logoLightMode}
-                  alt="Cinbal Help Desk Logo"
-                  height={57}
-                  width={130}
-                />
-              </Link>
-            ) : (
-              <Link
-                component="button"
-                onClick={() => navigate('/home/dashboard')}
-              >
-                <img src={logoDarkMode} height={57} width={130} />
-              </Link>
-            )}
-          </Box>
           <ListagemDeChamados />
         </Box>
       </Drawer>
@@ -71,3 +37,5 @@ export const MenuLateral: React.FC = () => {
     </>
   )
 }
+
+export default memo(MenuLateral)
