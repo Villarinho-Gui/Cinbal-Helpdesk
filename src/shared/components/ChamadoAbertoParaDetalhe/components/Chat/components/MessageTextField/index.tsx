@@ -141,7 +141,7 @@ export const MessageTextField: React.FC = () => {
           />
         </form>
         <Box display={'flex'} marginTop={1} marginX={1}>
-          <Tooltip title="Anexar arquivo" placement="top" arrow>
+          <Tooltip title="Em desenvolvimento" placement="top" arrow>
             <IconButton
               className="upload"
               component="label"
@@ -154,7 +154,7 @@ export const MessageTextField: React.FC = () => {
                 hidden
                 type="file"
                 multiple
-                disabled={isLoading}
+                disabled
                 onChange={(e) => {
                   setAttachedFiles([...attachedFiles!, ...e.target.files!])
                   triggerNewImageChange(e)
