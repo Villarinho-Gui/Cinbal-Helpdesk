@@ -224,12 +224,16 @@ export const CadastroUsuario: React.FC = () => {
                 </Typography>
               }
               type="password"
-              placeholder="Senha ex: N0Wk!c1Sb5z9"
+              placeholder="Senha"
               autoComplete="current-password"
               fullWidth
               disabled={isLoading}
               size="small"
             />
+            <Alert severity="info">
+              A senha deve ter no mínimo 8 caracteres, 1 caractere maiúsculo, 1
+              minúsculo, 1 número e um caractere especial.
+            </Alert>
           </Grid>
           <Grid item lg={12} sm={12} xs={12}>
             <Typography
