@@ -224,7 +224,7 @@ export const CadastroUsuario: React.FC = () => {
                 </Typography>
               }
               type="password"
-              placeholder="Senha"
+              placeholder="Senha ex: N0Wk!c1Sb5z9"
               autoComplete="current-password"
               fullWidth
               disabled={isLoading}
