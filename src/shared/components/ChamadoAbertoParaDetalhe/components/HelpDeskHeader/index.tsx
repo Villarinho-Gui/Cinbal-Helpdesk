@@ -18,7 +18,7 @@ import {
 } from '@mui/material'
 import React, { useState } from 'react'
 import { IoMdSend } from 'react-icons/io'
-import { MdMoreVert, MdOutlineEmojiPeople } from 'react-icons/md'
+import { MdClose, MdMoreVert, MdOutlineEmojiPeople } from 'react-icons/md'
 import { useForm } from 'react-hook-form'
 import api from '../../../../../service/api/config/configApi'
 import * as yup from 'yup'
@@ -81,12 +81,34 @@ export const HelpDeskHeader: React.FC<HelpDeskHeaderProps> = ({
   const smDown = useMediaQuery(theme.breakpoints.down('sm'))
   const mdDown = useMediaQuery(theme.breakpoints.down('md'))
 
-  const takeOverHelpDesk = async () => {
+  async function takeOverHelpDesk() {
     const formData = new FormData()
     const updateToInProgress = 'Em Andamento'
 
     formData.append('accountable', accountable!)
     formData.append('status', updateToInProgress)
+    const headers = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `bearer ${token}`,
+      },
+    }
+    try {
+      await api.patch(`/helpdesk/${id}`, formData, headers).then(() => {
+        setIsAssumed(true)
+        setAccountable(user!.name)
+        setChangingAccountable(false)
+      })
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  async function closeSelectAdmin() {
+    const formData = new FormData()
+    const accountable = currentUser?.name
+
+    formData.append('accountable', accountable!)
     const headers = {
       headers: {
         'Content-Type': 'application/json',
@@ -177,7 +199,7 @@ export const HelpDeskHeader: React.FC<HelpDeskHeaderProps> = ({
             <form
               method="POST"
               onSubmit={handleSubmit(takeOverHelpDesk)}
-              style={{ display: 'flex', width: '350px' }}
+              style={{ display: 'flex', width: '350px', gap: '2px' }}
             >
               <Select
                 {...register('accountable')}
@@ -189,19 +211,42 @@ export const HelpDeskHeader: React.FC<HelpDeskHeaderProps> = ({
                   setAccountable(e.target.value)
                 }
                 fullWidth
-                sx={{ marginRight: '20px' }}
               >
-                {adminUser?.map((user) => {
-                  return (
-                    user.role === 'admin' &&
-                    currentUser?.id !== user.id && (
-                      <MenuItem key={user.id} value={user.name}>
-                        {user.name}
-                      </MenuItem>
-                    )
+                {adminUser?.some(
+                  (user) =>
+                    user.role === 'admin' && currentUser?.id !== user.id,
+                ) ? (
+                  adminUser.map(
+                    (user) =>
+                      user.role === 'admin' &&
+                      currentUser?.id !== user.id && (
+                        <MenuItem key={user.id} value={user.name}>
+                          {user.name}
+                        </MenuItem>
+                      ),
                   )
-                })}
+                ) : (
+                  <MenuItem value="">
+                    <Typography>Nenhum usuário encontrado</Typography>
+                  </MenuItem>
+                )}
               </Select>
+
+              <IconButton
+                type="submit"
+                disabled={isLoading}
+                onClick={() => {
+                  closeSelectAdmin()
+                }}
+              >
+                <Icon>
+                  {isLoading ? (
+                    <CircularProgress size={25} />
+                  ) : (
+                    <MdClose size={25} />
+                  )}
+                </Icon>
+              </IconButton>
               <IconButton
                 type="submit"
                 disabled={isLoading}
