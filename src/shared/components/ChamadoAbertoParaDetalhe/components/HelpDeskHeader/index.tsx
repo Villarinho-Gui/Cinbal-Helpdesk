@@ -195,7 +195,9 @@ export const HelpDeskHeader: React.FC<HelpDeskHeaderProps> = ({
         alignItems={'center'}
       >
         {isAdmin === 'admin' ? (
-          changingAccountable ? (
+          changingAccountable &&
+          status !== 'Concluído' &&
+          status !== 'Terceiro' ? (
             <form
               method="POST"
               onSubmit={handleSubmit(takeOverHelpDesk)}
@@ -331,7 +333,9 @@ export const HelpDeskHeader: React.FC<HelpDeskHeaderProps> = ({
               onClose={handleClose}
             >
               <MenuItem
-                onClick={removeAccountable}
+                onClick={() => {
+                  removeAccountable()
+                }}
                 sx={{ display: 'flex', gap: '5px', alignItems: 'center' }}
               >
                 <ListItemText>Passar HelpDesk</ListItemText>
