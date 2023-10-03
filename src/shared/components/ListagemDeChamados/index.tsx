@@ -106,6 +106,10 @@ export const ListagemDeChamados: React.FC = () => {
     return helpDesk.user.name === currentUser?.name
   })
 
+  const filteredHelpDeskByAccountable = helpDeskData.filter((helpdesk) => {
+    return helpdesk.accountable === currentUser?.name
+  })
+
   const triggerSelectDate = (date: any) => {
     const filterByDate = filteredHelpDeskDataByDate.filter(
       (helpDesk) =>
@@ -210,7 +214,7 @@ export const ListagemDeChamados: React.FC = () => {
         )
       ) : currentUser?.role === 'admin' ? (
         <List sx={{ overflow: 'auto', padding: '0px' }}>
-          {helpDeskData.map((UniqueHelpDesk) => (
+          {filteredHelpDeskByAccountable.map((UniqueHelpDesk) => (
             <ListItem key={UniqueHelpDesk.id} disablePadding>
               <Chamado
                 id={UniqueHelpDesk.id}
