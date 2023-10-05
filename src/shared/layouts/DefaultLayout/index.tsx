@@ -20,7 +20,7 @@ import { CgLogOut } from 'react-icons/cg'
 
 import { useDrawerContext } from '../../contexts/DrawerContext'
 
-import { BsFillBellFill, BsMoonFill } from 'react-icons/bs'
+import { BsMoonFill } from 'react-icons/bs'
 import { AiFillHome, AiOutlinePlus } from 'react-icons/ai'
 import { MdClose } from 'react-icons/md'
 
@@ -70,10 +70,6 @@ const DefaultLayout: React.FC<IDefaultLayoutProps> = ({
     React.useState<null | HTMLElement>(null)
   const openCardInformation = Boolean(openInformation)
 
-  const [openNotification, setOpenNotification] =
-    React.useState<null | HTMLElement>(null)
-  const openCardNotification = Boolean(openNotification)
-
   const logoutUser = () => {
     setIsLogged(false)
     localStorage.removeItem('access_token')
@@ -87,19 +83,8 @@ const DefaultLayout: React.FC<IDefaultLayoutProps> = ({
     [],
   )
 
-  const openNotifications = useCallback(
-    (event: React.MouseEvent<HTMLButtonElement>) => {
-      setOpenNotification(event.currentTarget)
-    },
-    [],
-  )
-
   const handleCloseUserInformation = () => {
     setOpenInformation(null)
-  }
-
-  const handleCloseNotification = () => {
-    setOpenNotification(null)
   }
 
   return (
@@ -249,28 +234,6 @@ const DefaultLayout: React.FC<IDefaultLayoutProps> = ({
                     </CardContent>
                   </Card>
                 </Menu>
-              </>
-            )}
-
-            {showNotificationButton && (
-              <>
-                <Tooltip title="Notificações" arrow>
-                  <IconButton onClick={openNotifications}>
-                    <Icon>
-                      <BsFillBellFill size={20} />
-                    </Icon>
-                  </IconButton>
-                </Tooltip>
-                <Menu
-                  id="basic-menu"
-                  anchorEl={openNotification}
-                  open={openCardNotification}
-                  onClose={handleCloseNotification}
-                  sx={{ maxHeight: '700px' }}
-                  MenuListProps={{
-                    'aria-labelledby': 'basic-button',
-                  }}
-                ></Menu>
               </>
             )}
 
