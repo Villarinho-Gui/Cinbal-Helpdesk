@@ -22,7 +22,7 @@ interface HelpDeskDashboardList {
   to: string
 }
 
-export const CardExibicaoMeusChamados: React.FC = () => {
+export const CardHelpDesksAssumidos: React.FC = () => {
   const { data } = useFetch('http://localhost:3535/helpdesk')
   const { user } = useUserContext()
 
@@ -38,7 +38,7 @@ export const CardExibicaoMeusChamados: React.FC = () => {
         <Box display={'flex'} gap={'10px'} alignItems={'center'}>
           <HiCollection size={35} />
           <Box display={'flex'} flexDirection={'column'}>
-            <Typography variant="h6">Chamados</Typography>
+            <Typography variant="h6">HelpDesks assumidos</Typography>
             <Typography variant="body2">
               Todos os chamados assumidos por você irão aparecer aqui.
             </Typography>

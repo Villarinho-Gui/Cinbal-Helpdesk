@@ -1,48 +1,30 @@
-import {
-  Card,
-  Box,
-  CardContent,
-  Typography,
-  Skeleton,
-  Button,
-  useTheme,
-} from '@mui/material'
+import { Card, Box, CardContent, Typography } from '@mui/material'
 import React from 'react'
-import { useFetch } from '../../../../shared/hooks/useFetch'
 
-export const CardDashboard: React.FC = () => {
-  const { data, isLoading } = useFetch('http://localhost:3535/helpdesk/')
+interface CardOpenedHelpDesksProps {
+  numberOfOpened: number | undefined
+}
 
-  const theme = useTheme()
-
+export const CardOpenedHelpDesks: React.FC<CardOpenedHelpDesksProps> = ({
+  numberOfOpened,
+}) => {
   return (
     <Card elevation={0} variant="outlined">
       <CardContent>
         <Box>
           <Typography variant="h6" sx={{ margin: 'auto' }}>
-            Chamados Existentes
+            HelpDesks Abertos
           </Typography>
           <Box display="flex" gap={2} width="100%" alignItems="center">
-            {isLoading ? (
-              <Skeleton
-                variant="text"
-                sx={{ fontSize: '4rem' }}
-                width="100px"
-              />
-            ) : (
-              <Typography
-                variant="body2"
-                color={theme.palette.text.primary}
-                sx={{ fontSize: '3rem', margin: 'auto' }}
-              >
-                {data!.length}
-              </Typography>
-            )}
+            <Typography
+              variant="body2"
+              fontSize={45}
+              color="text.secondary"
+              sx={{ margin: 'auto' }}
+            >
+              {numberOfOpened}
+            </Typography>
           </Box>
-
-          <Button variant="outlined" sx={{ width: '100%' }}>
-            Visualizar
-          </Button>
         </Box>
       </CardContent>
     </Card>
