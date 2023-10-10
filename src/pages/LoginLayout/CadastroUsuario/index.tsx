@@ -231,7 +231,7 @@ export const CadastroUsuario: React.FC = () => {
               size="small"
             />
             <Alert severity="info">
-              A senha deve ter no mínimo 8 caracteres, 1 caractere maiúsculo, 1
+              A senha deve ter no mínimo 6 caracteres, 1 caractere maiúsculo, 1
               minúsculo, 1 número e um caractere especial.
             </Alert>
           </Grid>
