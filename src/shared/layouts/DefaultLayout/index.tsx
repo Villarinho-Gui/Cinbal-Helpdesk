@@ -66,6 +66,8 @@ const DefaultLayout: React.FC<IDefaultLayoutProps> = ({
 
   const navigate = useNavigate()
 
+  const currentUser = user
+
   const [openInformation, setOpenInformation] =
     React.useState<null | HTMLElement>(null)
   const openCardInformation = Boolean(openInformation)
@@ -257,15 +259,17 @@ const DefaultLayout: React.FC<IDefaultLayoutProps> = ({
       </Box>
       {mostrarBotaoOpenHelpDesk && (
         <Box display={'flex'} justifyContent={'end'} padding={'20px'}>
-          <Button
-            variant="contained"
-            color="primary"
-            sx={{ position: '-webkit-sticky', right: '0px' }}
-            endIcon={<AiOutlinePlus />}
-            onClick={() => navigate('/home/abrir-chamado')}
-          >
-            Abrir novo chamado
-          </Button>
+          {currentUser?.role !== 'admin' && (
+            <Button
+              variant="contained"
+              color="primary"
+              sx={{ position: '-webkit-sticky', right: '0px' }}
+              endIcon={<AiOutlinePlus />}
+              onClick={() => navigate('/home/abrir-chamado')}
+            >
+              Abrir novo chamado
+            </Button>
+          )}
         </Box>
       )}
     </Box>
