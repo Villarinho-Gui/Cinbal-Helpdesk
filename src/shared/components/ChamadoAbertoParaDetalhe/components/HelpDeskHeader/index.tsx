@@ -305,9 +305,11 @@ export const HelpDeskHeader: React.FC<HelpDeskHeaderProps> = ({
             color={'text.secondary'}
             marginRight={4}
           >
-            {helpDeskAccountable
-              ? `${helpDeskAccountable} assumiu este chamado`
-              : ''}
+            {helpDeskAccountable ? (
+              `${helpDeskAccountable} assumiu este chamado`
+            ) : (
+              <Typography>Aguardando responsável</Typography>
+            )}
           </Typography>
         )}
 
