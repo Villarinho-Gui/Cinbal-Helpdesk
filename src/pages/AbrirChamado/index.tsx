@@ -114,6 +114,7 @@ export const AbrirChamado: React.FC = () => {
       await api.post<OpenHelpDesk>('/helpdesk', formData, headers).then(() => {
         setTextFieldTitle('')
         setTextFieldDescription('')
+        setAttachedFiles([])
         setOpenSuccessMessage(true)
         toggleHelpDesk()
       })
@@ -197,6 +198,7 @@ export const AbrirChamado: React.FC = () => {
             className="AbrirChamadoForm"
             onSubmit={handleSubmit(PostHelpDesk)}
             method="POST"
+            acceptCharset="UTF-8"
           >
             <Grid
               container
