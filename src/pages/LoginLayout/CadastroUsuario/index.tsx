@@ -205,7 +205,7 @@ export const CadastroUsuario: React.FC = () => {
                 </Typography>
               }
               type="email"
-              placeholder="E-mail"
+              placeholder="nome.sobrenome@cinbal.com.br"
               fullWidth
               disabled={isLoading}
               size="small"
