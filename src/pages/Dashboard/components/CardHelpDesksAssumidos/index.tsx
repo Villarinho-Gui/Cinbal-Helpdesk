@@ -23,7 +23,7 @@ interface HelpDeskDashboardList {
 }
 
 export const CardHelpDesksAssumidos: React.FC = () => {
-  const { data } = useFetch('http://localhost:3535/helpdesk')
+  const { data } = useFetch('http://localhost:3545/helpdesk')
   const { user } = useUserContext()
 
   const currentUser = user

@@ -6,7 +6,6 @@ import { CardOpenedHelpDesks } from './components/CardHelpDesksExistentes'
 import { CardHelpDesksAssumidos } from './components/CardHelpDesksAssumidos'
 import { useUserContext } from '../../shared/contexts/userContext'
 import { CardHelpDesksConcluidos } from './components/CardHelpdesksConcluidos'
-import { CardCategoriaMaisRepetida } from './components/CardCategoriaMaisRepetida'
 import { CardHelpDesksEmAndamento } from './components/CardHelpDesksEmAndamento'
 import { useFetch } from '../../shared/hooks/useFetch'
 import HelpDeskProps from '../../shared/types/helpdeskType'
@@ -18,7 +17,7 @@ const Dashboard: React.FC = () => {
   const { user } = useUserContext()
   const currentUser = user
 
-  const { data } = useFetch('http://localhost:3535/helpdesk/')
+  const { data } = useFetch('http://localhost:3545/helpdesk/')
 
 
   const helpDesksInProgress = data?.filter((helpDesk: HelpDeskProps) => {
@@ -29,23 +28,23 @@ const Dashboard: React.FC = () => {
     return helpDesk.status === 'Concluído'
   })
 
-  const categoryThatAppearsTheMost = data?.reduce(
-    (quantity: any, helpdesk: any) => {
-      const chave = helpdesk.category
-      if (!quantity[chave]) {
-        quantity[chave] = 0
-      }
-      quantity[chave]++
-      return quantity
-    },
-    [],
-  )
+  // const categoryThatAppearsTheMost = data?.reduce(
+  //   (quantity: any, helpdesk: any) => {
+  //     const chave = helpdesk.category
+  //     if (!quantity[chave]) {
+  //       quantity[chave] = 0
+  //     }
+  //     quantity[chave]++
+  //     return quantity
+  //   },
+  //   [],
+  // )
 
-  const maxCategory = categoryThatAppearsTheMost
-    ? Object.keys(categoryThatAppearsTheMost).reduce((a, b) =>
-        categoryThatAppearsTheMost[a] > categoryThatAppearsTheMost[b] ? a : b,
-      )
-    : null
+  // const maxCategory = categoryThatAppearsTheMost
+  //   ? Object.keys(categoryThatAppearsTheMost).reduce((a, b) =>
+  //       categoryThatAppearsTheMost[a] > categoryThatAppearsTheMost[b] ? a : b,
+  //     )
+  //   : null
 
   return (
     <DefaultLayout  
@@ -53,7 +52,7 @@ const Dashboard: React.FC = () => {
       mostrarBotaoTema       
       mostrarBotaoLogout
       mostrarBotaoPerfil 
-      mostrarBotaoHome
+      mostrarBotaoHome={currentUser?.role === "admin"}
       mostrarBotaoOpenHelpDesk
       barraDeFerramentas={''}
       showNotificationButton
@@ -72,14 +71,14 @@ const Dashboard: React.FC = () => {
             {currentUser?.role === "admin" && <CardOpenedHelpDesks numberOfOpened={data?.length}/>}
           </Grid>
           <Grid item xl={3} md={4} xs={12}>
-            {currentUser?.role === "admin" && <CardHelpDesksConcluidos numberOfCompleted={completedHelpDesks.length}/>}
+            {currentUser?.role === "admin" && <CardHelpDesksConcluidos numberOfCompleted={completedHelpDesks?.length}/>}
           </Grid>
           <Grid item xl={3} md={4} xs={12}>
-            {currentUser?.role === "admin" && <CardHelpDesksEmAndamento quantityInProgress={helpDesksInProgress.length}/>}
+            {currentUser?.role === "admin" && <CardHelpDesksEmAndamento quantityInProgress={helpDesksInProgress?.length}/>}
           </Grid>
-          <Grid item xl={3} md={6} xs={12}>
+          {/* {categoryThatAppearsTheMost ? <Grid item xl={3} md={6} xs={12}>
             {currentUser?.role === "admin" && <CardCategoriaMaisRepetida maxCategory={maxCategory!}/>}
-          </Grid>
+          </Grid> : ''} */}
           <Grid item xl={3} md={12} xs={12}>
             {currentUser?.role === "admin" && <CardHelpDesksAssumidos />}
           </Grid>

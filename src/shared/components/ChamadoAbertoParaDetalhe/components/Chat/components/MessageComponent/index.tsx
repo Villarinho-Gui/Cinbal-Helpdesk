@@ -1,29 +1,64 @@
 import React, { memo } from 'react'
-import { Box, CardContent, Typography, useTheme } from '@mui/material'
+import {
+  Box,
+  // Card,
+  CardContent,
+  // Grid,
+  // Icon,
+  // IconButton,
+  Typography,
+  useTheme,
+} from '@mui/material'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import { useUserContext } from '../../../../../../contexts/userContext'
+// import { AiFillFile } from 'react-icons/ai'
+// import { MdDownload, MdImage } from 'react-icons/md'
+// import { FileProps } from '../../../../../../types/helpdeskType'
+// import api from '../../../../../../../service/api/config/configApi'
+// import fileDownload from 'js-file-download'
 interface MessageProps {
   id: string
   author: string
   createdAt: Date
   message: string
+  file: File
 }
 
 const MessageComponent: React.FC<MessageProps> = ({
   author,
   message,
   createdAt,
+  file,
 }) => {
   const theme = useTheme()
 
   const { user } = useUserContext()
+  // const token = localStorage.getItem('access_token')
+  // const headers = {
+  //   headers: {
+  //     // 'Content-Type': 'application/json',
+  //     Authorization: `bearer ${token}`,
+  //   },
+  // }
 
   const publishedDateFormatted = () => {
     return format(new Date(createdAt), "HH:mm'h'", {
       locale: ptBR,
     })
   }
+
+  // const downloadFile = async (file: FileProps) => {
+  //   await api
+  //     .get(`/file/${file.id}`, {
+  //       ...headers,
+  //       responseType: 'blob',
+  //     })
+  //     .then((response) => {
+  //       const fileName = file.filename
+  //       fileDownload(response.data, fileName)
+  //     })
+  // }
 
   return (
     <>
@@ -71,6 +106,52 @@ const MessageComponent: React.FC<MessageProps> = ({
             >
               {message}
             </Typography>
+            {/* {file.map((file: FileProps) => (
+              <Grid item xl={2} lg={6} md={6} sm={12} xs={12} key={file.id}>
+                <Card
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    height: '60px',
+                    justifyContent: 'space-between',
+                  }}
+                  variant="outlined"
+                >
+                  <Box display={'flex'} alignItems={'center'} gap={'2px'}>
+                    <Box margin={2}>
+                      {file.mimetype === 'application/pdf' ? (
+                        <Icon>
+                          <AiFillFile size={25} />
+                        </Icon>
+                      ) : file.mimetype === 'image/png' ||
+                        file.mimetype === 'image/jpeg' ||
+                        file.mimetype === 'image/gif' ||
+                        file.mimetype === 'image/bmp' ? (
+                        <Icon>
+                          <MdImage />
+                        </Icon>
+                      ) : (
+                        ''
+                      )}
+                    </Box>
+                    <Box
+                      display={'flex'}
+                      width={'200px'}
+                      justifyContent={'center'}
+                      flexDirection={'column'}
+                    >
+                      <Typography fontSize={'14px'} width={'30ch'} noWrap>
+                        {file.filename}
+                      </Typography>
+                    </Box>
+                  </Box>
+
+                  <IconButton onClick={() => downloadFile(file)}>
+                    <MdDownload />
+                  </IconButton>
+                </Card>
+              </Grid>
+            ))} */}
           </Box>
         </CardContent>
       </Box>

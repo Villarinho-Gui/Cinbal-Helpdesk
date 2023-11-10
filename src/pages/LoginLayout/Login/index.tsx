@@ -80,7 +80,7 @@ export const Login: React.FC = () => {
     if (userData) {
       setIsLogged(true)
     }
-    navigate('/home/dashboard')
+    navigate('/home/abrir-chamado')
   }
 
   const handleClose = (

@@ -12,7 +12,9 @@ import {
   Paper,
   Select,
   SelectChangeEvent,
+  Tooltip,
   Typography,
+  Zoom,
   useMediaQuery,
   useTheme,
 } from '@mui/material'
@@ -28,6 +30,7 @@ import { useUserContext } from '../../../../contexts/userContext'
 import { FaUserClock, FaUsersCog } from 'react-icons/fa'
 import { AiFillLike } from 'react-icons/ai'
 import { useHelpDeskContext } from '../../../../contexts/HelpDeskContext'
+import { RiTimer2Line } from 'react-icons/ri'
 interface HelpDeskHeaderProps {
   title: string | undefined
   helpDeskAccountable: string | undefined
@@ -60,6 +63,8 @@ export const HelpDeskHeader: React.FC<HelpDeskHeaderProps> = ({
   const [changingAccountable, setChangingAccountable] = useState<boolean>(false)
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
 
+  const [sendAccountableToDb, setSendAccountableToDb] = useState(false)
+
   const currentUser = user
 
   const { handleSubmit, register } = useForm({
@@ -87,6 +92,8 @@ export const HelpDeskHeader: React.FC<HelpDeskHeaderProps> = ({
 
     formData.append('accountable', accountable!)
     formData.append('status', updateToInProgress)
+
+    setSendAccountableToDb(true)
     const headers = {
       headers: {
         'Content-Type': 'application/json',
@@ -95,6 +102,7 @@ export const HelpDeskHeader: React.FC<HelpDeskHeaderProps> = ({
     }
     try {
       await api.patch(`/helpdesk/${id}`, formData, headers).then(() => {
+        setSendAccountableToDb(false)
         setIsAssumed(true)
         setAccountable(user!.name)
         setChangingAccountable(false)
@@ -270,6 +278,8 @@ export const HelpDeskHeader: React.FC<HelpDeskHeaderProps> = ({
               endIcon={
                 status === 'Terceiro' ? (
                   <FaUserClock />
+                ) : sendAccountableToDb ? (
+                  <CircularProgress size={25} />
                 ) : (
                   <MdOutlineEmojiPeople />
                 )
@@ -279,7 +289,8 @@ export const HelpDeskHeader: React.FC<HelpDeskHeaderProps> = ({
               disabled={
                 !!helpDeskAccountable ||
                 status === 'Concluído' ||
-                status === 'Terceiro'
+                status === 'Terceiro' ||
+                sendAccountableToDb
               }
               sx={{
                 marginRight: '15px',
@@ -300,17 +311,42 @@ export const HelpDeskHeader: React.FC<HelpDeskHeaderProps> = ({
             </Button>
           )
         ) : (
-          <Typography
-            variant={'body2'}
-            color={'text.secondary'}
-            marginRight={4}
-          >
-            {helpDeskAccountable ? (
-              `${helpDeskAccountable} assumiu este chamado`
-            ) : (
-              <Typography>Aguardando responsável</Typography>
-            )}
-          </Typography>
+          <Box display={'flex'} alignItems={'center'} gap={1} marginX={2}>
+            <Typography variant={'body2'} color={'text.secondary'}>
+              {helpDeskAccountable ? (
+                `${helpDeskAccountable} assumiu este chamado`
+              ) : (
+                <Typography>Aguardando responsável</Typography>
+              )}
+            </Typography>
+            {
+              <Tooltip
+                TransitionComponent={Zoom}
+                arrow
+                title={
+                  status === 'Em Andamento'
+                    ? 'Em andamento'
+                    : status === 'Concluído'
+                    ? 'Concluído'
+                    : status === 'Aberto'
+                    ? 'Aberto'
+                    : 'Aguardando Terceiro'
+                }
+              >
+                <Icon color="secondary">
+                  {status === 'Concluído' ? (
+                    <AiFillLike size={20} />
+                  ) : status === 'Em Andamento' ? (
+                    <MdOutlineEmojiPeople size={20} />
+                  ) : status === 'Aberto' ? (
+                    <RiTimer2Line size={20} />
+                  ) : (
+                    <FaUserClock size={20} />
+                  )}
+                </Icon>
+              </Tooltip>
+            }
+          </Box>
         )}
 
         {isAdmin === 'admin' &&
@@ -363,6 +399,15 @@ export const HelpDeskHeader: React.FC<HelpDeskHeaderProps> = ({
                 <ListItemText>Aguardando Terceirizado</ListItemText>
                 <ListItemIcon>
                   <FaUserClock />
+                </ListItemIcon>
+              </MenuItem>
+              <MenuItem
+                onClick={takeOverHelpDesk}
+                sx={{ display: 'flex', gap: '10px', alignItems: 'center' }}
+              >
+                <ListItemText>Reassumir HelpDesk</ListItemText>
+                <ListItemIcon>
+                  <MdOutlineEmojiPeople />
                 </ListItemIcon>
               </MenuItem>
             </Menu>

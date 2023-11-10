@@ -18,7 +18,7 @@ export const Chat: React.FC = () => {
       Authorization: `bearer ${token}`,
     },
   }
-  const { comment } = useMessage(`http://localhost:3535/comment/${id}`, headers)
+  const { comment } = useMessage(`http://localhost:3545/comment/${id}`, headers)
   const comments = comment
   const shouldShowMessageTextfield = comments.some(
     (message) => message.helpdesk.status === 'Concluído',
@@ -59,6 +59,7 @@ export const Chat: React.FC = () => {
                       author={messageHelpDesk.user.name}
                       createdAt={messageHelpDesk.createdAt}
                       message={messageHelpDesk.message}
+                      file={messageHelpDesk.file!}
                     />
                   </ListItem>
                 )
@@ -67,14 +68,14 @@ export const Chat: React.FC = () => {
           </List>
         )}
       </Box>
-      {shouldShowMessageTextfield === false ? (
-        <MessageTextField />
-      ) : (
+      {shouldShowMessageTextfield === true ? (
         <Box component={Card} elevation={0} padding={1}>
           <Typography variant="caption" color="text.secondary">
             HelpDesk já concluído
           </Typography>
         </Box>
+      ) : (
+        <MessageTextField />
       )}
     </>
   )

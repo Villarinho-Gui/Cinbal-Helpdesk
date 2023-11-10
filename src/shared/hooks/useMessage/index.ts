@@ -6,6 +6,7 @@ import { useHelpDeskContext } from '../../contexts/HelpDeskContext'
 import { useParams } from 'react-router-dom'
 
 interface CommentsProps {
+  file: File | undefined
   id: string
   message: string
   user: {

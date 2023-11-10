@@ -48,7 +48,7 @@ const ChamadoAbertoParaDetalhe: React.FC = () => {
   }
   const { id } = useParams()
 
-  const { data, isLoading } = useFetch(`http://localhost:3535/helpdesk/${id}`)
+  const { data, isLoading } = useFetch(`http://localhost:3545/helpdesk/${id}`)
 
   const attachedFiles = data?.files
 
@@ -95,10 +95,11 @@ const ChamadoAbertoParaDetalhe: React.FC = () => {
       mostrarBotaoTema={true}
       mostrarBotaoLogout
       mostrarBotaoPerfil
-      mostrarBotaoHome
+      mostrarBotaoHome={currentUser?.role === 'admin'}
       tituloPagina={''}
       barraDeFerramentas={''}
       showNotificationButton
+      mostrarBotaoOpenHelpDesk={true}
     >
       <Box
         padding={5}
@@ -120,7 +121,7 @@ const ChamadoAbertoParaDetalhe: React.FC = () => {
         />
         <HelpDeskBody
           id={id}
-          author={data?.user.name}
+          author={data?.user}
           sector={data?.user.sector}
           category={data?.category}
           description={data?.description}
@@ -184,19 +185,24 @@ const ChamadoAbertoParaDetalhe: React.FC = () => {
             </Grid>
           )}
 
-        {data?.accountable === currentUser?.name &&
-          data?.status !== 'Aberto' && (
-            <Box
-              maxWidth={'1024px'}
-              marginY={'10px'}
-              border="1px solid"
-              borderColor={theme.palette.divider}
-              borderRadius={'8px'}
-              padding={'10px'}
-            >
-              <Chat />
-            </Box>
-          )}
+        {data?.accountable !== accountable && data?.user.role !== user?.role ? (
+          ''
+        ) : data?.status === 'Em Andamento' ||
+          data?.status === 'Concluído' ||
+          data?.status === 'Terceiro' ? (
+          <Box
+            maxWidth={'1024px'}
+            marginY={'10px'}
+            border="1px solid"
+            borderColor={theme.palette.divider}
+            borderRadius={'8px'}
+            padding={'10px'}
+          >
+            <Chat />
+          </Box>
+        ) : (
+          ''
+        )}
       </Box>
     </DefaultLayout>
   )

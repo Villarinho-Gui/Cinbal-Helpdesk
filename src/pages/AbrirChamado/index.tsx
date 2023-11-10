@@ -27,6 +27,7 @@ import DefaultLayout from '../../shared/layouts/DefaultLayout'
 import { AiOutlinePaperClip } from 'react-icons/ai'
 import { useHelpDeskContext } from '../../shared/contexts/HelpDeskContext'
 import FileList from './components/FileList'
+import { useUserContext } from '../../shared/contexts/userContext'
 
 interface OpenHelpDesk {
   title: string
@@ -71,6 +72,9 @@ export const AbrirChamado: React.FC = () => {
 
   const theme = useTheme()
   const { toggleHelpDesk, toggleLoading, isLoading } = useHelpDeskContext()
+
+  const { user } = useUserContext()
+  const currentUser = user
 
   const {
     register,
@@ -173,7 +177,7 @@ export const AbrirChamado: React.FC = () => {
       mostrarBotaoLogout
       mostrarBotaoPerfil
       mostrarBotaoTema
-      mostrarBotaoHome
+      mostrarBotaoHome={currentUser?.role === 'admin'}
     >
       <Box
         borderRadius={1}

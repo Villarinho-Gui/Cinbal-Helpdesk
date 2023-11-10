@@ -30,12 +30,16 @@ export interface CommentsProps {
   }
   createdAt: Date
   messageStatus: string
+  file: File
 }
 
 export interface HelpDeskProps {
   id: string
   user: {
     name: string
+    email: string
+    extension: string
+    position: string
     sector: string
     role: string
   }

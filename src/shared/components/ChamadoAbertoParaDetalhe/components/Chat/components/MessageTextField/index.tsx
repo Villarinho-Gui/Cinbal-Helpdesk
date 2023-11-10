@@ -22,7 +22,7 @@ import { uniqueId } from 'lodash'
 export interface SendMessageProps {
   messageContent: string
   helpdeskId: string
-  files?: File[]
+  files: File[]
 }
 
 export const MessageTextField: React.FC = () => {
@@ -44,7 +44,7 @@ export const MessageTextField: React.FC = () => {
 
     const headers = {
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'multipart/form-data',
         Authorization: `bearer ${token}`,
       },
     }
@@ -53,12 +53,19 @@ export const MessageTextField: React.FC = () => {
     formData.append('message', textFieldMessage)
     formData.append('helpdeskId', helpdeskId!)
 
+    // for (let quantity = 0; quantity < attachedFiles!.length; quantity++) {
+    //   const quantityDisplayed = quantity
+    //   const attachedFilesToSend = attachedFiles![quantityDisplayed]
+    //   formData.append('files', attachedFilesToSend)
+    // }
+
     try {
       await api
         .post<SendMessageProps>(`/comment/`, formData, headers)
         .then(() => {
           toggleMessage()
           setTextFieldMessage('')
+          setAttachedFiles([])
           setIsLoading(false)
         })
     } catch (error) {
@@ -163,7 +170,11 @@ export const MessageTextField: React.FC = () => {
               <AiOutlinePaperClip size={25} />
             </IconButton>
           </Tooltip>
-          <IconButton type="submit" disabled={isLoading} onClick={PostMessage}>
+          <IconButton
+            type="submit"
+            disabled={isLoading || textFieldMessage === ''}
+            onClick={PostMessage}
+          >
             <Icon>
               {isLoading ? (
                 <CircularProgress size={25} />

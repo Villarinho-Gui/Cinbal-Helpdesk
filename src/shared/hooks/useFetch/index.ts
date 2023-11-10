@@ -21,6 +21,7 @@ export function useFetch(url: string) {
     ['id', id],
     async () => {
       const responseApi = await api.get<HelpDeskProps>(url, headers)
+
       return responseApi.data
     },
     {
