@@ -4,9 +4,10 @@ import api from '../../../service/api/config/configApi'
 import { AxiosRequestConfig } from 'axios'
 import { useHelpDeskContext } from '../../contexts/HelpDeskContext'
 import { useParams } from 'react-router-dom'
+import { FileProps } from '../../types/helpdeskType'
 
 interface CommentsProps {
-  file: File | undefined
+  files: FileProps
   id: string
   message: string
   user: {
