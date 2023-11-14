@@ -59,7 +59,7 @@ export const Chat: React.FC = () => {
                       author={messageHelpDesk.user.name}
                       createdAt={messageHelpDesk.createdAt}
                       message={messageHelpDesk.message}
-                      file={messageHelpDesk.file!}
+                      file={messageHelpDesk.files!}
                     />
                   </ListItem>
                 )
