@@ -53,11 +53,11 @@ export const MessageTextField: React.FC = () => {
     formData.append('message', textFieldMessage)
     formData.append('helpdeskId', helpdeskId!)
 
-    // for (let quantity = 0; quantity < attachedFiles!.length; quantity++) {
-    //   const quantityDisplayed = quantity
-    //   const attachedFilesToSend = attachedFiles![quantityDisplayed]
-    //   formData.append('files', attachedFilesToSend)
-    // }
+    for (let quantity = 0; quantity < attachedFiles!.length; quantity++) {
+      const quantityDisplayed = quantity
+      const attachedFilesToSend = attachedFiles![quantityDisplayed]
+      formData.append('files', attachedFilesToSend)
+    }
 
     try {
       await api
@@ -161,7 +161,7 @@ export const MessageTextField: React.FC = () => {
                 hidden
                 type="file"
                 multiple
-                disabled
+                disabled={isLoading}
                 onChange={(e) => {
                   setAttachedFiles([...attachedFiles!, ...e.target.files!])
                   triggerNewImageChange(e)
@@ -172,7 +172,10 @@ export const MessageTextField: React.FC = () => {
           </Tooltip>
           <IconButton
             type="submit"
-            disabled={isLoading || textFieldMessage === ''}
+            disabled={
+              isLoading ||
+              (attachedFiles?.length === 0 && textFieldMessage === '')
+            }
             onClick={PostMessage}
           >
             <Icon>
