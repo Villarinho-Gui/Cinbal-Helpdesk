@@ -18,7 +18,10 @@ export const Chat: React.FC = () => {
       Authorization: `bearer ${token}`,
     },
   }
-  const { comment } = useMessage(`http://localhost:3545/comment/${id}`, headers)
+  const { comment } = useMessage(
+    `http://10.152.7.151:3545/comment/${id}`,
+    headers,
+  )
   const comments = comment
   const shouldShowMessageTextfield = comments.some(
     (message) => message.helpdesk.status === 'Concluído',
