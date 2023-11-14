@@ -312,7 +312,12 @@ export const HelpDeskHeader: React.FC<HelpDeskHeaderProps> = ({
           )
         ) : (
           <Box display={'flex'} alignItems={'center'} gap={1} marginX={2}>
-            <Typography variant={'body2'} color={'text.secondary'}>
+            <Typography
+              variant={'body2'}
+              color={'text.secondary'}
+              noWrap
+              width={'30ch'}
+            >
               {helpDeskAccountable ? (
                 `${helpDeskAccountable} assumiu este chamado`
               ) : (
