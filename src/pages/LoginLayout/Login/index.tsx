@@ -135,7 +135,7 @@ export const Login: React.FC = () => {
         }}
       >
         <TextField
-          label="Usuário"
+          label="E-mail"
           type="text"
           autoComplete="username"
           value={userEmail}
