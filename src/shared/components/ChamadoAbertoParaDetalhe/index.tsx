@@ -49,7 +49,7 @@ const ChamadoAbertoParaDetalhe: React.FC = () => {
   const { id } = useParams()
 
   const { data, isLoading } = useFetch(
-    `http://10.152.7.151:3545/helpdesk/${id}`,
+    `http://apihd.cinbal.com.br/helpdesk/${id}`,
   )
 
   const attachedFiles = data?.files
@@ -134,58 +134,56 @@ const ChamadoAbertoParaDetalhe: React.FC = () => {
         />
         <Divider />
 
-        {data?.accountable === currentUser?.name &&
-          data?.files &&
-          data?.files.length > 0 && (
-            <Grid container spacing={2} maxWidth={'100%'} paddingY={'20px'}>
-              {attachedFiles!.map((file: FileProps) => (
-                <Grid item xl={2} lg={6} md={6} sm={12} xs={12} key={file.id}>
-                  <Card
-                    sx={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      height: '60px',
-                      justifyContent: 'space-between',
-                    }}
-                    variant="outlined"
-                  >
-                    <Box display={'flex'} alignItems={'center'} gap={'2px'}>
-                      <Box margin={2}>
-                        {file.mimetype === 'application/pdf' ? (
-                          <Icon>
-                            <AiFillFile size={25} />
-                          </Icon>
-                        ) : file.mimetype === 'image/png' ||
-                          file.mimetype === 'image/jpeg' ||
-                          file.mimetype === 'image/gif' ||
-                          file.mimetype === 'image/bmp' ? (
-                          <Icon>
-                            <MdImage />
-                          </Icon>
-                        ) : (
-                          ''
-                        )}
-                      </Box>
-                      <Box
-                        display={'flex'}
-                        width={'200px'}
-                        justifyContent={'center'}
-                        flexDirection={'column'}
-                      >
-                        <Typography fontSize={'14px'} width={'30ch'} noWrap>
-                          {file.filename}
-                        </Typography>
-                      </Box>
+        {data?.files && data?.files.length > 0 && (
+          <Grid container spacing={2} maxWidth={'100%'} paddingY={'20px'}>
+            {attachedFiles!.map((file: FileProps) => (
+              <Grid item xl={2} lg={6} md={6} sm={12} xs={12} key={file.id}>
+                <Card
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    height: '60px',
+                    justifyContent: 'space-between',
+                  }}
+                  variant="outlined"
+                >
+                  <Box display={'flex'} alignItems={'center'} gap={'2px'}>
+                    <Box margin={2}>
+                      {file.mimetype === 'application/pdf' ? (
+                        <Icon>
+                          <AiFillFile size={25} />
+                        </Icon>
+                      ) : file.mimetype === 'image/png' ||
+                        file.mimetype === 'image/jpeg' ||
+                        file.mimetype === 'image/gif' ||
+                        file.mimetype === 'image/bmp' ? (
+                        <Icon>
+                          <MdImage />
+                        </Icon>
+                      ) : (
+                        ''
+                      )}
                     </Box>
+                    <Box
+                      display={'flex'}
+                      width={'200px'}
+                      justifyContent={'center'}
+                      flexDirection={'column'}
+                    >
+                      <Typography fontSize={'14px'} width={'20ch'} noWrap>
+                        {file.filename}
+                      </Typography>
+                    </Box>
+                  </Box>
 
-                    <IconButton onClick={() => downloadFile(file)}>
-                      <MdDownload />
-                    </IconButton>
-                  </Card>
-                </Grid>
-              ))}
-            </Grid>
-          )}
+                  <IconButton onClick={() => downloadFile(file)}>
+                    <MdDownload />
+                  </IconButton>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
+        )}
 
         {data?.accountable !== accountable && data?.user.role !== user?.role ? (
           ''

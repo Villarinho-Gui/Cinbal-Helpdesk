@@ -19,7 +19,7 @@ export const Chat: React.FC = () => {
     },
   }
   const { comment } = useMessage(
-    `http://10.152.7.151:3545/comment/${id}`,
+    `http://apihd.cinbal.com.br/comment/${id}`,
     headers,
   )
   const comments = comment
