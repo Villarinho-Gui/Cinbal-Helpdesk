@@ -8,6 +8,7 @@ export interface UserProps {
   role: string | undefined
 }
 export interface FileProps {
+  map: any
   id: string
   filename: string
   mimetype:
