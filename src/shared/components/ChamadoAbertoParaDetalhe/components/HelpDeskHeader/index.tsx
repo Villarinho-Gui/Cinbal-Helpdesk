@@ -304,7 +304,7 @@ export const HelpDeskHeader: React.FC<HelpDeskHeaderProps> = ({
                   ? 'HelpDesk Concluído'
                   : helpDeskAccountable === user!.name
                   ? `Você assumiu este chamado`
-                  : `${helpDeskAccountable} assumiu este chamado`
+                  : `${helpDeskAccountable} assumiu`
                 : status === 'Terceiro'
                 ? 'Aguardando terceiros'
                 : 'Assumir Chamado'}
@@ -312,14 +312,9 @@ export const HelpDeskHeader: React.FC<HelpDeskHeaderProps> = ({
           )
         ) : (
           <Box display={'flex'} alignItems={'center'} gap={1} marginX={2}>
-            <Typography
-              variant={'body2'}
-              color={'text.secondary'}
-              noWrap
-              width={'30ch'}
-            >
+            <Typography variant={'body2'} color={'text.secondary'}>
               {helpDeskAccountable ? (
-                `${helpDeskAccountable} assumiu este chamado`
+                `${helpDeskAccountable} assumiu`
               ) : (
                 <Typography>Aguardando responsável</Typography>
               )}
