@@ -246,18 +246,22 @@ export const ListagemDeChamados: React.FC = () => {
             />
           </ListItem>
         ))
+      ) : showMessageIfNotExistHelpDeskFilteredByDate ? (
+        <Typography variant="body2" sx={{ marginLeft: '10px' }}>
+          Nenhum chamado nesta data
+        </Typography>
       ) : (
         <Typography variant="body2" sx={{ marginLeft: '10px' }}>
           Você ainda não tem nenhum chamado aberto!
         </Typography>
       )}
-      {showMessageIfNotExistHelpDeskFilteredByDate ? (
-        <Typography variant="body2" sx={{ marginLeft: '10px' }}>
-          Nenhum chamado nesta data
-        </Typography>
-      ) : (
-        ''
-      )}
+
+      {currentUser?.role === 'admin' &&
+        showMessageIfNotExistHelpDeskFilteredByDate && (
+          <Typography variant="body2" sx={{ marginLeft: '10px' }}>
+            Nenhum chamado nesta data
+          </Typography>
+        )}
 
       <Dialog open={openFilterDialog} onClose={triggerCloseFilterDialog}>
         <DialogTitle>Filtrar chamados por data</DialogTitle>
