@@ -148,7 +148,7 @@ export const MessageTextField: React.FC = () => {
           />
         </form>
         <Box display={'flex'} marginTop={1} marginX={1}>
-          <Tooltip title="Em desenvolvimento" placement="top" arrow>
+          <Tooltip title="Anexar arquivos" placement="top" arrow>
             <IconButton
               className="upload"
               component="label"
@@ -170,22 +170,24 @@ export const MessageTextField: React.FC = () => {
               <AiOutlinePaperClip size={25} />
             </IconButton>
           </Tooltip>
-          <IconButton
-            type="submit"
-            disabled={
-              isLoading ||
-              (attachedFiles?.length === 0 && textFieldMessage === '')
-            }
-            onClick={PostMessage}
-          >
-            <Icon>
-              {isLoading ? (
-                <CircularProgress size={25} />
-              ) : (
-                <IoMdSend size={20} />
-              )}
-            </Icon>
-          </IconButton>
+          <Tooltip title="Enviar Chamado" placement="top" arrow>
+            <IconButton
+              type="submit"
+              disabled={
+                isLoading ||
+                (attachedFiles?.length === 0 && textFieldMessage === '')
+              }
+              onClick={PostMessage}
+            >
+              <Icon>
+                {isLoading ? (
+                  <CircularProgress size={25} />
+                ) : (
+                  <IoMdSend size={20} />
+                )}
+              </Icon>
+            </IconButton>
+          </Tooltip>
         </Box>
       </Box>
     </>
