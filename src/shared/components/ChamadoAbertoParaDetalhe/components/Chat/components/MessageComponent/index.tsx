@@ -4,7 +4,6 @@ import {
   Card,
   CardContent,
   Grid,
-  Icon,
   IconButton,
   Typography,
   useTheme,
@@ -17,6 +16,13 @@ import { AiFillFile } from 'react-icons/ai'
 import { MdDownload, MdImage } from 'react-icons/md'
 import api from '../../../../../../../service/api/config/configApi'
 import fileDownload from 'js-file-download'
+import {
+  SiMicrosoftexcel,
+  SiMicrosoftword,
+  SiMicrosoftpowerpoint,
+} from 'react-icons/si'
+import { TiDocumentText } from 'react-icons/ti'
+
 interface MessageProps {
   id: string
   author: string
@@ -127,18 +133,25 @@ const MessageComponent: React.FC<MessageProps> = ({
                   }
                 >
                   <Box display={'flex'} alignItems={'center'} gap={'2px'}>
-                    <Box margin={2}>
+                    <Box margin={2} alignItems={'center'}>
                       {file.mimetype === 'application/pdf' ? (
-                        <Icon>
-                          <AiFillFile size={25} />
-                        </Icon>
+                        <AiFillFile size={25} />
                       ) : file.mimetype === 'image/png' ||
                         file.mimetype === 'image/jpeg' ||
                         file.mimetype === 'image/gif' ||
                         file.mimetype === 'image/bmp' ? (
-                        <Icon>
-                          <MdImage />
-                        </Icon>
+                        <MdImage />
+                      ) : file.mimetype ===
+                        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ? (
+                        <SiMicrosoftexcel />
+                      ) : file.mimetype ===
+                        'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ? (
+                        <SiMicrosoftword />
+                      ) : file.mimetype === 'text/plain' ? (
+                        <TiDocumentText size={20} />
+                      ) : file.mimetype ===
+                        'application/vnd.openxmlformats-officedocument.presentationml.presentation' ? (
+                        <SiMicrosoftpowerpoint />
                       ) : (
                         ''
                       )}
