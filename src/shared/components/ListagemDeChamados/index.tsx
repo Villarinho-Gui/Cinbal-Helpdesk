@@ -97,7 +97,9 @@ export const ListagemDeChamados: React.FC = () => {
             (helpDesk.user.name &&
               helpDesk.user.name
                 .toLowerCase()
-                .includes(searchTextField.toLowerCase()))
+                .includes(searchTextField.toLowerCase())) ||
+            (helpDesk.id &&
+              helpDesk.id.toLowerCase().includes(searchTextField.toLowerCase()))
           )
         })
       : []
@@ -105,6 +107,32 @@ export const ListagemDeChamados: React.FC = () => {
   const filteredHelpDeskListByUser = helpDeskData.filter((helpDesk) => {
     return helpDesk.user.name === currentUser?.name
   })
+
+  const filteredHelpDeskListBySearchTextFieldInUserProfile =
+    searchTextField.length > 0
+      ? filteredHelpDeskListByUser!.filter((helpDesk) => {
+          return (
+            (helpDesk.title &&
+              helpDesk.title
+                .toLowerCase()
+                .includes(searchTextField.toLowerCase())) ||
+            (helpDesk.description &&
+              helpDesk.description
+                .toLowerCase()
+                .includes(searchTextField.toLowerCase())) ||
+            (helpDesk.category &&
+              helpDesk.category
+                .toLowerCase()
+                .includes(searchTextField.toLowerCase())) ||
+            (helpDesk.user.name &&
+              helpDesk.user.name
+                .toLowerCase()
+                .includes(searchTextField.toLowerCase())) ||
+            (helpDesk.id &&
+              helpDesk.id.toLowerCase().includes(searchTextField.toLowerCase()))
+          )
+        })
+      : []
 
   const triggerSelectDate = (date: any) => {
     const filterByDate = filteredHelpDeskDataByDate.filter(
@@ -189,24 +217,35 @@ export const ListagemDeChamados: React.FC = () => {
               </ListItem>
             ))}
           </List>
+        ) : currentUser?.role === 'user' ? (
+          <List
+            sx={{
+              overflow: 'auto',
+              padding: '0px',
+            }}
+          >
+            {filteredHelpDeskListBySearchTextFieldInUserProfile.map(
+              (UniqueHelpDesk) => (
+                <ListItem key={UniqueHelpDesk.id} disablePadding>
+                  <Chamado
+                    id={UniqueHelpDesk.id}
+                    author={UniqueHelpDesk.user.name}
+                    title={UniqueHelpDesk.title}
+                    category={UniqueHelpDesk.category}
+                    description={UniqueHelpDesk.description}
+                    maxLines={2}
+                    createdAt={new Date(UniqueHelpDesk.createdAt)}
+                    countFiles={UniqueHelpDesk.countFiles}
+                    onClick={smDown ? toggleDrawerOpen : undefined}
+                    to={`chamado/detalhe/${UniqueHelpDesk.id}`}
+                    status={UniqueHelpDesk.status}
+                  />
+                </ListItem>
+              ),
+            )}
+          </List>
         ) : (
-          filteredHelpDeskListByUser.map((userHelpDesk) => (
-            <ListItem key={userHelpDesk.id} disablePadding>
-              <Chamado
-                id={userHelpDesk.id}
-                author={userHelpDesk.user.name}
-                title={userHelpDesk.title}
-                category={userHelpDesk.category}
-                description={userHelpDesk.description}
-                maxLines={2}
-                createdAt={new Date(userHelpDesk.createdAt)}
-                countFiles={userHelpDesk.countFiles}
-                onClick={smDown ? toggleDrawerOpen : undefined}
-                to={`chamado/detalhe/${userHelpDesk.id}`}
-                status={userHelpDesk.status}
-              />
-            </ListItem>
-          ))
+          []
         )
       ) : currentUser?.role === 'admin' ? (
         <List sx={{ overflow: 'auto', padding: '0px' }}>
@@ -228,7 +267,7 @@ export const ListagemDeChamados: React.FC = () => {
             </ListItem>
           ))}
         </List>
-      ) : filteredHelpDeskListByUser.length > 0 ? (
+      ) : currentUser?.role === 'user' ? (
         filteredHelpDeskListByUser.map((userHelpDesk) => (
           <ListItem key={userHelpDesk.id} disablePadding>
             <Chamado
