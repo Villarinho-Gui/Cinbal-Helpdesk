@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import {
+  Alert,
   Box,
   Card,
   CircularProgress,
@@ -7,6 +8,7 @@ import {
   IconButton,
   List,
   ListItem,
+  Snackbar,
   TextField,
   Tooltip,
   useTheme,
@@ -29,6 +31,9 @@ export const MessageTextField: React.FC = () => {
   const [textFieldMessage, setTextFieldMessage] = useState('')
   const [attachedFiles, setAttachedFiles] = useState<File[] | undefined>([])
   const [newUploadFile, setNewUploadFile] = useState<File | undefined>()
+
+  const [openErrorMessage, setOpenErrorMessage] = useState(false)
+  const [responseApi, setResponseApi] = useState<string>('')
 
   const { id } = useParams()
   const theme = useTheme()
@@ -68,10 +73,28 @@ export const MessageTextField: React.FC = () => {
           setAttachedFiles([])
           setIsLoading(false)
         })
-    } catch (error) {
+    } catch (error: any) {
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        setResponseApi(error.response.data.message)
+      }
       console.error(error)
+      setOpenErrorMessage(true)
       setIsLoading(false)
     }
+  }
+
+  const triggerCloseErrorMessage = (
+    event: React.SyntheticEvent | Event,
+    reason?: string,
+  ) => {
+    if (reason === 'clickaway') {
+      return
+    }
+    setOpenErrorMessage(false)
   }
 
   function triggerNewImageChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -188,6 +211,16 @@ export const MessageTextField: React.FC = () => {
               </Icon>
             </IconButton>
           </Tooltip>
+          <Snackbar
+            open={openErrorMessage}
+            autoHideDuration={6000}
+            onClose={triggerCloseErrorMessage}
+            anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+          >
+            <Alert severity="error" onClose={triggerCloseErrorMessage}>
+              {responseApi}
+            </Alert>
+          </Snackbar>
         </Box>
       </Box>
     </>
