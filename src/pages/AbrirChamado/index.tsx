@@ -22,6 +22,9 @@ import {
   CircularProgress,
   Snackbar,
   SelectChangeEvent,
+  List,
+  ListItem,
+  Card,
 } from '@mui/material'
 import DefaultLayout from '../../shared/layouts/DefaultLayout'
 import { AiOutlinePaperClip } from 'react-icons/ai'
@@ -274,147 +277,141 @@ export const AbrirChamado: React.FC = () => {
                   <MenuItem value={'Outros'}>Outros</MenuItem>
                 </Select>
               </Grid>
-            </Grid>
 
-            <Grid item xl={6} lg={9} sx={{ marginY: '20px' }}>
-              <TextField
-                {...register('description')}
-                name="description"
-                label="Descrição"
-                type="text"
-                variant="outlined"
-                value={textFieldDescription}
-                multiline
-                rows={4}
-                sx={{ width: '100%' }}
-                onChange={(e) => setTextFieldDescription(e.target.value)}
-                disabled={isLoading}
-                error={!!errors.description}
-                helperText={
-                  errors.description && (
-                    <span>{errors.description?.message}</span>
-                  )
-                }
-              />
-            </Grid>
-
-            <Grid
-              container
-              spacing={2}
-              direction={'row'}
-              alignItems={'center'}
-              gap={2}
-            >
-              {attachedFiles && attachedFiles.length > 0 && (
-                <Grid
-                  container
-                  gap={2}
-                  paddingY={4}
-                  paddingX={2}
-                  className="FileList"
-                >
-                  {attachedFiles.map((file) => {
-                    return (
-                      <FileList
-                        file={file}
-                        key={uniqueId(String(file.lastModified))}
-                        onDeleteFile={deleteFile}
-                      />
+              <Grid item>
+                <TextField
+                  {...register('description')}
+                  name="description"
+                  label="Descrição"
+                  type="text"
+                  variant="outlined"
+                  value={textFieldDescription}
+                  multiline
+                  rows={4}
+                  sx={{ width: '100%', marginBottom: '20px' }}
+                  onChange={(e) => setTextFieldDescription(e.target.value)}
+                  disabled={isLoading}
+                  error={!!errors.description}
+                  helperText={
+                    errors.description && (
+                      <span>{errors.description?.message}</span>
                     )
-                  })}
-                </Grid>
-              )}
+                  }
+                />
+              </Grid>
             </Grid>
-            <Grid item lg={6} md={8} sx={{ marginY: '10px' }}>
+            <Box maxWidth={585}>
+              {attachedFiles && attachedFiles.length > 0 && (
+                <Box
+                  borderRadius={'8px'}
+                  component={Card}
+                  elevation={0}
+                  padding={1}
+                >
+                  <List
+                    sx={{
+                      overflow: 'auto',
+                      display: 'flex',
+                    }}
+                  >
+                    {attachedFiles.map((file) => {
+                      return (
+                        <ListItem
+                          key={uniqueId(String(file.lastModified))}
+                          sx={{
+                            padding: '0',
+                            marginX: '4px',
+                            width: 'max-content',
+                          }}
+                        >
+                          <FileList file={file} onDeleteFile={deleteFile} />
+                        </ListItem>
+                      )
+                    })}
+                  </List>
+                </Box>
+              )}
+            </Box>
+
+            <Box maxWidth={585} paddingY={2}>
               <Alert severity="info">
                 Serão aceitos no máximo 3 arquivos de até 2mb
               </Alert>
-            </Grid>
-            <Grid
-              container
-              direction={'row'}
-              spacing={2}
-              paddingY={2}
+            </Box>
+
+            <Box
+              display={'flex'}
+              maxWidth={585}
+              height={50}
               alignItems={'center'}
+              gap={2}
             >
-              <Grid item>
-                <Tooltip title="Anexar arquivo" placement="top" arrow>
-                  <IconButton
-                    className="upload"
-                    component="label"
-                    color="primary"
-                    onChange={triggerSelectNewFile}
-                    disabled={isLoading}
-                  >
-                    <input
-                      {...register('files')}
-                      id="file-input"
-                      hidden
-                      // accept="image/*"
-                      type="file"
-                      multiple
-                      disabled={isLoading}
-                      onChange={(e) => {
-                        setAttachedFiles([
-                          ...attachedFiles!,
-                          ...e.target.files!,
-                        ])
-                        triggerNewImageChange(e)
-                      }}
-                    />
-                    <AiOutlinePaperClip size={25} />
-                  </IconButton>
-                </Tooltip>
-              </Grid>
-              <Divider
-                variant="middle"
-                orientation="vertical"
-                sx={{ height: '35px', marginTop: '20px' }}
-              />
-              <Grid item xl={2} lg={4}>
-                <Button
-                  type="submit"
+              <Tooltip title="Anexar arquivo" placement="top" arrow>
+                <IconButton
+                  className="upload"
+                  component="label"
+                  color="primary"
+                  onChange={triggerSelectNewFile}
                   disabled={isLoading}
-                  variant="contained"
-                  sx={{ width: '100%' }}
-                  endIcon={
-                    isLoading ? (
-                      <CircularProgress
-                        variant="indeterminate"
-                        color="inherit"
-                        size={20}
-                        sx={{ alignSelf: 'end' }}
-                      />
-                    ) : undefined
-                  }
                 >
-                  {isLoading ? 'Enviando...' : 'Enviar Chamado'}
-                </Button>
-                <Snackbar
-                  open={openSuccessMessage}
-                  autoHideDuration={6000}
-                  onClose={triggerCloseSuccessMessage}
-                  anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-                >
-                  <Alert
-                    severity="success"
-                    onClose={triggerCloseSuccessMessage}
-                  >
-                    Chamado aberto com sucesso!
-                  </Alert>
-                </Snackbar>
-                <Snackbar
-                  open={openErrorMessage}
-                  autoHideDuration={6000}
-                  onClose={triggerCloseErrorMessage}
-                  anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-                >
-                  <Alert severity="error" onClose={triggerCloseErrorMessage}>
-                    Falha ao abrir o chamado
-                  </Alert>
-                </Snackbar>
-              </Grid>
-            </Grid>
+                  <input
+                    {...register('files')}
+                    id="file-input"
+                    hidden
+                    // accept="image/*"
+                    type="file"
+                    multiple
+                    disabled={isLoading}
+                    onChange={(e) => {
+                      setAttachedFiles([...attachedFiles!, ...e.target.files!])
+                      triggerNewImageChange(e)
+                    }}
+                  />
+                  <AiOutlinePaperClip size={25} />
+                </IconButton>
+              </Tooltip>
+              <Divider variant="middle" orientation="vertical" />
+              <Button
+                type="submit"
+                disabled={isLoading}
+                disableElevation
+                variant="contained"
+                sx={{ width: '100%' }}
+                endIcon={
+                  isLoading ? (
+                    <CircularProgress
+                      variant="indeterminate"
+                      color="inherit"
+                      size={20}
+                      sx={{ alignSelf: 'end' }}
+                    />
+                  ) : undefined
+                }
+              >
+                {isLoading ? 'Enviando...' : 'Enviar Chamado'}
+              </Button>
+            </Box>
+
+            <Snackbar
+              open={openSuccessMessage}
+              autoHideDuration={6000}
+              onClose={triggerCloseSuccessMessage}
+              anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+            >
+              <Alert severity="success" onClose={triggerCloseSuccessMessage}>
+                Chamado aberto com sucesso!
+              </Alert>
+            </Snackbar>
+            <Snackbar
+              open={openErrorMessage}
+              autoHideDuration={6000}
+              onClose={triggerCloseErrorMessage}
+              anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+            >
+              <Alert severity="error" onClose={triggerCloseErrorMessage}>
+                Falha ao abrir o chamado
+              </Alert>
+            </Snackbar>
           </form>
         </Grid>
       </Box>
