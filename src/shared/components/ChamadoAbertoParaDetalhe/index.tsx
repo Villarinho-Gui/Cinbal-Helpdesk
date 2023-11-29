@@ -26,6 +26,12 @@ import { useUser } from '../../hooks/useUser'
 import HelpDeskBody from './components/HelpDeskBody'
 import { HelpDeskHeader } from './components/HelpDeskHeader'
 import { useUserContext } from '../../contexts/userContext'
+import {
+  SiMicrosoftexcel,
+  SiMicrosoftpowerpoint,
+  SiMicrosoftword,
+} from 'react-icons/si'
+import { TiDocumentText } from 'react-icons/ti'
 
 interface FileProps {
   id: string
@@ -150,16 +156,23 @@ const ChamadoAbertoParaDetalhe: React.FC = () => {
                   <Box display={'flex'} alignItems={'center'} gap={'2px'}>
                     <Box margin={2}>
                       {file.mimetype === 'application/pdf' ? (
-                        <Icon>
-                          <AiFillFile size={25} />
-                        </Icon>
+                        <AiFillFile size={25} />
                       ) : file.mimetype === 'image/png' ||
                         file.mimetype === 'image/jpeg' ||
                         file.mimetype === 'image/gif' ||
                         file.mimetype === 'image/bmp' ? (
-                        <Icon>
-                          <MdImage />
-                        </Icon>
+                        <MdImage />
+                      ) : file.mimetype ===
+                        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ? (
+                        <SiMicrosoftexcel />
+                      ) : file.mimetype ===
+                        'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ? (
+                        <SiMicrosoftword />
+                      ) : file.mimetype === 'text/plain' ? (
+                        <TiDocumentText size={20} />
+                      ) : file.mimetype ===
+                        'application/vnd.openxmlformats-officedocument.presentationml.presentation' ? (
+                        <SiMicrosoftpowerpoint />
                       ) : (
                         ''
                       )}
