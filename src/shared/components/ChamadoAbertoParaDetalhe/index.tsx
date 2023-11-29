@@ -141,9 +141,19 @@ const ChamadoAbertoParaDetalhe: React.FC = () => {
         <Divider />
 
         {data?.files && data?.files.length > 0 && (
-          <Grid container spacing={2} maxWidth={'100%'} paddingY={'20px'}>
+          <Box
+            display={'flex'}
+            gap={2}
+            maxWidth={'100%'}
+            paddingY={'20px'}
+            sx={{
+              [theme.breakpoints.down('lg')]: {
+                flexDirection: 'column',
+              },
+            }}
+          >
             {attachedFiles!.map((file: FileProps) => (
-              <Grid item xl={2} lg={6} md={6} sm={12} xs={12} key={file.id}>
+              <Box key={file.id}>
                 <Card
                   sx={{
                     display: 'flex',
@@ -193,9 +203,9 @@ const ChamadoAbertoParaDetalhe: React.FC = () => {
                     <MdDownload />
                   </IconButton>
                 </Card>
-              </Grid>
+              </Box>
             ))}
-          </Grid>
+          </Box>
         )}
 
         {data?.accountable !== accountable && data?.user.role !== user?.role ? (
