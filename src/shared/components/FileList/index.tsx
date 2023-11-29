@@ -11,7 +11,7 @@ import {
   DialogContent,
   DialogContentText,
 } from '@mui/material'
-import { useHelpDeskContext } from '../../../../shared/contexts/HelpDeskContext'
+import { useHelpDeskContext } from '../../contexts/HelpDeskContext'
 import { filesize } from 'filesize'
 import { AiFillFile } from 'react-icons/ai'
 interface FileProps {
