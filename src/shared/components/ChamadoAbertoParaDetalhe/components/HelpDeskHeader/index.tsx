@@ -84,7 +84,6 @@ export const HelpDeskHeader: React.FC<HelpDeskHeaderProps> = ({
 
   const theme = useTheme()
   const smDown = useMediaQuery(theme.breakpoints.down('sm'))
-  const mdDown = useMediaQuery(theme.breakpoints.down('md'))
 
   async function takeOverHelpDesk() {
     const formData = new FormData()
@@ -193,7 +192,16 @@ export const HelpDeskHeader: React.FC<HelpDeskHeaderProps> = ({
       marginBottom={5}
       elevation={0}
     >
-      <Typography variant="h6" margin={2} noWrap={mdDown}>
+      <Typography
+        variant="h6"
+        sx={{
+          [theme.breakpoints.down('lg')]: {
+            width: '20ch',
+          },
+        }}
+        margin={2}
+        noWrap
+      >
         {title}
       </Typography>
       <Box
