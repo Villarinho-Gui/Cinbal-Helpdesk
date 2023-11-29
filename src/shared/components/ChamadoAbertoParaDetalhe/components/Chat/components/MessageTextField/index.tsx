@@ -19,7 +19,7 @@ import api from '../../../../../../../service/api/config/configApi'
 import { useForm } from 'react-hook-form'
 import { useParams } from 'react-router-dom'
 import { useHelpDeskContext } from '../../../../../../contexts/HelpDeskContext'
-import FileList from '../../../../../../../pages/AbrirChamado/components/FileList'
+import FileList from '../../../../../FileList'
 import { uniqueId } from 'lodash'
 export interface SendMessageProps {
   messageContent: string

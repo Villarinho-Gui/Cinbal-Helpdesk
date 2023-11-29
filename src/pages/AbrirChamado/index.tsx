@@ -26,7 +26,7 @@ import {
 import DefaultLayout from '../../shared/layouts/DefaultLayout'
 import { AiOutlinePaperClip } from 'react-icons/ai'
 import { useHelpDeskContext } from '../../shared/contexts/HelpDeskContext'
-import FileList from './components/FileList'
+import FileList from '../../shared/components/FileList'
 import { useUserContext } from '../../shared/contexts/userContext'
 
 interface OpenHelpDesk {
