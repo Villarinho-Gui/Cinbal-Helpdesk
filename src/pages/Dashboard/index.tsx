@@ -28,24 +28,6 @@ const Dashboard: React.FC = () => {
     return helpDesk.status === 'Concluído'
   })
 
-  // const categoryThatAppearsTheMost = data?.reduce(
-  //   (quantity: any, helpdesk: any) => {
-  //     const chave = helpdesk.category
-  //     if (!quantity[chave]) {
-  //       quantity[chave] = 0
-  //     }
-  //     quantity[chave]++
-  //     return quantity
-  //   },
-  //   [],
-  // )
-
-  // const maxCategory = categoryThatAppearsTheMost
-  //   ? Object.keys(categoryThatAppearsTheMost).reduce((a, b) =>
-  //       categoryThatAppearsTheMost[a] > categoryThatAppearsTheMost[b] ? a : b,
-  //     )
-  //   : null
-
   return (
     <DefaultLayout  
       tituloPagina="Dashboard" 
@@ -76,10 +58,7 @@ const Dashboard: React.FC = () => {
           <Grid item xl={3} md={4} xs={12}>
             {currentUser?.role === "admin" && <CardHelpDesksEmAndamento quantityInProgress={helpDesksInProgress?.length}/>}
           </Grid>
-          {/* {categoryThatAppearsTheMost ? <Grid item xl={3} md={6} xs={12}>
-            {currentUser?.role === "admin" && <CardCategoriaMaisRepetida maxCategory={maxCategory!}/>}
-          </Grid> : ''} */}
-          <Grid item xl={3} md={12} xs={12}>
+          <Grid item md={12} lg={12} xl={6} xs={12}>
             {currentUser?.role === "admin" && <CardHelpDesksAssumidos />}
           </Grid>
         </Grid>
