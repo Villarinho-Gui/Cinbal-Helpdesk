@@ -15,14 +15,13 @@ import { AiFillLike } from 'react-icons/ai'
 import { MdOutlineEmojiPeople } from 'react-icons/md'
 import { RiTimer2Line } from 'react-icons/ri'
 import { useMatch, useNavigate, useResolvedPath } from 'react-router-dom'
-
-// Fazer com que seja exibida uma mensagem mostrando "Concluído em 'data de conclusão'"
 interface HelpDeskDashboardList {
   title: string
   description: string
   status: string
   createdAt: string
   to: string
+  id: string
 }
 
 export const HelpDeskList: React.FC<HelpDeskDashboardList> = ({
@@ -31,6 +30,7 @@ export const HelpDeskList: React.FC<HelpDeskDashboardList> = ({
   to,
   createdAt,
   status,
+  id,
 }) => {
   const navigate = useNavigate()
 
@@ -57,8 +57,6 @@ export const HelpDeskList: React.FC<HelpDeskDashboardList> = ({
 
     return calcDays
   }
-  // const theme = useTheme()
-  // const smDown = theme.breakpoints.down('sm')
 
   return (
     <CardActionArea onClick={clickHelpDesk}>
@@ -89,6 +87,9 @@ export const HelpDeskList: React.FC<HelpDeskDashboardList> = ({
           >
             {description}
           </Typography>
+          <Box paddingY={1}>
+            <Chip label={id} />
+          </Box>
         </Box>
 
         <Box
