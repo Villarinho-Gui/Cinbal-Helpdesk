@@ -137,7 +137,12 @@ const DefaultLayout: React.FC<IDefaultLayoutProps> = ({
             </Typography>
           )}
 
-          <Box display="flex" gap={1} alignItems="center">
+          <Box
+            display="flex"
+            gap={1}
+            alignItems="center"
+            justifyContent={'center'}
+          >
             {mostrarBotaoLogout && (
               <Tooltip title="Sair" placement="bottom" arrow>
                 <IconButton onClick={logoutUser}>
