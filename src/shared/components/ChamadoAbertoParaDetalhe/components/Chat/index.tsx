@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import { Box, Card, List, ListItem, Typography, useTheme } from '@mui/material'
 import { MessageTextField } from './components/MessageTextField'
 import MessageComponent from './components/MessageComponent'
@@ -18,14 +18,22 @@ export const Chat: React.FC = () => {
       Authorization: `bearer ${token}`,
     },
   }
-  const { comment } = useMessage(
-    `http://apihd.cinbal.com.br/comment/${id}`,
-    headers,
-  )
-  const comments = comment
-  const shouldShowMessageTextfield = comments.some(
+  const { comment } = useMessage(`/comment/${id}`, headers)
+
+  const shouldShowMessageTextfield = comment.some(
     (message) => message.helpdesk.status === 'Concluído',
   )
+
+  const messagesEndRef = useRef<HTMLLIElement>(null)
+
+  useEffect(() => {
+    if (comment.length > 0 && messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'end',
+      })
+    }
+  }, [comment])
 
   return (
     <>
@@ -35,15 +43,16 @@ export const Chat: React.FC = () => {
         flexDirection={'column'}
         height={250}
       >
-        {comments && comments.length > 0 && (
+        {comment && comment.length > 0 && (
           <List
             sx={{
               display: 'flex',
               flexDirection: 'column',
               overflow: 'auto',
+              scrollSnapType: 'y',
             }}
           >
-            {comments.map((messageHelpDesk) => {
+            {comment.map((messageHelpDesk) => {
               return (
                 id === messageHelpDesk.helpdesk.id && (
                   <ListItem
@@ -55,6 +64,7 @@ export const Chat: React.FC = () => {
                           ? 'start'
                           : 'end',
                     }}
+                    ref={messagesEndRef}
                   >
                     <MessageComponent
                       key={messageHelpDesk.id}
