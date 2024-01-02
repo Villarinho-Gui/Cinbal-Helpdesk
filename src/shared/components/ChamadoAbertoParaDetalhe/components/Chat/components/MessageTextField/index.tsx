@@ -118,6 +118,15 @@ export const MessageTextField: React.FC = () => {
     setAttachedFiles(newListImageWithoutDeletedOne)
   }
 
+  function handlePostMessageByEnterButtonClick(
+    e: React.KeyboardEvent<HTMLInputElement>,
+  ) {
+    if (e.key === 'Enter') {
+      e.preventDefault()
+      PostMessage()
+    }
+  }
+
   return (
     <>
       {attachedFiles && attachedFiles.length > 0 && (
@@ -157,6 +166,7 @@ export const MessageTextField: React.FC = () => {
             fullWidth
             {...register('message')}
             name="message"
+            onKeyDown={handlePostMessageByEnterButtonClick}
             placeholder="Escreva uma mensagem..."
             size={'small'}
             type="text"
