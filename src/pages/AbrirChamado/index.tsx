@@ -25,6 +25,8 @@ import {
   List,
   ListItem,
   Card,
+  FormControl,
+  InputLabel,
 } from '@mui/material'
 import DefaultLayout from '../../shared/layouts/DefaultLayout'
 import { AiOutlinePaperClip } from 'react-icons/ai'
@@ -52,20 +54,7 @@ const createHelpDeskSchema = yup
 export const AbrirChamado: React.FC = () => {
   const [textFieldTitle, setTextFieldTitle] = useState('')
   const [textFieldDescription, setTextFieldDescription] = useState('')
-  const [selectFieldCategory, setSelectFieldCategory] = useState<
-    | 'Email'
-    | 'Ramal'
-    | 'Rede'
-    | 'Fluig'
-    | 'Hardware'
-    | 'Software'
-    | 'PcFactory'
-    | 'Preactor'
-    | 'Protheus'
-    | 'Vexon'
-    | 'Portal do Cliente'
-    | 'Outros'
-  >('Email')
+  const [selectFieldCategory, setSelectFieldCategory] = useState('')
 
   const [attachedFiles, setAttachedFiles] = useState<File[] | undefined>([])
   const [newUploadFile, setNewUploadFile] = useState<File | undefined>()
@@ -218,9 +207,7 @@ export const AbrirChamado: React.FC = () => {
                 <Box sx={{ minWidth: 120, paddingTop: 3 }}>
                   <TextField
                     {...register('title')}
-                    name="title"
                     label="Título"
-                    type="text"
                     variant="outlined"
                     disabled={isLoading}
                     value={textFieldTitle}
@@ -229,53 +216,41 @@ export const AbrirChamado: React.FC = () => {
                     helperText={
                       errors.title && <span>{errors.title?.message}</span>
                     }
-                    sx={{ width: '100%' }}
+                    fullWidth
                   />
                 </Box>
               </Grid>
               <Grid item xl={4}>
-                <Select
-                  {...register('category')}
-                  placeholder="categoria"
-                  name="category"
-                  disabled={isLoading}
-                  type="text"
-                  value={selectFieldCategory}
-                  onChange={(event: SelectChangeEvent) =>
-                    setSelectFieldCategory(
-                      event.target.value as
-                        | 'Email'
-                        | 'Ramal'
-                        | 'Rede'
-                        | 'Fluig'
-                        | 'Hardware'
-                        | 'Software'
-                        | 'PcFactory'
-                        | 'Preactor'
-                        | 'Protheus'
-                        | 'Vexon'
-                        | 'Portal do Cliente'
-                        | 'Outros',
-                    )
-                  }
-                  error={!!errors.category}
-                  sx={{ width: '100%' }}
-                >
-                  <MenuItem value={'Email'}>Email</MenuItem>
-                  <MenuItem value={'Ramal'}>Ramal</MenuItem>
-                  <MenuItem value={'Rede'}>Rede</MenuItem>
-                  <MenuItem value={'Fluig'}>Fluig</MenuItem>
-                  <MenuItem value={'Hardware'}>Hardware</MenuItem>
-                  <MenuItem value={'Software'}>Software</MenuItem>
-                  <MenuItem value={'PcFactory'}>PcFactory</MenuItem>
-                  <MenuItem value={'Preactor'}>Preactor</MenuItem>
-                  <MenuItem value={'Protheus'}>Protheus</MenuItem>
-                  <MenuItem value={'Vexon'}>Vexon</MenuItem>
-                  <MenuItem value={'PortalDoCliente'}>
-                    Portal do Cliente
-                  </MenuItem>
-                  <MenuItem value={'Outros'}>Outros</MenuItem>
-                </Select>
+                <FormControl fullWidth>
+                  <InputLabel id="category-select-label">Categoria</InputLabel>
+                  <Select
+                    labelId="category-select-label"
+                    label="Categoria"
+                    {...register('category')}
+                    disabled={isLoading}
+                    value={selectFieldCategory}
+                    onChange={(event: SelectChangeEvent) =>
+                      setSelectFieldCategory(event.target.value)
+                    }
+                    error={!!errors.category}
+                    fullWidth
+                  >
+                    <MenuItem value={'Email'}>Email</MenuItem>
+                    <MenuItem value={'Ramal'}>Ramal</MenuItem>
+                    <MenuItem value={'Rede'}>Rede</MenuItem>
+                    <MenuItem value={'Fluig'}>Fluig</MenuItem>
+                    <MenuItem value={'Hardware'}>Hardware</MenuItem>
+                    <MenuItem value={'Software'}>Software</MenuItem>
+                    <MenuItem value={'PcFactory'}>PcFactory</MenuItem>
+                    <MenuItem value={'Preactor'}>Preactor</MenuItem>
+                    <MenuItem value={'Protheus'}>Protheus</MenuItem>
+                    <MenuItem value={'Vexon'}>Vexon</MenuItem>
+                    <MenuItem value={'PortalDoCliente'}>
+                      Portal do Cliente
+                    </MenuItem>
+                    <MenuItem value={'Outros'}>Outros</MenuItem>
+                  </Select>
+                </FormControl>
               </Grid>
 
               <Grid item>
