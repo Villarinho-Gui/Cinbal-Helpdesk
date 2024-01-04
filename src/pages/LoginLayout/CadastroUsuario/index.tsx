@@ -22,6 +22,8 @@ import {
   SelectChangeEvent,
   SnackbarContent,
   Alert,
+  FormControl,
+  InputLabel,
 } from '@mui/material'
 import { MdOutlineErrorOutline } from 'react-icons/md'
 
@@ -152,7 +154,7 @@ export const CadastroUsuario: React.FC = () => {
   }
 
   return (
-    <form onSubmit={handleSubmit(createUser)} method="POST">
+    <form onSubmit={handleSubmit(createUser)}>
       <Grid
         container
         direction="column"
@@ -312,25 +314,27 @@ export const CadastroUsuario: React.FC = () => {
               />
             </Grid>
             <Grid item lg={6} xs={12}>
-              <Select
-                label="Filial"
-                {...register('branch')}
-                name="branch"
-                type="text"
-                placeholder="Filial"
-                value={branch}
-                onChange={(e: SelectChangeEvent) =>
-                  setBranch(e.target.value as string)
-                }
-                error={!!errors.branch}
-                fullWidth
-                disabled={isLoading}
-                size="small"
-              >
-                <MenuItem value={'vr'}>Volta Redonda</MenuItem>
-                <MenuItem value={'sp'}>Guarulhos</MenuItem>
-                <MenuItem value={'pn'}>Pinheiral</MenuItem>
-              </Select>
+              <FormControl fullWidth size="small">
+                <InputLabel id="filial-select-label">Filial</InputLabel>
+                <Select
+                  {...register('branch')}
+                  labelId="filial-label-select"
+                  id="select"
+                  label="Filial"
+                  placeholder="Filial"
+                  value={branch}
+                  onChange={(e: SelectChangeEvent) =>
+                    setBranch(e.target.value as string)
+                  }
+                  error={!!errors.branch}
+                  disabled={isLoading}
+                  size="small"
+                >
+                  <MenuItem value={'vr'}>Volta Redonda</MenuItem>
+                  <MenuItem value={'sp'}>Guarulhos</MenuItem>
+                  <MenuItem value={'pn'}>Pinheiral</MenuItem>
+                </Select>
+              </FormControl>
             </Grid>
           </Grid>
           <Grid
@@ -343,6 +347,31 @@ export const CadastroUsuario: React.FC = () => {
             xs={12}
             spacing={2}
           >
+            <Grid item xl={6} lg={6} md={12} sm={12} xs={12}>
+              <Button
+                type="submit"
+                variant="outlined"
+                sx={{ width: '100%' }}
+                onClick={() => navigate('/login')}
+              >
+                Voltar
+              </Button>
+              <Snackbar
+                open={openErrorMessage}
+                autoHideDuration={6000}
+                onClose={handleClose}
+                anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+              >
+                <Alert
+                  variant="filled"
+                  color="error"
+                  onClose={handleClose}
+                  icon={<MdOutlineErrorOutline />}
+                >
+                  {responseApi}
+                </Alert>
+              </Snackbar>
+            </Grid>
             <Grid item xl={6} lg={6} md={12} sm={12} xs={12}>
               <Button
                 type="submit"
@@ -374,31 +403,6 @@ export const CadastroUsuario: React.FC = () => {
                 anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
               >
                 <SnackbarContent message={'Usuário cadastrado com sucesso!'} />
-              </Snackbar>
-            </Grid>
-            <Grid item xl={6} lg={6} md={12} sm={12} xs={12}>
-              <Button
-                type="submit"
-                variant="outlined"
-                sx={{ width: '100%' }}
-                onClick={() => navigate('/login')}
-              >
-                Voltar
-              </Button>
-              <Snackbar
-                open={openErrorMessage}
-                autoHideDuration={6000}
-                onClose={handleClose}
-                anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-              >
-                <Alert
-                  variant="filled"
-                  color="error"
-                  onClose={handleClose}
-                  icon={<MdOutlineErrorOutline />}
-                >
-                  {responseApi}
-                </Alert>
               </Snackbar>
             </Grid>
           </Grid>
