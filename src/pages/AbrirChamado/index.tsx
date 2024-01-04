@@ -1,10 +1,7 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable no-unused-expressions */
 import React, { useState } from 'react'
 import api from '../../service/api/config/configApi'
 import { uniqueId } from 'lodash'
 import { SubmitHandler, useForm } from 'react-hook-form'
-import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 
 import {
@@ -33,6 +30,7 @@ import { AiOutlinePaperClip } from 'react-icons/ai'
 import { useHelpDeskContext } from '../../shared/contexts/HelpDeskContext'
 import FileList from '../../shared/components/FileList'
 import { useUserContext } from '../../shared/contexts/userContext'
+import { createHelpDeskSchema } from './schema'
 
 interface OpenHelpDesk {
   title: string
@@ -41,15 +39,6 @@ interface OpenHelpDesk {
   status: string
   files?: File[]
 }
-
-const createHelpDeskSchema = yup
-  .object()
-  .shape({
-    title: yup.string().required().min(3).max(1500),
-    category: yup.string().required(),
-    description: yup.string().min(3).max(5000).required(),
-  })
-  .required()
 
 export const AbrirChamado: React.FC = () => {
   const [textFieldTitle, setTextFieldTitle] = useState('')
