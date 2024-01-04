@@ -286,10 +286,15 @@ export const ListagemDeChamados: React.FC = () => {
           </ListItem>
         ))
       ) : (
-        <Typography variant="body2" sx={{ marginLeft: '10px' }}>
-          Você ainda não tem nenhum chamado aberto!
-        </Typography>
+        ''
       )}
+
+      {currentUser?.role === 'user' &&
+        filteredHelpDeskListByUser.length === 0 && (
+          <Typography variant="body2" sx={{ marginLeft: '10px' }}>
+            Você ainda não tem nenhum chamado aberto!
+          </Typography>
+        )}
 
       {currentUser?.role === 'admin' &&
         showMessageIfNotExistHelpDeskFilteredByDate && (
