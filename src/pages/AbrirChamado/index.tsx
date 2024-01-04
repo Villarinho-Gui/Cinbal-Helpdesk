@@ -45,9 +45,9 @@ interface OpenHelpDesk {
 const createHelpDeskSchema = yup
   .object()
   .shape({
-    title: yup.string().required().min(3).max(50),
+    title: yup.string().required().min(3).max(1500),
     category: yup.string().required(),
-    description: yup.string().min(3).max(500).required(),
+    description: yup.string().min(3).max(5000).required(),
   })
   .required()
 
