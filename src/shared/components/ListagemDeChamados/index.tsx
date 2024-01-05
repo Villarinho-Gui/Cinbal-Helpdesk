@@ -17,7 +17,7 @@ import {
 } from '@mui/material'
 import BarraFerramentasListagemDeChamados from '../BarraFerramentasListagemDeChamados'
 
-import api from '../../../service/api/config/configApi'
+import api from '../../../service/api'
 import { useDrawerContext } from '../../contexts/DrawerContext'
 import { useHelpDeskContext } from '../../contexts/HelpDeskContext'
 import 'react-date-range/dist/styles.css' // main style file

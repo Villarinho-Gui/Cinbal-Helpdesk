@@ -15,7 +15,7 @@ import {
 } from '@mui/material'
 import { AiOutlinePaperClip } from 'react-icons/ai'
 import { IoMdSend } from 'react-icons/io'
-import api from '../../../../../../../service/api/config/configApi'
+import api from '../../../../../../../service/api'
 import { useForm } from 'react-hook-form'
 import { useParams } from 'react-router-dom'
 import { useHelpDeskContext } from '../../../../../../contexts/HelpDeskContext'

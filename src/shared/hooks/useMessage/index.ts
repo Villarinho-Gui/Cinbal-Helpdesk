@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from 'react'
-import api from '../../../service/api/config/configApi'
+import api from '../../../service/api'
 import { AxiosRequestConfig } from 'axios'
 import { useHelpDeskContext } from '../../contexts/HelpDeskContext'
 import { useParams } from 'react-router-dom'

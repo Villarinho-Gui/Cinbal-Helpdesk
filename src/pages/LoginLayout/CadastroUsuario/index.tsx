@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
-import api from '../../../service/api/config/configApi'
+import api from '../../../service/api'
 
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
