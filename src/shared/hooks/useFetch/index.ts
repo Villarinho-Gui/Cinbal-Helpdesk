@@ -13,7 +13,6 @@ export function useFetch(url: string) {
   const token = localStorage.getItem('access_token')
   const headers = {
     headers: {
-      'Content-Type': 'application/json',
       Authorization: `bearer ${token}`,
     },
   }

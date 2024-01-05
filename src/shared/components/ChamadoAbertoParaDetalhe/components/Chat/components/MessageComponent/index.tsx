@@ -43,7 +43,6 @@ const MessageComponent: React.FC<MessageProps> = ({
   const token = localStorage.getItem('access_token')
   const headers = {
     headers: {
-      'Content-Type': 'application/json',
       Authorization: `bearer ${token}`,
     },
   }

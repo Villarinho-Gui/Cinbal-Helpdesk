@@ -95,7 +95,6 @@ export const HelpDeskHeader: React.FC<HelpDeskHeaderProps> = ({
     setSendAccountableToDb(true)
     const headers = {
       headers: {
-        'Content-Type': 'application/json',
         Authorization: `bearer ${token}`,
       },
     }
@@ -118,7 +117,6 @@ export const HelpDeskHeader: React.FC<HelpDeskHeaderProps> = ({
     formData.append('accountable', accountable!)
     const headers = {
       headers: {
-        'Content-Type': 'application/json',
         Authorization: `bearer ${token}`,
       },
     }
@@ -141,7 +139,6 @@ export const HelpDeskHeader: React.FC<HelpDeskHeaderProps> = ({
     formData.append('accountable', accountable!)
     const headers = {
       headers: {
-        'Content-Type': 'application/json',
         Authorization: `bearer ${token}`,
       },
     }
@@ -163,7 +160,6 @@ export const HelpDeskHeader: React.FC<HelpDeskHeaderProps> = ({
     formData.append('accountable', accountable!)
     const headers = {
       headers: {
-        'Content-Type': 'application/json',
         Authorization: `bearer ${token}`,
       },
     }

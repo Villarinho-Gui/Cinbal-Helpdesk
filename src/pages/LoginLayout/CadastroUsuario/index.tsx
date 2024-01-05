@@ -115,14 +115,9 @@ export const CadastroUsuario: React.FC = () => {
     formData.append('sector', sector)
     formData.append('branch', branch)
 
-    const headers = {
-      headers: {
-        'content-type': 'application/json',
-      },
-    }
     try {
       setIsLoading(true)
-      await api.post<User>('/auth/register', formData, headers).then(() => {
+      await api.post<User>('/auth/register', formData).then(() => {
         setOpenSuccessMessage(true)
         setIsLoading(false)
         navigate('/login')
