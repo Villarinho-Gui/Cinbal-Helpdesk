@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom'
 import DefaultLayout from '../../layouts/DefaultLayout'
 import { format, formatDistanceToNow } from 'date-fns'
 import ptBR from 'date-fns/locale/pt-BR'
-import api from '../../../service/api/config/configApi'
+import api from '../../../service/api'
 import fileDownload from 'js-file-download'
 
 import {
@@ -48,7 +48,6 @@ const ChamadoAbertoParaDetalhe: React.FC = () => {
   const token = localStorage.getItem('access_token')
   const headers = {
     headers: {
-      // 'Content-Type': 'application/json',
       Authorization: `bearer ${token}`,
     },
   }

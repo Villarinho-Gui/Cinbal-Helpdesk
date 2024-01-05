@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import api from '../../service/api/config/configApi'
+import api from '../../service/api'
 import { uniqueId } from 'lodash'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'

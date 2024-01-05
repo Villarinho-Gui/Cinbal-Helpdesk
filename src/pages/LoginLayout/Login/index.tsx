@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import api from '../../../service/api/config/configApi'
+import api from '../../../service/api'
 
 import {
   Box,

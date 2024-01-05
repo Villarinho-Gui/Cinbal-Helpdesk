@@ -14,7 +14,7 @@ import { useUserContext } from '../../../../../../contexts/userContext'
 import { FileProps } from '../../../../../../types/helpdeskType'
 import { AiFillFile } from 'react-icons/ai'
 import { MdDownload, MdImage } from 'react-icons/md'
-import api from '../../../../../../../service/api/config/configApi'
+import api from '../../../../../../../service/api'
 import fileDownload from 'js-file-download'
 import {
   SiMicrosoftexcel,
@@ -43,7 +43,6 @@ const MessageComponent: React.FC<MessageProps> = ({
   const token = localStorage.getItem('access_token')
   const headers = {
     headers: {
-      'Content-Type': 'application/json',
       Authorization: `bearer ${token}`,
     },
   }

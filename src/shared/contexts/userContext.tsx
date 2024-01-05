@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { createContext, useContext, useEffect, useState } from 'react'
 
-import api from '../../service/api/config/configApi'
+import api from '../../service/api'
 
 export interface UserProps {
   id: string

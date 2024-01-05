@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
-import api from '../../../service/api/config/configApi'
+import api from '../../../service/api'
 
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -115,14 +115,9 @@ export const CadastroUsuario: React.FC = () => {
     formData.append('sector', sector)
     formData.append('branch', branch)
 
-    const headers = {
-      headers: {
-        'content-type': 'application/json',
-      },
-    }
     try {
       setIsLoading(true)
-      await api.post<User>('/auth/register', formData, headers).then(() => {
+      await api.post<User>('/auth/register', formData).then(() => {
         setOpenSuccessMessage(true)
         setIsLoading(false)
         navigate('/login')

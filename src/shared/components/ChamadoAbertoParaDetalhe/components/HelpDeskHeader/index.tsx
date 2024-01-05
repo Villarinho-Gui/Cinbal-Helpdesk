@@ -22,7 +22,7 @@ import React, { useState } from 'react'
 import { IoMdSend } from 'react-icons/io'
 import { MdClose, MdMoreVert, MdOutlineEmojiPeople } from 'react-icons/md'
 import { useForm } from 'react-hook-form'
-import api from '../../../../../service/api/config/configApi'
+import api from '../../../../../service/api'
 import * as yup from 'yup'
 import { UserProps } from '../../../../hooks/useUser'
 import { yupResolver } from '@hookform/resolvers/yup'
@@ -95,7 +95,6 @@ export const HelpDeskHeader: React.FC<HelpDeskHeaderProps> = ({
     setSendAccountableToDb(true)
     const headers = {
       headers: {
-        'Content-Type': 'application/json',
         Authorization: `bearer ${token}`,
       },
     }
@@ -118,7 +117,6 @@ export const HelpDeskHeader: React.FC<HelpDeskHeaderProps> = ({
     formData.append('accountable', accountable!)
     const headers = {
       headers: {
-        'Content-Type': 'application/json',
         Authorization: `bearer ${token}`,
       },
     }
@@ -141,7 +139,6 @@ export const HelpDeskHeader: React.FC<HelpDeskHeaderProps> = ({
     formData.append('accountable', accountable!)
     const headers = {
       headers: {
-        'Content-Type': 'application/json',
         Authorization: `bearer ${token}`,
       },
     }
@@ -163,7 +160,6 @@ export const HelpDeskHeader: React.FC<HelpDeskHeaderProps> = ({
     formData.append('accountable', accountable!)
     const headers = {
       headers: {
-        'Content-Type': 'application/json',
         Authorization: `bearer ${token}`,
       },
     }

@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom'
-import api from '../../../service/api/config/configApi'
+import api from '../../../service/api'
 import { useQuery } from 'react-query'
 import { HelpDeskProps } from '../../types/helpdeskType'
 import { useEffect } from 'react'
@@ -13,7 +13,6 @@ export function useFetch(url: string) {
   const token = localStorage.getItem('access_token')
   const headers = {
     headers: {
-      'Content-Type': 'application/json',
       Authorization: `bearer ${token}`,
     },
   }

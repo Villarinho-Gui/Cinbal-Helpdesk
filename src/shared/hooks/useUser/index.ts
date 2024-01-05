@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from 'react'
 import { AxiosRequestConfig } from 'axios'
-import api from '../../../service/api/config/configApi'
+import api from '../../../service/api'
 import { useUserContext } from '../../contexts/userContext'
 
 export interface UserProps {
