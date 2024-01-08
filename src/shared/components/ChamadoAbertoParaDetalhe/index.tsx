@@ -53,9 +53,7 @@ const ChamadoAbertoParaDetalhe: React.FC = () => {
   }
   const { id } = useParams()
 
-  const { data, isLoading } = useFetch(
-    `http://apihd.cinbal.com.br/helpdesk/${id}`,
-  )
+  const { data, isLoading } = useFetch(`helpdesk/${id}`)
 
   const attachedFiles = data?.files
 

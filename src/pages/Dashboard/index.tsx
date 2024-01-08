@@ -17,7 +17,7 @@ const Dashboard: React.FC = () => {
   const { user } = useUserContext()
   const currentUser = user
 
-  const { data } = useFetch('http://apihd.cinbal.com.br/helpdesk/')
+  const { data } = useFetch('helpdesk')
 
 
   const helpDesksInProgress = data?.filter((helpDesk: HelpDeskProps) => {
