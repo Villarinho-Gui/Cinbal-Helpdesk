@@ -10,7 +10,7 @@ export function usePostHelpDeskMutate() {
   const mutate = useMutation({
     mutationFn: submit,
     onSuccess: () => {
-      queryClient.invalidateQueries(`helpDesk-data`)
+      queryClient.invalidateQueries(`helpDesk`)
     },
   })
   return mutate
