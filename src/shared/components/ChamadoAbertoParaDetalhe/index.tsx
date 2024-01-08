@@ -8,15 +8,7 @@ import ptBR from 'date-fns/locale/pt-BR'
 import api from '../../../service/api'
 import fileDownload from 'js-file-download'
 
-import {
-  Box,
-  Divider,
-  Typography,
-  Card,
-  Icon,
-  IconButton,
-  Grid,
-} from '@mui/material'
+import { Box, Divider, Typography, Card, IconButton } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 import { MdImage, MdDownload } from 'react-icons/md'
 import { Chat } from './components/Chat'
