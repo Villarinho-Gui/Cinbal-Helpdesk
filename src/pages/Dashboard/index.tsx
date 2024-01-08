@@ -7,7 +7,7 @@ import { CardHelpDesksAssumidos } from './components/CardHelpDesksAssumidos'
 import { useUserContext } from '../../shared/contexts/userContext'
 import { CardHelpDesksConcluidos } from './components/CardHelpdesksConcluidos'
 import { CardHelpDesksEmAndamento } from './components/CardHelpDesksEmAndamento'
-import { useFetch } from '../../shared/hooks/useFetch'
+import { useFetchHelpDeskDetails } from '../../shared/hooks/useFetchHelpDeskDetails'
 import HelpDeskProps from '../../shared/types/helpdeskType'
 
 
@@ -17,7 +17,7 @@ const Dashboard: React.FC = () => {
   const { user } = useUserContext()
   const currentUser = user
 
-  const { data } = useFetch('helpdesk')
+  const { data } = useFetchHelpDeskDetails('helpdesk')
 
 
   const helpDesksInProgress = data?.filter((helpDesk: HelpDeskProps) => {

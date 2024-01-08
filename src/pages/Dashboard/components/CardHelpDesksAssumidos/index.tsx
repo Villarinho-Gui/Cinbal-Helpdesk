@@ -9,7 +9,7 @@ import {
   Typography,
 } from '@mui/material'
 import React, { useState } from 'react'
-import { useFetch } from '../../../../shared/hooks/useFetch'
+import { useFetchHelpDeskDetails } from '../../../../shared/hooks/useFetchHelpDeskDetails'
 import { HiCollection } from 'react-icons/hi'
 import { HelpDeskList } from './components/HelpDeskList'
 import { useUserContext } from '../../../../shared/contexts/userContext'
@@ -26,7 +26,7 @@ interface HelpDeskDashboardList {
 }
 
 export const CardHelpDesksAssumidos: React.FC = () => {
-  const { data } = useFetch('helpdesk')
+  const { data } = useFetchHelpDeskDetails('helpdesk')
   const { user } = useUserContext()
   const [searchTextField, setSearchTextField] = useState('')
 

@@ -13,7 +13,7 @@ import { useTheme } from '@mui/material/styles'
 import { MdImage, MdDownload } from 'react-icons/md'
 import { Chat } from './components/Chat'
 import { AiFillFile } from 'react-icons/ai'
-import { useFetch } from '../../hooks/useFetch'
+import { useFetchHelpDeskDetails } from '../../hooks/useFetchHelpDeskDetails'
 import { useUser } from '../../hooks/useUser'
 import HelpDeskBody from './components/HelpDeskBody'
 import { HelpDeskHeader } from './components/HelpDeskHeader'
@@ -45,7 +45,7 @@ const ChamadoAbertoParaDetalhe: React.FC = () => {
   }
   const { id } = useParams()
 
-  const { data, isLoading } = useFetch(`helpdesk/${id}`)
+  const { data, isLoading } = useFetchHelpDeskDetails(`helpdesk/${id}`)
 
   const attachedFiles = data?.files
 
